@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Settings
   m_EditorClassIdentifier: 
   headerSettings:
-    headerText: GUI
-    headerColor: {r: 0.83137256, g: 0.003921578, b: 0.66821986, a: 1}
+    headerText: FIFO
+    headerColor: {r: 0.12721774, g: 0.83137256, b: 0.003921578, a: 1}
     textAlignmentOptions: 0
     fontStyleOptions: 0
     fontSize: 12

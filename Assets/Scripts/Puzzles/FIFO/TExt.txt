@@ -1,0 +1,346 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
+
+public class DragAndDrop2D : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+{
+    private RectTransform rectTransform;
+    private Canvas canvas;
+    private CanvasGroup canvasGroup;
+    private Vector3 initialPosition;
+    private Transform initialParent;
+
+    public bool returnToOriginalPosition = true; // Voltar à posição original se não for solto em uma área de drop válida
+
+    [Header("Configuração de Som")]
+    public AudioSource audioSource;   // Fonte de áudio
+    public AudioClip dropSound;       // Som ao dropar o item
+
+    void Awake()
+    {
+        rectTransform = GetComponent<RectTransform>();
+        canvas = GetComponentInParent<Canvas>();
+        canvasGroup = GetComponent<CanvasGroup>();
+
+        if (canvasGroup == null)
+        {
+            canvasGroup = gameObject.AddComponent<CanvasGroup>();
+        }
+
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+    }
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        // Salva a posição inicial e o pai inicial
+        initialPosition = rectTransform.anchoredPosition;
+        initialParent = transform.parent;
+
+        // Configura o Canvas Group para permitir arrastar
+        canvasGroup.alpha = 0.6f;
+        canvasGroup.blocksRaycasts = false;
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        // Move o objeto com o mouse
+        rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        // Reseta o Canvas Group
+        canvasGroup.alpha = 1f;
+        canvasGroup.blocksRaycasts = true;
+
+        // Se o objeto não foi solto em uma área válida, retorna à posição inicial
+        if (transform.parent == initialParent && returnToOriginalPosition)
+        {
+            rectTransform.anchoredPosition = initialPosition;
+        }
+
+        // Toca o som de drop
+        TocarSomDeDrop();
+    }
+
+    private void TocarSomDeDrop()
+    {
+        if (audioSource != null && dropSound != null)
+        {
+            audioSource.PlayOneShot(dropSound);
+        }
+    }
+}
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro; // Importação necessária para TextMeshPro
+
+public class PuzzleManager : MonoBehaviour
+{
+    [Header("Configurações do Puzzle")]
+    public List<Transform> slots; // Lista dos slots para validação
+    public Button confirmButton;  // Botão de confirmação
+    public AudioSource audioSource; // Componente de áudio para tocar sons
+    public AudioClip clickSound;   // Som para quando clicar no botão
+    public AudioClip successSound; // Som para sucesso na validação
+    public AudioClip errorSound;   // Som para erro na validação
+
+    [Header("UI de Feedback")]
+    public GameObject feedbackPanel; // Painel de feedback
+    public TextMeshProUGUI feedbackText; // Texto de feedback (TextMeshPro)
+    public float feedbackDuration = 2f; // Duração do feedback na tela
+
+    private void Start()
+    {
+        // Configura o botão para chamar o método de validação
+        if (confirmButton != null)
+        {
+            confirmButton.onClick.AddListener(ValidarPuzzle);
+        }
+
+        // Certifique-se de esconder o painel de feedback no início
+        if (feedbackPanel != null)
+        {
+            feedbackPanel.SetActive(false);
+        }
+    }
+
+    public void ValidarPuzzle()
+    {
+        // Inicia a corrotina para tocar os sons e exibir o feedback
+        StartCoroutine(PlayValidationSounds());
+    }
+
+    private IEnumerator PlayValidationSounds()
+    {
+        // Tocar som de clique
+        if (audioSource != null && clickSound != null)
+        {
+            audioSource.PlayOneShot(clickSound);
+        }
+
+        // Espera o tempo do som de clique terminar antes de continuar
+        yield return new WaitForSeconds(clickSound.length);
+
+        List<PuzzleObjectData> objectsInSlots = new List<PuzzleObjectData>();
+
+        // Itera pelos slots e coleta os dados dos objetos dentro deles
+        foreach (Transform slot in slots)
+        {
+            if (slot.childCount > 0)
+            {
+                PuzzleObjectData objectData = slot.GetChild(0).GetComponent<PuzzleObjectData>();
+                if (objectData != null)
+                {
+                    objectsInSlots.Add(objectData);
+                }
+                else
+                {
+                    ExibirFeedback("ERRO", errorSound);
+                    yield break; // Retorna da corrotina
+                }
+            }
+            else
+            {
+                ExibirFeedback("ERRO", errorSound);
+                yield break; // Retorna da corrotina
+            }
+        }
+
+        // Validação FIFO
+        for (int i = 0; i < objectsInSlots.Count - 1; i++)
+        {
+            try
+            {
+                // Converte Data e Hora para DateTime para comparar
+                System.DateTime currentDateTime = System.DateTime.Parse($"{objectsInSlots[i].data} {objectsInSlots[i].hora}");
+                System.DateTime nextDateTime = System.DateTime.Parse($"{objectsInSlots[i + 1].data} {objectsInSlots[i + 1].hora}");
+
+                if (currentDateTime > nextDateTime)
+                {
+                    ExibirFeedback("ERRO", errorSound);
+                    yield break; // Retorna da corrotina
+                }
+            }
+            catch (System.FormatException)
+            {
+                ExibirFeedback("ERRO", errorSound);
+                yield break; // Retorna da corrotina
+            }
+        }
+
+        // Se chegou até aqui, a ordem está correta
+        ExibirFeedback("Sucesso!", successSound);
+    }
+
+    private void ExibirFeedback(string mensagem, AudioClip som)
+    {
+        // Atualizar o texto de feedback
+        if (feedbackText != null)
+        {
+            feedbackText.text = mensagem; // Altera o texto do feedback
+        }
+
+        // Mostrar o painel de feedback
+        if (feedbackPanel != null)
+        {
+            feedbackPanel.SetActive(true);
+        }
+
+        // Tocar o som correspondente
+        if (audioSource != null && som != null)
+        {
+            audioSource.PlayOneShot(som);
+        }
+
+        // Esconde o painel após a duração configurada
+        StartCoroutine(EsconderFeedback());
+    }
+
+    private IEnumerator EsconderFeedback()
+    {
+        yield return new WaitForSeconds(feedbackDuration);
+
+        // Esconde o painel de feedback
+        if (feedbackPanel != null)
+        {
+            feedbackPanel.SetActive(false);
+        }
+    }
+}
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
+
+public class DropZone : MonoBehaviour, IDropHandler
+{
+    public bool acceptAnyObject = true; // Aceita qualquer objeto?
+    public List<string> allowedTags;   // Tags permitidas
+    private RectTransform rectTransform;
+
+    private void Awake()
+    {
+        rectTransform = GetComponent<RectTransform>();
+    }
+
+    public void OnDrop(PointerEventData eventData)
+    {
+        // Verifica se o objeto arrastado é válido
+        if (eventData.pointerDrag != null)
+        {
+            DragAndDrop2D draggedObject = eventData.pointerDrag.GetComponent<DragAndDrop2D>();
+
+            if (draggedObject != null && IsObjectAllowed(draggedObject.gameObject))
+            {
+                // Verifica se já há um objeto neste slot
+                Transform existingObject = transform.childCount > 0 ? transform.GetChild(0) : null;
+
+                if (existingObject != null)
+                {
+                    // Troca de posição com o objeto arrastado
+                    SwapObjects(draggedObject, existingObject.GetComponent<DragAndDrop2D>());
+                }
+                else
+                {
+                    // Se o slot estiver vazio, coloca o objeto nele
+                    PlaceObject(draggedObject);
+                }
+            }
+        }
+    }
+
+    private void SwapObjects(DragAndDrop2D draggedObject, DragAndDrop2D existingObject)
+    {
+        // Salva o pai original e a posição do objeto existente
+        Transform draggedParent = draggedObject.transform.parent;
+        Vector2 draggedPosition = draggedObject.GetComponent<RectTransform>().anchoredPosition;
+
+        // Move o objeto existente para o lugar do arrastado
+        existingObject.transform.SetParent(draggedParent);
+        existingObject.GetComponent<RectTransform>().anchoredPosition = draggedPosition;
+
+        // Coloca o objeto arrastado no slot atual
+        PlaceObject(draggedObject);
+    }
+
+    private void PlaceObject(DragAndDrop2D draggedObject)
+    {
+        // Torna o objeto arrastado filho da área de drop
+        RectTransform draggedRect = draggedObject.GetComponent<RectTransform>();
+        draggedRect.SetParent(rectTransform);
+
+        // Centraliza o objeto na área
+        draggedRect.anchoredPosition = Vector2.zero;
+        draggedRect.localScale = Vector3.one; // Mantém a escala
+    }
+
+    private bool IsObjectAllowed(GameObject obj)
+    {
+        // Verifica se o objeto tem uma tag permitida ou se aceita qualquer objeto
+        return acceptAnyObject || (allowedTags != null && allowedTags.Contains(obj.tag));
+    }
+}
+
+using UnityEngine;
+using UnityEngine.UI;
+
+public class DynamicTableGenerator : MonoBehaviour {
+    public GameObject slotPrefab; // Prefab do slot
+    public Transform parentPanel; // Painel pai onde os slots serão adicionados
+    public int rows = 5; // Número de linhas
+    public int columns = 15; // Número de colunas
+    public Vector2 cellSize = new Vector2(50, 50); // Tamanho de cada célula
+    public Vector2 spacing = new Vector2(5, 5); // Espaçamento entre as células
+
+    void Start() {
+        GenerateTable(rows, columns); // Chama a geração da tabela ao iniciar
+    }
+
+    public void GenerateTable(int rows, int columns) {
+        // Limpa os slots existentes (se necessário)
+        foreach (Transform child in parentPanel) {
+            Destroy(child.gameObject);
+        }
+
+        // Configura o painel pai com um Grid Layout Group
+        GridLayoutGroup gridLayout = parentPanel.GetComponent<GridLayoutGroup>();
+        if (gridLayout == null) {
+            gridLayout = parentPanel.gameObject.AddComponent<GridLayoutGroup>();
+        }
+        gridLayout.cellSize = cellSize;
+        gridLayout.spacing = spacing;
+        gridLayout.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+        gridLayout.constraintCount = columns;
+
+        // Gera os slots
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                GameObject slot = Instantiate(slotPrefab, parentPanel);
+                slot.name = $"Slot_Linha_{i+1}_Coluna_{j+1}"; // Nomeia os slots dinamicamente com base na linha e coluna
+                
+                // Adiciona um componente customizado para armazenar a identificação (opcional)
+                SlotIdentifier slotIdentifier = slot.AddComponent<SlotIdentifier>();
+                slotIdentifier.row = i + 1; // Linha começa de 1
+                slotIdentifier.column = j + 1; // Coluna começa de 1
+
+                // Adicione mais configurações ou componentes ao slot, se necessário
+                // Por exemplo, você pode adicionar cores, imagens ou outros comportamentos.
+            }
+        }
+    }
+}
+
+// Componente customizado para armazenar a identificação do slot
+public class SlotIdentifier : MonoBehaviour {
+    public int row; // Armazena a linha
+    public int column; // Armazena a coluna
+}
