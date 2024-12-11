@@ -36,29 +36,35 @@ public class CircularDropZone : MonoBehaviour, IDropHandler
 
             if (draggedObject != null)
             {
-                PlaceObject(draggedObject);
+                // Clona o objeto arrastado e coloca-o na zona
+                GameObject clonedObject = Instantiate(draggedObject.gameObject, transform);
+                clonedObject.transform.SetParent(transform);
+
+                // Ajusta o clone
+                RectTransform clonedRectTransform = clonedObject.GetComponent<RectTransform>();
+                clonedRectTransform.localScale = Vector3.one;
+
+                // Posiciona o clone na zona circular
+                PlaceObject(clonedRectTransform);
+
+                // Atualiza o gráfico de pizza
                 UpdatePieChart();
             }
         }
     }
 
-    private void PlaceObject(DragAndDrop2D draggedObject)
+    private void PlaceObject(RectTransform draggedRectTransform)
     {
-        draggedObject.transform.SetParent(transform);
-        RectTransform draggedRectTransform = draggedObject.GetComponent<RectTransform>();
-
         int childIndex = transform.childCount - 1;
         float angle = (360f / maxChildren) * childIndex;
 
         Vector3 positionOffset = Quaternion.Euler(0f, 0f, angle) * Vector3.up * radius;
         draggedRectTransform.anchoredPosition = positionOffset;
 
-        // Reset anchors and pivot for proper positioning
+        // Reset anchors e pivot para o posicionamento correto
         draggedRectTransform.anchorMin = new Vector2(0.5f, 0.5f);
         draggedRectTransform.anchorMax = new Vector2(0.5f, 0.5f);
         draggedRectTransform.pivot = new Vector2(0.5f, 0.5f);
-
-        draggedRectTransform.localScale = Vector3.one;
     }
 
     private void UpdatePieChart()

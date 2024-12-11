@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class SlotManager : MonoBehaviour
 {
@@ -38,11 +39,29 @@ public class SlotManager : MonoBehaviour
     }
 
     // Método chamado quando um objeto é solto
+
     private void OnObjectDropped(GameObject droppedObject)
     {
         if (isTableFull || objectsAlreadyAdded.Contains(droppedObject)) return;
 
-        AddObjectToTable(droppedObject);
+        // Configura o PointerEventData para checar o objeto sob o mouse
+        PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
+        pointerEventData.position = Input.mousePosition;
+
+        // Armazena os resultados do raycast
+        List<RaycastResult> raycastResults = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerEventData, raycastResults);
+
+        // Verifica se o objeto foi solto sobre um slot válido
+        foreach (RaycastResult result in raycastResults)
+        {
+            SlotIdentifier slotIdentifier = result.gameObject.GetComponent<SlotIdentifier>();
+            if (slotIdentifier != null)
+            {
+                AddObjectToTable(droppedObject);
+                return; // Sai do método assim que o objeto é adicionado
+            }
+        }
     }
 
     // Adiciona o objeto à tabela e gerencia sua posição
