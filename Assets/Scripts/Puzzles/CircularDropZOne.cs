@@ -13,6 +13,7 @@ public class CircularDropZone : MonoBehaviour, IDropHandler
     public float holeRadius = 20f; // The radius of the hole in the center (open space)
 
     private Color[] originalColors; // To store the original colors of the slices
+    public GameObject associatedTable; // Referência à tabela associada
 
     private void Start()
     {
@@ -27,7 +28,10 @@ public class CircularDropZone : MonoBehaviour, IDropHandler
             }
         }
     }
-
+    public void SetAssociatedTable(GameObject table)
+    {
+        associatedTable = table;
+    }
     public void OnDrop(PointerEventData eventData)
     {
         if (eventData.pointerDrag != null && transform.childCount < maxChildren)
@@ -52,6 +56,7 @@ public class CircularDropZone : MonoBehaviour, IDropHandler
             }
         }
     }
+
 
     private void PlaceObject(RectTransform draggedRectTransform)
     {

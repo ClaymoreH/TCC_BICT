@@ -10,9 +10,9 @@ public class PuzzleObjectData : MonoBehaviour
     public string data;       
     public string hora;       
     public int prioridade;    
-    public float tempoExecucao; 
-    public float ordemChegada; 
-
+    public int tempoExecucao; 
+    public int ordemChegada; 
+    public int processo;
     [TextArea]
     public string descricao;  // Descrição adicional do objeto (opcional)
 
