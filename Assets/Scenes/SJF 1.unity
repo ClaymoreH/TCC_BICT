@@ -645,6 +645,7 @@ RectTransform:
   - {fileID: 948386051}
   - {fileID: 642086688}
   - {fileID: 1089203080}
+  - {fileID: 1884158821}
   - {fileID: 598153729}
   - {fileID: 1249440636}
   - {fileID: 639373791}
@@ -1037,6 +1038,7 @@ GameObject:
   m_Component:
   - component: {fileID: 642086688}
   - component: {fileID: 642086690}
+  - component: {fileID: 642086691}
   - component: {fileID: 642086689}
   m_Layer: 5
   m_Name: Text
@@ -1105,6 +1107,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 642086687}
   m_CullTransparentMesh: 1
+--- !u!114 &642086691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 642086687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f121fc55ea39164f8b02663bd3987ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slots: []
+  tableGenerator: {fileID: 1884158825}
+  Quantum: 3
+  tableID: 0
 --- !u!1 &771617887
 GameObject:
   m_ObjectHideFlags: 0
@@ -1405,6 +1423,7 @@ MonoBehaviour:
   slots: []
   tableGenerator: {fileID: 1089203085}
   Quantum: 3
+  tableID: 0
 --- !u!1 &1089203079
 GameObject:
   m_ObjectHideFlags: 0
@@ -1610,6 +1629,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1249440636}
   - component: {fileID: 1249440640}
+  - component: {fileID: 1249440642}
+  - component: {fileID: 1249440641}
   - component: {fileID: 1249440639}
   - component: {fileID: 1249440638}
   - component: {fileID: 1249440637}
@@ -1743,6 +1764,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1249440635}
   m_CullTransparentMesh: 1
+--- !u!114 &1249440641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1249440635}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df3422bf4d900c84099924a57bf11ef0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slots: []
+  tableGenerator: {fileID: 1089203085}
+  parentOriginal: {fileID: 0}
+--- !u!114 &1249440642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1249440635}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df3422bf4d900c84099924a57bf11ef0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slots: []
+  tableGenerator: {fileID: 1884158825}
+  parentOriginal: {fileID: 0}
 --- !u!1 &1511294655
 GameObject:
   m_ObjectHideFlags: 0
@@ -2103,6 +2154,125 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1884158820
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1884158821}
+  - component: {fileID: 1884158825}
+  - component: {fileID: 1884158824}
+  - component: {fileID: 1884158823}
+  - component: {fileID: 1884158822}
+  m_Layer: 5
+  m_Name: SlotsBlocos (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1884158821
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1884158820}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 566146197}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -810.3, y: 97}
+  m_SizeDelta: {x: 1202.3455, y: 397.2213}
+  m_Pivot: {x: 0, y: 0}
+--- !u!114 &1884158822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1884158820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 4
+  m_StartCorner: 0
+  m_StartAxis: 0
+  m_CellSize: {x: 80, y: 80}
+  m_Spacing: {x: 0, y: 5}
+  m_Constraint: 1
+  m_ConstraintCount: 15
+--- !u!114 &1884158823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1884158820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1884158824
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1884158820}
+  m_CullTransparentMesh: 1
+--- !u!114 &1884158825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1884158820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71b44cabd8fcadf48b83bdb15e2645ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slotPrefab: {fileID: 4573463790059438755, guid: 764de8d28370cbf4db089fa9521a97a4, type: 3}
+  parentPanel: {fileID: 1884158821}
+  rows: 5
+  columns: 15
+  cellSize: {x: 75, y: 75}
+  spacing: {x: 5, y: 5}
 --- !u!1 &1925717916
 GameObject:
   m_ObjectHideFlags: 0

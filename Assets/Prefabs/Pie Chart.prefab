@@ -417,6 +417,7 @@ MonoBehaviour:
   - {fileID: 3493678399731493571}
   initialColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   holeRadius: 20
+  associatedTable: {fileID: 5072918425171145841, guid: 43a0dcd21c3a3ed4bae074f1f2d884c7, type: 3}
 --- !u!1 &5676234348277293579
 GameObject:
   m_ObjectHideFlags: 0

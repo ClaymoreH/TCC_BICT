@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 
 public class SlotManager : MonoBehaviour
 {
+    public int tableID; // Identificador único da tabela
     public List<GameObject> slots = new List<GameObject>();
     public DynamicTableGenerator tableGenerator;
     private int currentRow = 1;
@@ -12,64 +13,59 @@ public class SlotManager : MonoBehaviour
     private bool isTableFull = false;
     private HashSet<GameObject> objectsAlreadyAdded = new HashSet<GameObject>();
 
-    public Transform parentOriginal; // Novo campo: referência ao pai original dos objetos
-
-    // Armazena a última coluna utilizada em cada linha
-    private Dictionary<int, int> lastColumnInRow = new Dictionary<int, int>();
-
-    // Armazena as posições originais dos objetos
-    private Dictionary<GameObject, Vector3> originalPositions = new Dictionary<GameObject, Vector3>();
+    public Transform parentOriginal; // Pai original dos objetos
+    private Dictionary<int, int> lastColumnInRow = new Dictionary<int, int>(); // Última coluna ocupada em cada linha
+    private Dictionary<GameObject, Vector3> originalPositions = new Dictionary<GameObject, Vector3>(); // Posições originais dos objetos
 
     void Start()
     {
-        // Registra os eventos e cria a tabela
+        // Registra eventos e cria a tabela
         DragAndDrop2D.OnDrop += OnObjectDropped;
         tableGenerator.OnTableGenerated += PopulateSlots;
         tableGenerator.GenerateTable(tableGenerator.rows, tableGenerator.columns);
     }
 
-    // Popula a lista de slots com os slots da tabela gerada
+    // Popula a lista de slots filtrando pelo tableID
     private void PopulateSlots()
     {
         slots.Clear();
         foreach (Transform child in tableGenerator.parentPanel)
         {
-            slots.Add(child.gameObject);
-        }
-    }
-
-    // Método chamado quando um objeto é solto
-
-    private void OnObjectDropped(GameObject droppedObject)
-    {
-        if (isTableFull || objectsAlreadyAdded.Contains(droppedObject)) return;
-
-        // Configura o PointerEventData para checar o objeto sob o mouse
-        PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
-        pointerEventData.position = Input.mousePosition;
-
-        // Armazena os resultados do raycast
-        List<RaycastResult> raycastResults = new List<RaycastResult>();
-        EventSystem.current.RaycastAll(pointerEventData, raycastResults);
-
-        // Verifica se o objeto foi solto sobre um slot válido
-        foreach (RaycastResult result in raycastResults)
-        {
-            SlotIdentifier slotIdentifier = result.gameObject.GetComponent<SlotIdentifier>();
-            if (slotIdentifier != null)
+            SlotIdentifier identifier = child.GetComponent<SlotIdentifier>();
+            if (identifier != null && identifier.tableID == tableID) // Verifica se o slot pertence à tabela correta
             {
-                AddObjectToTable(droppedObject);
-                return; // Sai do método assim que o objeto é adicionado
+                slots.Add(child.gameObject);
             }
         }
     }
 
-    // Adiciona o objeto à tabela e gerencia sua posição
+    // Método chamado quando um objeto é solto
+    private void OnObjectDropped(GameObject droppedObject)
+    {
+        if (isTableFull || objectsAlreadyAdded.Contains(droppedObject)) return;
+
+        PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
+        pointerEventData.position = Input.mousePosition;
+
+        List<RaycastResult> raycastResults = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerEventData, raycastResults);
+
+        foreach (RaycastResult result in raycastResults)
+        {
+            SlotIdentifier slotIdentifier = result.gameObject.GetComponent<SlotIdentifier>();
+            if (slotIdentifier != null && slotIdentifier.tableID == tableID) // Garante que o slot pertence à tabela atual
+            {
+                AddObjectToTable(droppedObject);
+                return;
+            }
+        }
+    }
+
+    // Adiciona o objeto à tabela
     private void AddObjectToTable(GameObject droppedObject)
     {
         float executionTime = droppedObject.GetComponent<PuzzleObjectData>()?.tempoExecucao ?? 1;
 
-        // Armazena a posição original do objeto
         originalPositions[droppedObject] = droppedObject.transform.position;
 
         for (int i = 0; i < executionTime; i++)
@@ -82,7 +78,6 @@ public class SlotManager : MonoBehaviour
                 objectsAlreadyAdded.Add(clone);
                 MoveToNextPosition();
 
-                // Verifica se a tabela está cheia
                 if (currentRow > tableGenerator.rows)
                 {
                     isTableFull = true;
@@ -96,18 +91,16 @@ public class SlotManager : MonoBehaviour
             }
         }
 
-        // Atualiza a última coluna ocupada da linha
         if (!lastColumnInRow.ContainsKey(currentRow))
         {
             lastColumnInRow[currentRow] = currentColumn - 1;
         }
 
-        // Atualiza a linha e a coluna para o próximo objeto
         currentRow++;
         currentColumn = lastColumnInRow.ContainsKey(currentRow - 1) ? lastColumnInRow[currentRow - 1] + 1 : 1;
     }
 
-    // Coloca o objeto dentro de um slot
+    // Coloca o objeto no slot
     private void PlaceObjectInSlot(GameObject obj, GameObject slot)
     {
         obj.transform.SetParent(slot.transform);
@@ -115,11 +108,10 @@ public class SlotManager : MonoBehaviour
         obj.GetComponent<RectTransform>().localScale = Vector3.one;
     }
 
-    // Atualiza a posição atual na tabela para o próximo slot disponível
+    // Atualiza a posição atual na tabela
     private void MoveToNextPosition()
     {
         currentColumn++;
-
         if (currentColumn > tableGenerator.columns)
         {
             currentColumn = 1;
@@ -127,13 +119,13 @@ public class SlotManager : MonoBehaviour
         }
     }
 
-    // Encontra um slot específico de acordo com a linha e coluna
+    // Encontra um slot específico
     public GameObject FindSlot(int row, int column)
     {
         foreach (GameObject slot in slots)
         {
             SlotIdentifier identifier = slot.GetComponent<SlotIdentifier>();
-            if (identifier != null && identifier.row == row && identifier.column == column)
+            if (identifier != null && identifier.row == row && identifier.column == column && identifier.tableID == tableID)
             {
                 return slot;
             }
@@ -147,44 +139,33 @@ public class SlotManager : MonoBehaviour
         return FindSlot(currentRow, currentColumn);
     }
 
-    // Novo método: Reseta a tabela e move os objetos de volta para o pai de origem
+    // Reseta a tabela
     public void ResetTable()
     {
         foreach (GameObject slot in slots)
         {
-            // Checa se o slot contém objetos
             if (slot.transform.childCount > 0)
             {
-                Transform child = slot.transform.GetChild(0); // Obtém o objeto filho
-
-                // Verifica se o objeto é o original, não o clone
+                Transform child = slot.transform.GetChild(0);
                 if (originalPositions.ContainsKey(child.gameObject))
                 {
-                    // Envia o objeto original de volta para o pai original
                     child.SetParent(parentOriginal);
-                    child.position = originalPositions[child.gameObject]; // Reseta a posição para a original
+                    child.position = originalPositions[child.gameObject];
                 }
                 else
                 {
-                    // Se for um clone, destrói-o
                     Destroy(child.gameObject);
                 }
             }
         }
 
-        // Limpa os dados
-        objectsAlreadyAdded.Clear(); // Limpa a lista de objetos adicionados
-        originalPositions.Clear();  // Limpa as posições originais
-
-        // Reseta os indicadores de posição
-        currentRow = 1; 
-        currentColumn = 1; 
+        objectsAlreadyAdded.Clear();
+        originalPositions.Clear();
+        currentRow = 1;
+        currentColumn = 1;
         isTableFull = false;
-
-        // Reinicia os dados de preenchimento de linhas
         lastColumnInRow.Clear();
 
-        Debug.Log("Tabela resetada e pronta para reutilização.");
+        Debug.Log($"Tabela {tableID} resetada e pronta para reutilização.");
     }
-
 }

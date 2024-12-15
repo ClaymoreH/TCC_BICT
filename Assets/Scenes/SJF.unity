@@ -300,6 +300,7 @@ MonoBehaviour:
   prioridade: 0
   tempoExecucao: 3
   ordemChegada: 7
+  processo: 0
   descricao: 
 --- !u!1 &465832381
 GameObject:
@@ -545,6 +546,7 @@ MonoBehaviour:
   prioridade: 0
   tempoExecucao: 4
   ordemChegada: 0
+  processo: 0
   descricao: 
 --- !u!1 &566146193
 GameObject:
@@ -1213,6 +1215,7 @@ MonoBehaviour:
   prioridade: 0
   tempoExecucao: 1
   ordemChegada: 5
+  processo: 0
   descricao: 
 --- !u!1 &948386050
 GameObject:
@@ -1399,6 +1402,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df3422bf4d900c84099924a57bf11ef0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tableID: 0
   slots: []
   tableGenerator: {fileID: 1089203085}
   parentOriginal: {fileID: 598153729}
@@ -2344,6 +2348,7 @@ MonoBehaviour:
   prioridade: 0
   tempoExecucao: 5
   ordemChegada: 5
+  processo: 0
   descricao: 
 --- !u!1 &1974555330
 GameObject:
@@ -2455,6 +2460,7 @@ MonoBehaviour:
   prioridade: 0
   tempoExecucao: 2
   ordemChegada: 2
+  processo: 0
   descricao: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

@@ -12,26 +12,25 @@ public class CircularDropZone : MonoBehaviour, IDropHandler
     public Color initialColor = Color.gray; // Initial color when the chart is empty
     public float holeRadius = 20f; // The radius of the hole in the center (open space)
 
-    private Color[] originalColors; // To store the original colors of the slices
     public GameObject associatedTable; // Referência à tabela associada
 
     private void Start()
     {
-        // Store the original colors of each slice at the start
-        originalColors = new Color[imagesPieChart.Length];
+        // Set initial color for all slices
         for (int i = 0; i < imagesPieChart.Length; i++)
         {
             if (imagesPieChart[i] != null)
             {
-                originalColors[i] = imagesPieChart[i].color;
                 imagesPieChart[i].color = initialColor; // Set the initial color
             }
         }
     }
+
     public void SetAssociatedTable(GameObject table)
     {
         associatedTable = table;
     }
+
     public void OnDrop(PointerEventData eventData)
     {
         if (eventData.pointerDrag != null && transform.childCount < maxChildren)
@@ -40,6 +39,17 @@ public class CircularDropZone : MonoBehaviour, IDropHandler
 
             if (draggedObject != null)
             {
+                // Verifica se já existe um objeto com o mesmo valor de processo
+                PuzzleObjectData objectData = draggedObject.gameObject.GetComponent<PuzzleObjectData>();
+                if (objectData == null) return;
+
+                // Verifica se já existe um objeto com o mesmo processo na DropZone
+                if (IsProcessAlreadyAssigned(objectData.processo))
+                {
+                    Debug.Log("Objeto com esse processo já foi adicionado à DropZone.");
+                    return; // Impede o drop se o processo já existir
+                }
+
                 // Clona o objeto arrastado e coloca-o na zona
                 GameObject clonedObject = Instantiate(draggedObject.gameObject, transform);
                 clonedObject.transform.SetParent(transform);
@@ -51,12 +61,25 @@ public class CircularDropZone : MonoBehaviour, IDropHandler
                 // Posiciona o clone na zona circular
                 PlaceObject(clonedRectTransform);
 
-                // Atualiza o gráfico de pizza
+                // Atualiza o gráfico de pizza com a cor do objeto
                 UpdatePieChart();
             }
         }
     }
 
+    private bool IsProcessAlreadyAssigned(int processo)
+    {
+        // Verifica se algum dos filhos da DropZone tem o mesmo valor de processo
+        foreach (Transform child in transform)
+        {
+            PuzzleObjectData childData = child.GetComponent<PuzzleObjectData>();
+            if (childData != null && childData.processo == processo)
+            {
+                return true; // Já existe um objeto com esse processo
+            }
+        }
+        return false;
+    }
 
     private void PlaceObject(RectTransform draggedRectTransform)
     {
@@ -95,8 +118,16 @@ public class CircularDropZone : MonoBehaviour, IDropHandler
         {
             if (i < currentChildren)
             {
+                // Obtém o objeto correspondente
+                Transform child = transform.GetChild(i);
+                Image childImage = child.GetComponent<Image>();
+                
+                if (childImage != null)
+                {
+                    imagesPieChart[i].color = childImage.color; // Define a cor com base no objeto
+                }
+
                 imagesPieChart[i].fillAmount = cumulativeFill + sliceSize;
-                imagesPieChart[i].color = originalColors[i]; // Restore the original color
                 cumulativeFill += sliceSize;
 
                 // Enable the image to make it visible

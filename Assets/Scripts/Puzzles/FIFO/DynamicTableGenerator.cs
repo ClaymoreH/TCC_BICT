@@ -10,13 +10,15 @@ public class DynamicTableGenerator : MonoBehaviour
     public int columns = 15;
     public Vector2 cellSize = new Vector2(50, 50);
     public Vector2 spacing = new Vector2(5, 5);
+    private int tableID;  // O ID único da tabela
 
     // Evento para notificar quando a tabela for gerada
     public event Action OnTableGenerated;
 
-    void Start()
+    // Método para setar o tableID
+    public void SetTableID(int id)
     {
-        //GenerateTable(rows, columns);
+        tableID = id;
     }
 
     // Gera a tabela de slots
@@ -50,6 +52,7 @@ public class DynamicTableGenerator : MonoBehaviour
                 SlotIdentifier slotIdentifier = slot.AddComponent<SlotIdentifier>();
                 slotIdentifier.row = i + 1;
                 slotIdentifier.column = j + 1;
+                slotIdentifier.tableID = tableID;  // Atribui o tableID a cada slot
             }
         }
 
@@ -58,11 +61,11 @@ public class DynamicTableGenerator : MonoBehaviour
     }
 }
 
-
 // Script SlotIdentifier
 [System.Serializable]
 public class SlotIdentifier : MonoBehaviour
 {
     public int row;
     public int column;
+    public int tableID;  // ID único para cada tabela
 }

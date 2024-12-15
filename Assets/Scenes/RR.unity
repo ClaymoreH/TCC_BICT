@@ -209,7 +209,6 @@ GameObject:
   - component: {fileID: 57927455}
   - component: {fileID: 57927454}
   - component: {fileID: 57927453}
-  - component: {fileID: 57927452}
   - component: {fileID: 57927451}
   m_Layer: 5
   m_Name: CicloDROPZONE
@@ -259,42 +258,7 @@ MonoBehaviour:
   - {fileID: 1107243577}
   initialColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   holeRadius: 20
-  associatedTable: {fileID: 0}
---- !u!58 &57927452
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 57927449}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.5
+  associatedTable: {fileID: 5072918425171145841, guid: 43a0dcd21c3a3ed4bae074f1f2d884c7, type: 3}
 --- !u!114 &57927453
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -844,7 +808,7 @@ MonoBehaviour:
   circularDropZones:
   - {fileID: 1957930018}
   tables:
-  - {fileID: 0}
+  - {fileID: 1877630413}
   dropZonePrefab: {fileID: 6798759546980063906, guid: fd86dc98b0f093a46887f8a9734843fc, type: 3}
   tablePrefab: {fileID: 5072918425171145841, guid: 43a0dcd21c3a3ed4bae074f1f2d884c7, type: 3}
   parentPanel: {fileID: 533808945}
@@ -3354,6 +3318,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1877630413 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5072918425171145841, guid: 43a0dcd21c3a3ed4bae074f1f2d884c7, type: 3}
+  m_PrefabInstance: {fileID: 1508388163}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1881905883
 GameObject:
   m_ObjectHideFlags: 0
