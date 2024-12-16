@@ -13,6 +13,7 @@ public class CircularDropZone : MonoBehaviour, IDropHandler
     public float holeRadius = 20f; // The radius of the hole in the center (open space)
 
     public GameObject associatedTable; // Referência à tabela associada
+    public int tableID; // ID da tabela associada a este DropZone
 
     private void Start()
     {
@@ -24,6 +25,12 @@ public class CircularDropZone : MonoBehaviour, IDropHandler
                 imagesPieChart[i].color = initialColor; // Set the initial color
             }
         }
+
+    }
+    
+    public void SetTableID(int id)
+    {
+        tableID = id;
     }
 
     public void SetAssociatedTable(GameObject table)

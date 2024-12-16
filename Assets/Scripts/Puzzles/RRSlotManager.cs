@@ -23,10 +23,23 @@ public class RRSlotManager : MonoBehaviour
         tableGenerator.OnTableGenerated += PopulateSlots;
         GenerateTable();
 
+        // Passa o tableID para todas as DropZones
+        SetTableIDForDropZones();
+
         // Assinar o evento OnDrop apenas para esta tabela
         DragAndDrop2D.OnDrop += OnObjectDropped;
     }
 
+    private void SetTableIDForDropZones()
+    {
+        // Encontre todos os CircularDropZones na cena ou dentro de um painel específico
+        CircularDropZone[] dropZones = FindObjectsOfType<CircularDropZone>();
+        
+        foreach (var dropZone in dropZones)
+        {
+            dropZone.SetTableID(tableID);
+        }
+    }
     private void OnDestroy()
     {
         // Cancelar inscrição para evitar referências a objetos destruídos
@@ -49,7 +62,6 @@ public class RRSlotManager : MonoBehaviour
 
     public void OnObjectDropped(GameObject droppedObject)
     {
-        // Verificar se o objeto foi solto em uma DropZone válida e pertencente a esta tabela
         if (objectsAlreadyAdded.Contains(droppedObject)) return;
 
         PuzzleObjectData objectData = droppedObject.GetComponent<PuzzleObjectData>();
@@ -63,29 +75,24 @@ public class RRSlotManager : MonoBehaviour
         List<RaycastResult> raycastResults = new List<RaycastResult>();
         EventSystem.current.RaycastAll(pointerEventData, raycastResults);
 
+        CircularDropZone targetDropZone = null;
         bool isValidDrop = false;
 
         foreach (RaycastResult result in raycastResults)
         {
-            SlotIdentifier slotIdentifier = result.gameObject.GetComponent<SlotIdentifier>();
-            if (slotIdentifier != null && slotIdentifier.tableID == tableID)
+            // Verifica se é um CircularDropZone e pertence à tabela correta
+            CircularDropZone dropZone = result.gameObject.GetComponent<CircularDropZone>();
+            if (dropZone != null && dropZone.tableID == tableID)
             {
-                // Validação: Apenas processar se o slot pertence à tabela correta
+                targetDropZone = dropZone;
                 isValidDrop = true;
-                break;  // Se encontrar um slot válido, sai do loop
-            }
-
-            // Verificar se o objeto foi solto em uma CircularDropZone
-            CircularDropZone circularDropZone = result.gameObject.GetComponent<CircularDropZone>();
-            if (circularDropZone != null)
-            {
-                isValidDrop = true;
-                break;  // Se encontrar a CircularDropZone, sai do loop
+                break;
             }
         }
 
-        if (isValidDrop)
+        if (isValidDrop && targetDropZone != null)
         {
+            Debug.Log($"Objeto solto na tabela {targetDropZone.tableID} associada ao CircularDropZone.");
             int processo = objectData.processo;
             float executionTime = objectData.tempoExecucao;
 
@@ -98,6 +105,7 @@ public class RRSlotManager : MonoBehaviour
             Debug.Log("Objeto não foi solto em uma área válida de drop para esta tabela.");
         }
     }
+
 
     private void AddObjectToProcess(int processo, GameObject droppedObject)
     {

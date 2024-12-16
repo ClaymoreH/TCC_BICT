@@ -10,7 +10,7 @@ public class DynamicTableGenerator : MonoBehaviour
     public int columns = 15;
     public Vector2 cellSize = new Vector2(50, 50);
     public Vector2 spacing = new Vector2(5, 5);
-    private int tableID;  // O ID único da tabela
+    public int tableID;  // O ID único da tabela
 
     // Evento para notificar quando a tabela for gerada
     public event Action OnTableGenerated;
