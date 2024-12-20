@@ -1,5 +1,13 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: 41068b13419c08e4fa212bebc5d8cd73
+=======
+<<<<<<<< HEAD:Assets/DialogueDisplay.cs.meta
+guid: 276faa2de82f68f49b7e88e67549353e
+========
+guid: e7659105992119148898f207c8521720
+>>>>>>>> a50778603681d59cb24cde971fd107d6feb6bad5:Assets/Scripts/NewBehaviourScript.cs.meta
+>>>>>>> a50778603681d59cb24cde971fd107d6feb6bad5
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2

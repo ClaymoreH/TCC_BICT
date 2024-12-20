@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
     public float        _playerRunSpeed;
     private Vector2     _playerDirection;
 
-    // Start is called before the first frame update
+    // Start is called before the first frame 
     void Start()
     {
         _playerRigidbody2D = GetComponent<Rigidbody2D>();

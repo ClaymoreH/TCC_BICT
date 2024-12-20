@@ -6,12 +6,13 @@ using UnityEngine;
 public class PuzzleObjectData : MonoBehaviour
 {
     [Header("Informações do Objeto")]
-    public string objectName; // Nome do objeto
-    public string data;       // Data associada ao objeto
-    public string hora;       // Hora associada ao objeto
-    public int prioridade;    // Prioridade do objeto
-    public float tempoExecucao; // Tempo de execução
-
+    public string objectName; 
+    public string data;       
+    public string hora;       
+    public int prioridade;    
+    public int tempoExecucao; 
+    public int ordemChegada; 
+    public int processo;
     [TextArea]
     public string descricao;  // Descrição adicional do objeto (opcional)
 
