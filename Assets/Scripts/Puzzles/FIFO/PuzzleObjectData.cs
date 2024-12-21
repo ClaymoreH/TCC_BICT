@@ -11,6 +11,8 @@ public class PuzzleObjectData : MonoBehaviour
     public string hora;       
     public int prioridade;    
     public int tempoExecucao; 
+    public int tempoExecucaoTotal; 
+    public int ValorOriginal;
     public int ordemChegada; 
     public int processo;
     [TextArea]

@@ -6,15 +6,20 @@ using UnityEngine.UI;
 public class CircularDropZoneManager : MonoBehaviour
 {
     public TMP_Dropdown dropdownMenu;
-    public List<GameObject> circularDropZones;
-    public List<GameObject> tables; // Lista das tabelas associadas
+    public List<GameObject> circularDropZones;  // A lista já é pública, então você pode acessá-la diretamente
+    public List<GameObject> tables;
     public GameObject dropZonePrefab;
-    public GameObject tablePrefab;  // Prefab da tabela
+    public GameObject tablePrefab;
     public Transform parentPanel;
-    public Transform parentTablePanel; // Painel que conterá as tabelas lado a lado
-
+    public Transform parentTablePanel;
     public Button addButton;
     public Button removeButton;
+
+    // Método de acesso à lista de DropZones
+    public List<GameObject> GetCircularDropZones()
+    {
+        return circularDropZones;
+    }
 
     private void Start()
     {
@@ -23,13 +28,11 @@ public class CircularDropZoneManager : MonoBehaviour
         removeButton.onClick.AddListener(RemoveDropZone);
 
         UpdateDropZoneVisibility(dropdownMenu.value);
-        UpdateRemoveButtonState();
     }
 
     private void OnDropdownValueChanged(int selectedIndex)
     {
         UpdateDropZoneVisibility(selectedIndex);
-        UpdateRemoveButtonState();
     }
 
     private void UpdateDropZoneVisibility(int selectedIndex)
@@ -54,34 +57,28 @@ public class CircularDropZoneManager : MonoBehaviour
         newTable.transform.localScale = Vector3.one;
         tables.Add(newTable);
 
-        PositionTables(); // Organiza as tabelas lado a lado
-
+        PositionTables();
         UpdateDropdownOptions();
         dropdownMenu.value = circularDropZones.Count - 1;
-
-        UpdateRemoveButtonState();
     }
 
     private void RemoveDropZone()
     {
-        if (circularDropZones.Count > 1)
+        int lastIndex = circularDropZones.Count - 1;
+        Destroy(circularDropZones[lastIndex]);
+        Destroy(tables[lastIndex]);
+        circularDropZones.RemoveAt(lastIndex);
+        tables.RemoveAt(lastIndex);
+
+        if (circularDropZones.Count == 0)
         {
-            int lastIndex = circularDropZones.Count - 1;
-
-            Destroy(circularDropZones[lastIndex]);
-            Destroy(tables[lastIndex]); // Remove também a tabela correspondente
-
-            circularDropZones.RemoveAt(lastIndex);
-            tables.RemoveAt(lastIndex);
-
-            PositionTables(); // Atualiza a posição das tabelas
-
-            UpdateDropdownOptions();
-            dropdownMenu.value = circularDropZones.Count - 1;
-
-            UpdateDropZoneVisibility(dropdownMenu.value);
-            UpdateRemoveButtonState();
+            AddDropZone();
         }
+
+        PositionTables();
+        UpdateDropdownOptions();
+        dropdownMenu.value = circularDropZones.Count - 1;
+        UpdateDropZoneVisibility(dropdownMenu.value);
     }
 
     private void UpdateDropdownOptions()
@@ -95,14 +92,9 @@ public class CircularDropZoneManager : MonoBehaviour
         dropdownMenu.AddOptions(options);
     }
 
-    private void UpdateRemoveButtonState()
-    {
-        removeButton.interactable = circularDropZones.Count > 1;
-    }
-
     private void PositionTables()
     {
-        float spacing = 200f; // Espaçamento horizontal entre as tabelas
+        float spacing = 200f;
         for (int i = 0; i < tables.Count; i++)
         {
             RectTransform rectTransform = tables[i].GetComponent<RectTransform>();

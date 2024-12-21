@@ -95,6 +95,7 @@ MonoBehaviour:
   columns: 10
   cellSize: {x: 37, y: 37}
   spacing: {x: 2, y: 2}
+  tableID: 0
 --- !u!114 &8485143848551666993
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -110,3 +111,4 @@ MonoBehaviour:
   slots: []
   tableGenerator: {fileID: 5709905425213310190}
   Quantum: 3
+  tableID: 1
