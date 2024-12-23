@@ -1,0 +1,94 @@
+{
+    "dialogues": [
+        {
+            "id": 0,
+            "type": 0,
+            "status": 0,
+            "lines": [
+                "Um painel metálico parcialmente enterrado no solo, marcas de impacto indicam que foi arrancado durante a queda da nave.",
+                "Ainda emite um brilho fraco, talvez possa extrair peças úteis para os reparos."
+            ]
+        },
+        {
+            "id": 1,
+            "type": 1,
+            "status": 0,
+            "lines": [
+                "À frente, uma antena de comunicação torta e coberta de poeira.",
+                "O módulo de transmissão foi destruído, mas alguns fios podem ser reparados para emitir um sinal fraco de socorro."
+            ]
+        },
+        {
+            "id": 2,
+            "type": 1,
+            "status": 1,
+            "lines": [
+                "Encontrei uma esfera de vidro quebrada, parte do sistema de resfriamento do núcleo da nave.",
+                "Ainda está ativa, mas precisa de um recipiente adequado para reutilização."
+            ]
+        },
+        {
+            "id": 3,
+            "type": 1,
+            "status": 1,
+            "lines": [
+                "Entre os destroços, uma câmera de segurança ainda intacta.",
+                "Se a memória estiver preservada, pode fornecer informações sobre o que causou a falha."
+            ]
+        },
+        {
+            "id": 4,
+            "type": 0,
+            "status": 0,
+            "lines": [
+                "Uma porta de acesso enterrada no solo arenoso.",
+                "O painel de controle está quebrado, mas talvez eu consiga remover componentes úteis."
+            ]
+        },
+        {
+            "id": 5,
+            "type": 1,
+            "status": 1,
+            "lines": [
+                "Encontrei uma chave mecânica antiga entre os destroços.",
+                "Pode ser usada para destrancar portas e acessar novas áreas."
+            ]
+        },
+        {
+            "id": 6,
+            "type": 1,
+            "status": 1,
+            "lines": [
+                "Perto, um gerador portátil caído, danificado.",
+                "Posso tentar reparar suas conexões para usá-lo como fonte de energia de emergência."
+            ]
+        },
+        {
+            "id": 7,
+            "type": 1,
+            "status": 1,
+            "lines": [
+                "Um bloco de memória solto, pode conter registros importantes.",
+                "Vou precisar conectá-lo ao meu sistema para recuperar informações vitais."
+            ]
+        },
+        {
+            "id": 8,
+            "type": 1,
+            "status": 1,
+            "lines": [
+                "Um motor de propulsão parcialmente danificado entre os destroços.",
+                "Se conseguir repará-lo, poderá ajudar a ajustar meu curso e explorar novos locais."
+            ]
+        },
+        {
+            "id": 9,
+            "type": 1,
+            "status": 0,
+            "lines": [
+                "Perto da antena de comunicação, um painel de controle danificado.",
+                "Com as conexões corretas, posso tentar reconfigurar o sistema para enviar sinais de socorro."
+            ]
+        }
+    ]
+}

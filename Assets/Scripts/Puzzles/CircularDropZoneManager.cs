@@ -23,6 +23,10 @@ public class CircularDropZoneManager : MonoBehaviour
 
     private void Start()
     {
+        if (circularDropZones.Count == 0)
+        {
+            AddDropZone();
+        }
         dropdownMenu.onValueChanged.AddListener(OnDropdownValueChanged);
         addButton.onClick.AddListener(AddDropZone);
         removeButton.onClick.AddListener(RemoveDropZone);
@@ -60,7 +64,11 @@ public class CircularDropZoneManager : MonoBehaviour
         PositionTables();
         UpdateDropdownOptions();
         dropdownMenu.value = circularDropZones.Count - 1;
+
+        // Garantir que a nova drop zone seja visível
+        UpdateDropZoneVisibility(dropdownMenu.value);
     }
+
 
     private void RemoveDropZone()
     {
@@ -70,15 +78,11 @@ public class CircularDropZoneManager : MonoBehaviour
         circularDropZones.RemoveAt(lastIndex);
         tables.RemoveAt(lastIndex);
 
-        if (circularDropZones.Count == 0)
-        {
-            AddDropZone();
-        }
-
         PositionTables();
         UpdateDropdownOptions();
         dropdownMenu.value = circularDropZones.Count - 1;
         UpdateDropZoneVisibility(dropdownMenu.value);
+
     }
 
     private void UpdateDropdownOptions()

@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 32140665}
   - component: {fileID: 32140664}
   - component: {fileID: 32140663}
-  - component: {fileID: 32140662}
+  - component: {fileID: 32140666}
   m_Layer: 5
   m_Name: Confrim
   m_TagString: Untagged
@@ -153,8 +153,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 548594622}
+  m_Children: []
   m_Father: {fileID: 566146197}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -162,29 +161,6 @@ RectTransform:
   m_AnchoredPosition: {x: 688, y: -398.81}
   m_SizeDelta: {x: 415, y: 121}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &32140662
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 32140660}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10e58ad474ea6ef449348003701c07a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slots:
-  - {fileID: 182944339}
-  - {fileID: 957343065}
-  confirmButton: {fileID: 32140663}
-  audioSource: {fileID: 948386054}
-  clickSound: {fileID: 8300000, guid: ea8041a89a3b0494b985101acad70cc3, type: 3}
-  successSound: {fileID: 8300000, guid: 2c04bdec8521348488dc327472c7f8b0, type: 3}
-  errorSound: {fileID: 8300000, guid: c790b29dc52dddf458e8d12476dc0112, type: 3}
-  feedbackPanel: {fileID: 548594621}
-  feedbackText: {fileID: 326863830}
-  feedbackDuration: 0.7
 --- !u!114 &32140663
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -267,6 +243,29 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 32140660}
   m_CullTransparentMesh: 1
+--- !u!114 &32140666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 32140660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aabe0df34641ac4c928bd63f6868303, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  confirmButton: {fileID: 32140663}
+  audioSource: {fileID: 948386054}
+  clickSound: {fileID: 8300000, guid: ea8041a89a3b0494b985101acad70cc3, type: 3}
+  successSound: {fileID: 8300000, guid: 2c04bdec8521348488dc327472c7f8b0, type: 3}
+  errorSound: {fileID: 8300000, guid: 279ddac74df37d44fb89a82c6b99f269, type: 3}
+  feedbackPanel: {fileID: 548594621}
+  feedbackText: {fileID: 326863830}
+  feedbackDuration: 1
+  slots:
+  - {fileID: 182944339}
+  - {fileID: 957343065}
 --- !u!1 &77069854
 GameObject:
   m_ObjectHideFlags: 0
@@ -1052,7 +1051,7 @@ GameObject:
   - component: {fileID: 326863831}
   - component: {fileID: 326863830}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: FeedbackText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1440,12 +1439,12 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 326863829}
-  m_Father: {fileID: 32140661}
+  m_Father: {fileID: 566146197}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -665, y: 398.81}
-  m_SizeDelta: {x: 92.46057, y: 109.14807}
+  m_AnchoredPosition: {x: 23, y: 0}
+  m_SizeDelta: {x: -1412.5394, y: -849.8519}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &548594623
 MonoBehaviour:
@@ -1584,6 +1583,7 @@ RectTransform:
   - {fileID: 949056901}
   - {fileID: 1072478451}
   - {fileID: 32140661}
+  - {fileID: 548594622}
   - {fileID: 345363466}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2200,6 +2200,10 @@ MonoBehaviour:
   hora: 23:00
   prioridade: 0
   tempoExecucao: 0
+  tempoExecucaoTotal: 0
+  ValorOriginal: 0
+  ordemChegada: 0
+  processo: 0
   descricao: 
 --- !u!114 &925915533
 MonoBehaviour:
@@ -2400,6 +2404,7 @@ GameObject:
   - component: {fileID: 949056903}
   - component: {fileID: 949056902}
   - component: {fileID: 949056904}
+  - component: {fileID: 949056905}
   m_Layer: 5
   m_Name: Alertas
   m_TagString: Untagged
@@ -2493,6 +2498,27 @@ MonoBehaviour:
   m_Spacing: {x: 0, y: 4}
   m_Constraint: 0
   m_ConstraintCount: 2
+--- !u!114 &949056905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 949056900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1aabe0df34641ac4c928bd63f6868303, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  confirmButton: {fileID: 0}
+  audioSource: {fileID: 0}
+  clickSound: {fileID: 0}
+  successSound: {fileID: 0}
+  errorSound: {fileID: 0}
+  feedbackPanel: {fileID: 0}
+  feedbackText: {fileID: 0}
+  feedbackDuration: 1
+  slots: []
 --- !u!1 &957343064
 GameObject:
   m_ObjectHideFlags: 0
@@ -2742,6 +2768,10 @@ MonoBehaviour:
   hora: 03:00
   prioridade: 0
   tempoExecucao: 0
+  tempoExecucaoTotal: 0
+  ValorOriginal: 0
+  ordemChegada: 0
+  processo: 0
   descricao: 
 --- !u!114 &1008030581
 MonoBehaviour:
@@ -4304,6 +4334,10 @@ MonoBehaviour:
   hora: 05:40
   prioridade: 0
   tempoExecucao: 0
+  tempoExecucaoTotal: 0
+  ValorOriginal: 0
+  ordemChegada: 0
+  processo: 0
   descricao: 
 --- !u!114 &1517046313
 MonoBehaviour:
@@ -4720,6 +4754,10 @@ MonoBehaviour:
   hora: 11:15
   prioridade: 0
   tempoExecucao: 0
+  tempoExecucaoTotal: 0
+  ValorOriginal: 0
+  ordemChegada: 0
+  processo: 0
   descricao: 
 --- !u!114 &1751922724
 MonoBehaviour:
@@ -4855,6 +4893,10 @@ MonoBehaviour:
   hora: 23:00
   prioridade: 0
   tempoExecucao: 0
+  tempoExecucaoTotal: 0
+  ValorOriginal: 0
+  ordemChegada: 0
+  processo: 0
   descricao: 
 --- !u!114 &1986922039
 MonoBehaviour:

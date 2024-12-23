@@ -3,46 +3,47 @@ using UnityEngine;
 [System.Serializable]
 public class DialogueData
 {
-    public int id; // ID do di·logo
-    public string[] lines; // Linhas do di·logo
-    public int type; // Tipo do di·logo (0 = autom·tico, 1 = interativo)
+    public int id; // ID do diÔøΩlogo
+    public string[] lines; // Linhas do diÔøΩlogo
+    public int type; // Tipo do diÔøΩlogo (0 = automÔøΩtico, 1 = interativo)
+    public int status; // Tipo do diÔøΩlogo (0 = automÔøΩtico, 1 = interativo)
 }
 
 [System.Serializable]
 public class DialogueDatabase
 {
-    public DialogueData[] dialogues; // Array de di·logos
+    public DialogueData[] dialogues; // Array de diÔøΩlogos
 }
 
 public class DialogueTrigger : MonoBehaviour
 {
-    public TextAsset dialogueFile; // Arquivo JSON com os di·logos
-    public int dialogueID; // ID do di·logo associado a este trigger
+    public TextAsset dialogueFile; // Arquivo JSON com os di√°logos
+    public int dialogueID; // ID do di√°logo associado a este trigger
 
-    private DialogueUI dialogueUI; // ReferÍncia ao sistema de UI de di·logo
-    private DialogueDatabase dialogueDatabase; // Base de dados de di·logos
-    private DialogueData currentDialogue; // Dados do di·logo atual
-    private bool canShowDialogue = false; // Controle para permitir interaÁıes interativas
-    private bool hasShownAutomaticDialogue = false; // Controle para di·logos autom·ticos serem exibidos uma vez
-    private bool isAutomaticDialogue = false; // Controle para identificar se o di·logo atual È autom·tico
+    private DialogueUI dialogueUI; // Refer√™ncia ao sistema de UI de di√°logo
+    private DialogueDatabase dialogueDatabase; // Base de dados de di√°logos
+    private DialogueData currentDialogue; // Dados do di√°logo atual
+    private bool canShowDialogue = false; // Controle para permitir intera√ß√µes interativas
+    private bool hasShownAutomaticDialogue = false; // Controle para di√°logos autom√°ticos serem exibidos uma vez
+    private bool isAutomaticDialogue = false; // Controle para identificar se o di√°logo atual √© autom√°tico
 
     void Start()
     {
         dialogueUI = FindObjectOfType<DialogueUI>();
 
-        // Carrega o JSON contendo os di·logos
+        // Carrega o JSON contendo os di√°logos
         if (dialogueFile != null)
         {
             dialogueDatabase = JsonUtility.FromJson<DialogueDatabase>(dialogueFile.text);
         }
 
-        // Subscreve o evento de fim de di·logo
+        // Subscreve o evento de fim de di√°logo
         dialogueUI.OnDialogueEnded += OnDialogueEnded;
     }
 
     void OnDestroy()
     {
-        // Remove subscriÁ„o para evitar erros ao destruir objetos
+        // Remove subscri√ß√£o para evitar erros ao destruir objetos
         dialogueUI.OnDialogueEnded -= OnDialogueEnded;
     }
 
@@ -54,19 +55,26 @@ public class DialogueTrigger : MonoBehaviour
             {
                 if (dialogue.id == dialogueID)
                 {
+                    // Verifica o status do di√°logo
+                    if (dialogue.status == 0)
+                    {
+                        // Di√°logo inativo, n√£o pode ser disparado
+                        return;
+                    }
+
                     currentDialogue = dialogue;
 
-                    if (dialogue.type == 0 && !hasShownAutomaticDialogue) // Di·logo autom·tico
+                    if (dialogue.type == 0 && !hasShownAutomaticDialogue && dialogue.status == 1) // Di√°logo autom√°tico ativo
                     {
                         dialogueUI.StartDialogue(dialogue.lines);
-                        hasShownAutomaticDialogue = true; // Marca o di·logo como exibido
-                        isAutomaticDialogue = true; // Marca que o di·logo atual È autom·tico
+                        hasShownAutomaticDialogue = true; // Marca o di√°logo como exibido
+                        isAutomaticDialogue = true; // Marca que o di√°logo atual √© autom√°tico
                     }
-                    else if (dialogue.type == 1) // Di·logo interativo
+                    else if (dialogue.type == 1 && dialogue.status == 1) // Di√°logo interativo ativo
                     {
                         canShowDialogue = true;
                         dialogueUI.ShowPressXMessage(); // Mostra "Pressione X para interagir"
-                        isAutomaticDialogue = false; // Marca que o di·logo atual n„o È autom·tico
+                        isAutomaticDialogue = false; // Marca que o di√°logo atual n√£o √© autom√°tico
                     }
 
                     break;
@@ -80,35 +88,54 @@ public class DialogueTrigger : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             canShowDialogue = false;
-            dialogueUI.HidePressXMessage(); // Esconde "Pressione X" ao sair da ·rea
+            dialogueUI.HidePressXMessage(); // Esconde "Pressione X" ao sair da √°rea
         }
     }
 
     void Update()
     {
-        // Para di·logos interativos, verifica se o jogador apertou X
+        // Recarrega os di√°logos a cada quadro
+        ReloadDialogueData();
+
+        // Para di√°logos interativos, verifica se o jogador apertou X
         if (canShowDialogue && Input.GetKeyDown(KeyCode.X))
         {
             dialogueUI.StartDialogue(currentDialogue.lines);
-            dialogueUI.HidePressXMessage(); // Esconde "Pressione X" ao iniciar o di·logo
-            canShowDialogue = false; // Impede que o jogador interaja novamente enquanto o di·logo est· ativo
+            dialogueUI.HidePressXMessage(); // Esconde "Pressione X" ao iniciar o di√°logo
+            canShowDialogue = false; // Impede que o jogador interaja novamente enquanto o di√°logo est√° ativo
         }
     }
 
+    void ReloadDialogueData()
+    {
+        if (dialogueFile != null)
+        {
+            dialogueDatabase = JsonUtility.FromJson<DialogueDatabase>(dialogueFile.text);
+        }
+
+    }
+
+
     private void OnDialogueEnded()
     {
-        // Apenas para di·logos interativos (type == 1), reabilita a interaÁ„o
+        // Atualiza o status do di√°logo para conclu√≠do (2)
+        if (currentDialogue != null)
+        {
+            currentDialogue.status = 2; // Define como conclu√≠do
+        }
+
+        // Apenas para di√°logos interativos (type == 1), reabilita a intera√ß√£o se necess√°rio
         if (currentDialogue != null && currentDialogue.type == 1)
         {
             canShowDialogue = true; // Permite interagir novamente
             dialogueUI.ShowPressXMessage(); // Mostra "Pressione X" novamente
         }
 
-        // Impede que mensagens de "Pressione X" sejam mostradas apÛs di·logos autom·ticos
+        // Impede que mensagens de "Pressione X" sejam mostradas ap√≥s di√°logos autom√°ticos
         if (isAutomaticDialogue)
         {
-            isAutomaticDialogue = false; // Reseta o controle para futuros di·logos
-            dialogueUI.HidePressXMessage(); // Garante que "Pressione X" n„o apareÁa
+            isAutomaticDialogue = false; // Reseta o controle para futuros di√°logos
+            dialogueUI.HidePressXMessage(); // Garante que "Pressione X" n√£o apare√ßa
         }
     }
 }

@@ -1,19 +1,34 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
-public class timer : MonoBehaviour
+public class Timer : MonoBehaviour
 {
     public int startValue = 360; // Valor inicial do timer
     private int currentValue;    // Valor atual do timer
 
-    public TextMeshProUGUI timerText; // Refer�ncia ao TextMeshPro no Canvas
+    public TextMeshProUGUI timerText; // Referência ao TextMeshPro no Canvas
+    public Animator playerAnimator;  // Referência ao Animator do Player
+    public GameObject gameOverScreen; // Referência à tela de Game Over (Canvas)
 
     void Start()
     {
-        // Certifique-se de que o TextMeshPro est� configurado
+        // Certifique-se de que o TextMeshPro está configurado
         if (timerText == null)
         {
-            Debug.LogError("TimerText n�o est� atribu�do no Inspector!");
+            Debug.LogError("TimerText não está atribuído no Inspector!");
+            return;
+        }
+
+        if (playerAnimator == null)
+        {
+            Debug.LogError("PlayerAnimator não está atribuído no Inspector!");
+            return;
+        }
+
+        if (gameOverScreen == null)
+        {
+            Debug.LogError("GameOverScreen não está atribuído no Inspector!");
             return;
         }
 
@@ -32,6 +47,7 @@ public class timer : MonoBehaviour
         else
         {
             CancelInvoke(nameof(DecrementTimer)); // Para o timer quando atingir 0
+            TriggerGameOver(); // Ativa a lógica de Game Over
         }
     }
 
@@ -39,4 +55,20 @@ public class timer : MonoBehaviour
     {
         timerText.text = currentValue.ToString(); // Atualiza o texto com o valor atual
     }
+
+    void TriggerGameOver()
+    {
+        // Ativa o trigger "dead" no Animator
+        playerAnimator.SetTrigger("Dead");
+
+        // Ativa a tela de Game Over após um pequeno atraso para garantir que a animação seja exibida
+        Invoke(nameof(ShowGameOverScreen), 2f); // Aguarda 2 segundos antes de mostrar a tela de Game Over
+    }
+
+    void ShowGameOverScreen()
+    {
+        gameOverScreen.SetActive(true); // Ativa o Canvas de Game Over
+    }
 }
+
+

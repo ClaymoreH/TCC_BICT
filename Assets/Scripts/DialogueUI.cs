@@ -5,32 +5,32 @@ using System.Collections;
 
 public class DialogueUI : MonoBehaviour
 {
-    public Image dialogueImage; // Imagem de fundo do diálogo
-    public TMP_Text dialogueText; // Texto principal do diálogo
+    public Image dialogueImage; // Imagem de fundo do diï¿½logo
+    public TMP_Text dialogueText; // Texto principal do diï¿½logo
     public Image additionalImage; // Imagem adicional
     public TMP_Text additionalText; // Texto adicional
-    public GameObject dialogueObject; // Objeto contendo a UI do diálogo
+    public GameObject dialogueObject; // Objeto contendo a UI do diï¿½logo
     public TMP_Text continueText; // Texto "Pressione X para continuar" piscando
-    public float typingSpeed = 0.05f; // Velocidade de digitação
+    public float typingSpeed = 0.05f; // Velocidade de digitaï¿½ï¿½o
     public float blinkSpeed = 0.5f; // Velocidade de piscagem do texto "Pressione X"
 
     // Elemento adicional para "Pressione X"
-    public Image pressXImage; // Imagem que servirá de fundo para o texto "Pressione X"
+    public Image pressXImage; // Imagem que servirï¿½ de fundo para o texto "Pressione X"
     public TMP_Text pressXText; // Texto "Pressione X para interagir"
 
-    private string[] lines; // Linhas do diálogo
-    private int currentLineIndex = 0; // Índice da linha atual
-    private bool isTyping = false; // Verifica se está digitando
-    private bool isDialogueActive = false; // Verifica se o diálogo está ativo
-    private Coroutine blinkCoroutine; // Referência para a coroutine de piscagem do texto
+    private string[] lines; // Linhas do diï¿½logo
+    private int currentLineIndex = 0; // ï¿½ndice da linha atual
+    private bool isTyping = false; // Verifica se estï¿½ digitando
+    private bool isDialogueActive = false; // Verifica se o diï¿½logo estï¿½ ativo
+    private Coroutine blinkCoroutine; // Referï¿½ncia para a coroutine de piscagem do texto
 
-    private PlayerController playerController; // Referência ao controlador do jogador
-    private Animator playerAnimator; // Referência ao Animator do jogador
+    private PlayerController playerController; // Referï¿½ncia ao controlador do jogador
+    private Animator playerAnimator; // Referï¿½ncia ao Animator do jogador
 
     [Header("Texto Adicional")]
     [TextArea] public string additionalTextContent = "Texto adicional"; // Texto adicional (exposto no Inspector)
 
-    // Evento para notificar o fim do diálogo
+    // Evento para notificar o fim do diï¿½logo
     public event System.Action OnDialogueEnded;
 
     void Start()
@@ -42,12 +42,12 @@ public class DialogueUI : MonoBehaviour
 
         if (additionalImage != null)
         {
-            additionalImage.enabled = false; // Garante que a nova imagem esteja desativada no início
+            additionalImage.enabled = false; // Garante que a nova imagem esteja desativada no inï¿½cio
         }
 
         if (additionalText != null)
         {
-            additionalText.text = ""; // Garante que o novo texto esteja vazio no início
+            additionalText.text = ""; // Garante que o novo texto esteja vazio no inï¿½cio
         }
 
         if (pressXImage != null)
@@ -108,7 +108,7 @@ public class DialogueUI : MonoBehaviour
     private IEnumerator TypeText(string line)
     {
         isTyping = true;
-        dialogueText.text = ""; // Limpa o texto antes de começar
+        dialogueText.text = ""; // Limpa o texto antes de comeï¿½ar
         foreach (char letter in line.ToCharArray())
         {
             dialogueText.text += letter; // Adiciona letra por letra
@@ -116,7 +116,7 @@ public class DialogueUI : MonoBehaviour
         }
         isTyping = false;
 
-        // Após digitar a linha, ativa o texto de "Pressione X para continuar"
+        // Apï¿½s digitar a linha, ativa o texto de "Pressione X para continuar"
         continueText.gameObject.SetActive(true);
         blinkCoroutine = StartCoroutine(BlinkText());
     }
@@ -190,7 +190,7 @@ public class DialogueUI : MonoBehaviour
 
         isDialogueActive = false;
 
-        // Notifica o fim do diálogo
+        // Notifica o fim do diï¿½logo
         OnDialogueEnded?.Invoke();
     }
 }

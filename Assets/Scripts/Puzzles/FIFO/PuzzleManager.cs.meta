@@ -3,7 +3,14 @@ guid: 10e58ad474ea6ef449348003701c07a8
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - confirmButton: {instanceID: 0}
+  - audioSource: {instanceID: 0}
+  - clickSound: {fileID: 8300000, guid: ea8041a89a3b0494b985101acad70cc3, type: 3}
+  - successSound: {fileID: 8300000, guid: 2c04bdec8521348488dc327472c7f8b0, type: 3}
+  - errorSound: {fileID: 8300000, guid: 279ddac74df37d44fb89a82c6b99f269, type: 3}
+  - feedbackPanel: {instanceID: 0}
+  - feedbackText: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
