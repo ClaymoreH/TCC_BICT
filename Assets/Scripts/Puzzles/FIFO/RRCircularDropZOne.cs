@@ -46,11 +46,18 @@ public class CircularDropZone : MonoBehaviour, IDropHandler
 
             if (draggedObject != null)
             {
-                // Verifica se já existe um objeto com o mesmo valor de processo
+                // Verifica se o objeto tem os dados necessários
                 PuzzleObjectData objectData = draggedObject.gameObject.GetComponent<PuzzleObjectData>();
                 if (objectData == null) return;
 
-                // Verifica se já existe um objeto com o mesmo processo na DropZone
+                // Verifica se o tempoExecucao do objeto é maior que 0
+                if (objectData.tempoExecucao <= 0)
+                {
+                    Debug.Log("O objeto não pode ser adicionado à DropZone pois o tempoExecucao é 0.");
+                    return; // Impede o drop se o tempoExecucao for 0
+                }
+
+                // Verifica se já existe um objeto com o mesmo valor de processo
                 if (IsProcessAlreadyAssigned(objectData.processo))
                 {
                     Debug.Log("Objeto com esse processo já foi adicionado à DropZone.");
@@ -73,6 +80,7 @@ public class CircularDropZone : MonoBehaviour, IDropHandler
             }
         }
     }
+
 
     private bool IsProcessAlreadyAssigned(int processo)
     {

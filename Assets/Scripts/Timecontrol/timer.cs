@@ -4,70 +4,50 @@ using UnityEngine.SceneManagement;
 
 public class Timer : MonoBehaviour
 {
-    public int startValue = 360; // Valor inicial do timer
-    private int currentValue;    // Valor atual do timer
+    public int startValue = 360; 
+    private int currentValue;    
 
-    public TextMeshProUGUI timerText; // Referência ao TextMeshPro no Canvas
-    public Animator playerAnimator;  // Referência ao Animator do Player
-    public GameObject gameOverScreen; // Referência à tela de Game Over (Canvas)
+    public TextMeshProUGUI timerText; 
+    public Animator playerAnimator;  
+    public GameObject gameOverScreen; 
+    public KeyCode toggleKey = KeyCode.P; // Tecla para alternar a visibilidade
 
     void Start()
     {
-        // Certifique-se de que o TextMeshPro está configurado
-        if (timerText == null)
-        {
-            Debug.LogError("TimerText não está atribuído no Inspector!");
-            return;
-        }
-
-        if (playerAnimator == null)
-        {
-            Debug.LogError("PlayerAnimator não está atribuído no Inspector!");
-            return;
-        }
-
-        if (gameOverScreen == null)
-        {
-            Debug.LogError("GameOverScreen não está atribuído no Inspector!");
-            return;
-        }
-
-        currentValue = startValue; // Define o valor inicial
-        UpdateTimerUI(); // Atualiza a interface inicialmente
-        InvokeRepeating(nameof(DecrementTimer), 1f, 1f); // Chama DecrementTimer a cada 1 segundo
+        currentValue = startValue; 
+        UpdateTimerUI(); 
+        InvokeRepeating(nameof(DecrementTimer), 1f, 1f); 
     }
 
     void DecrementTimer()
     {
         if (currentValue > 0)
         {
-            currentValue--; // Decrementa o valor do timer
-            UpdateTimerUI(); // Atualiza a interface
+            currentValue--; 
+            UpdateTimerUI(); 
         }
         else
         {
-            CancelInvoke(nameof(DecrementTimer)); // Para o timer quando atingir 0
-            TriggerGameOver(); // Ativa a lógica de Game Over
+            CancelInvoke(nameof(DecrementTimer)); 
+            TriggerGameOver();
         }
     }
 
     void UpdateTimerUI()
     {
-        timerText.text = currentValue.ToString(); // Atualiza o texto com o valor atual
+        timerText.text = currentValue.ToString(); 
     }
 
     void TriggerGameOver()
     {
-        // Ativa o trigger "dead" no Animator
         playerAnimator.SetTrigger("Dead");
 
-        // Ativa a tela de Game Over após um pequeno atraso para garantir que a animação seja exibida
-        Invoke(nameof(ShowGameOverScreen), 2f); // Aguarda 2 segundos antes de mostrar a tela de Game Over
+        Invoke(nameof(ShowGameOverScreen), 2f);
     }
 
     void ShowGameOverScreen()
     {
-        gameOverScreen.SetActive(true); // Ativa o Canvas de Game Over
+        gameOverScreen.SetActive(true); 
     }
 }
 
