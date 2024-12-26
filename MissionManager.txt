@@ -1,0 +1,32 @@
+using UnityEngine;
+
+public class MissionManager : MonoBehaviour
+{
+    public Mission[] missions; // 1
+    private int currentMissionIndex = 0; // 2
+
+    void Start() // 3
+    {
+        StartMission(); // 4
+    }
+
+    void StartMission() // 5
+    {
+        if (currentMissionIndex < missions.Length) // 6
+        {
+            missions[currentMissionIndex].StartMission(); // 7
+        }
+        else
+        {
+            Debug.Log("Todas as missões foram completadas!"); // 8
+        }
+    }
+
+    public void CompleteMission() // 9
+    {
+        missions[currentMissionIndex].CompleteMission(); // 10
+        currentMissionIndex++; // 11
+        StartMission(); // 12
+    }
+   
+   }
