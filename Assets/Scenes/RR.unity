@@ -3460,6 +3460,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62cb17c1caa41c44abc14b7894235d07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  confirmButton: {fileID: 2067141807}
+  audioSource: {fileID: 948386054}
+  clickSound: {fileID: 8300000, guid: ea8041a89a3b0494b985101acad70cc3, type: 3}
+  successSound: {fileID: 8300000, guid: 2c04bdec8521348488dc327472c7f8b0, type: 3}
+  errorSound: {fileID: 8300000, guid: 279ddac74df37d44fb89a82c6b99f269, type: 3}
+  feedbackPanel: {fileID: 1424279294}
+  feedbackText: {fileID: 1859699263}
+  feedbackDuration: 1
+  panelTransform: {fileID: 453571187}
+  painelProcessos: {fileID: 598153729}
 --- !u!1 &2137775781
 GameObject:
   m_ObjectHideFlags: 0
