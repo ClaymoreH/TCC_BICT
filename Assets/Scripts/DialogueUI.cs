@@ -1,124 +1,156 @@
+
 using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
+using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 public class DialogueUI : MonoBehaviour
 {
-    public Image dialogueImage; // Imagem de fundo do di�logo
-    public TMP_Text dialogueText; // Texto principal do di�logo
-    public Image additionalImage; // Imagem adicional
-    public TMP_Text additionalText; // Texto adicional
-    public GameObject dialogueObject; // Objeto contendo a UI do di�logo
-    public TMP_Text continueText; // Texto "Pressione X para continuar" piscando
-    public float typingSpeed = 0.05f; // Velocidade de digita��o
-    public float blinkSpeed = 0.5f; // Velocidade de piscagem do texto "Pressione X"
+    public Image dialogueImage;
+    public TMP_Text dialogueText;
+    public GameObject dialogueObject;
+    public TMP_Text continueText;
+    public float typingSpeed = 0.05f;
+    public float blinkSpeed = 0.5f;
 
-    // Elemento adicional para "Pressione X"
-    public Image pressXImage; // Imagem que servir� de fundo para o texto "Pressione X"
-    public TMP_Text pressXText; // Texto "Pressione X para interagir"
+    public Image pressXImage;
+    public TMP_Text pressXText;
 
-    private string[] lines; // Linhas do di�logo
-    private int currentLineIndex = 0; // �ndice da linha atual
-    private bool isTyping = false; // Verifica se est� digitando
-    private bool isDialogueActive = false; // Verifica se o di�logo est� ativo
-    private Coroutine blinkCoroutine; // Refer�ncia para a coroutine de piscagem do texto
+    private string[] lines;
+    private int currentLineIndex = 0;
+    private bool isTyping = false;
+    private bool isDialogueActive = false;
+    private Coroutine blinkCoroutine;
 
-    private PlayerController playerController; // Refer�ncia ao controlador do jogador
-    private Animator playerAnimator; // Refer�ncia ao Animator do jogador
+    private PlayerController playerController;
+    private Animator playerAnimator;
 
-    [Header("Texto Adicional")]
-    [TextArea] public string additionalTextContent = "Texto adicional"; // Texto adicional (exposto no Inspector)
-
-    // Evento para notificar o fim do di�logo
     public event System.Action OnDialogueEnded;
+
+    public bool IsDialogueActive => isDialogueActive;
+
+    private readonly Dictionary<char, string> colorMap = new Dictionary<char, string>
+    {
+        { '#', "red" },
+        { '@', "blue" },
+        { '&', "green" }
+    };
 
     void Start()
     {
         dialogueObject.SetActive(false);
-
         playerController = FindObjectOfType<PlayerController>();
-        playerAnimator = playerController != null ? playerController.GetComponent<Animator>() : null;
+        playerAnimator = playerController?.GetComponent<Animator>();
 
-        if (additionalImage != null)
-        {
-            additionalImage.enabled = false; // Garante que a nova imagem esteja desativada no in�cio
-        }
+        SetUIElementState(pressXImage, false);
+        SetUIElementState(pressXText, false);
+    }
 
-        if (additionalText != null)
-        {
-            additionalText.text = ""; // Garante que o novo texto esteja vazio no in�cio
-        }
-
-        if (pressXImage != null)
-        {
-            pressXImage.gameObject.SetActive(false); // Esconde a imagem de fundo de "Pressione X"
-        }
+    private void SetUIElementState(Graphic element, bool state)
+    {
+        if (element != null) element.enabled = state;
     }
 
     public void ShowPressXMessage()
     {
-        if (pressXImage != null)
-        {
-            pressXImage.gameObject.SetActive(true); // Mostra a mensagem "Pressione X"
-        }
+        SetUIElementState(pressXImage, true);
+        SetUIElementState(pressXText, true);
+
+        
     }
+
 
     public void HidePressXMessage()
     {
-        if (pressXImage != null)
+        SetUIElementState(pressXImage, false);
+        SetUIElementState(pressXText, false);
+    }
+
+    public void ShowContinueMessage()
+    {
+        if (continueText != null)
         {
-            pressXImage.gameObject.SetActive(false); // Esconde a mensagem "Pressione X"
+            continueText.gameObject.SetActive(true);
+            if (blinkCoroutine == null)
+                blinkCoroutine = StartCoroutine(BlinkText());
+        }
+    }
+
+    public void HideContinueMessage()
+    {
+        if (continueText != null)
+        {
+            continueText.gameObject.SetActive(false);
+            if (blinkCoroutine != null)
+            {
+                StopCoroutine(blinkCoroutine);
+                blinkCoroutine = null;
+            }
         }
     }
 
     public void StartDialogue(string[] dialogueLines)
     {
-        lines = dialogueLines;
+        ResetDialogueState();
+
+        lines = new string[dialogueLines.Length];
+        for (int i = 0; i < dialogueLines.Length; i++)
+        {
+            lines[i] = ProcessLine(dialogueLines[i]);
+        }
         currentLineIndex = 0;
 
         dialogueObject.SetActive(true);
         dialogueImage.enabled = true;
         dialogueText.text = "";
-        continueText.gameObject.SetActive(false);
+        HidePressXMessage();
 
-        if (additionalImage != null)
-        {
-            additionalImage.enabled = true; // Ativa a nova imagem
-        }
-
-        if (additionalText != null)
-        {
-            additionalText.text = additionalTextContent; // Define o texto adicional, usando o valor do Inspector
-        }
-
-        if (playerController != null)
-        {
-            playerController.enabled = false;
-            if (playerAnimator != null)
-            {
-                playerAnimator.enabled = false;
-            }
-        }
-
+        if (playerController != null) TogglePlayerControl(false);
         isDialogueActive = true;
+
         StartCoroutine(TypeText(lines[currentLineIndex]));
+    }
+
+    private void ResetDialogueState()
+    {
+        HideContinueMessage();
+        dialogueText.text = string.Empty;
+        isTyping = false;
     }
 
     private IEnumerator TypeText(string line)
     {
         isTyping = true;
-        dialogueText.text = ""; // Limpa o texto antes de come�ar
-        foreach (char letter in line.ToCharArray())
+        dialogueText.text = string.Empty;
+
+        int charIndex = 0;
+        while (charIndex < line.Length)
         {
-            dialogueText.text += letter; // Adiciona letra por letra
+            if (line[charIndex] == '<')
+            {
+                int closingIndex = line.IndexOf('>', charIndex);
+                if (closingIndex != -1)
+                {
+                    dialogueText.text += line.Substring(charIndex, closingIndex - charIndex + 1);
+                    charIndex = closingIndex + 1;
+                }
+                else
+                {
+                    dialogueText.text += line[charIndex];
+                    charIndex++;
+                }
+            }
+            else
+            {
+                dialogueText.text += line[charIndex];
+                charIndex++;
+            }
             yield return new WaitForSeconds(typingSpeed);
         }
-        isTyping = false;
 
-        // Ap�s digitar a linha, ativa o texto de "Pressione X para continuar"
-        continueText.gameObject.SetActive(true);
-        blinkCoroutine = StartCoroutine(BlinkText());
+        isTyping = false;
+        ShowContinueMessage();
     }
 
     private IEnumerator BlinkText()
@@ -132,11 +164,11 @@ public class DialogueUI : MonoBehaviour
         }
     }
 
-    private void Update()
+    void Update()
     {
         if (!isDialogueActive) return;
 
-        if (Input.GetKeyDown(KeyCode.X) && !isTyping)
+        if (Input.GetKeyDown(KeyCode.X))
         {
             AdvanceDialogue();
         }
@@ -144,22 +176,27 @@ public class DialogueUI : MonoBehaviour
 
     private void AdvanceDialogue()
     {
-        if (isTyping) return;
-
-        if (blinkCoroutine != null)
+        if (isTyping)
         {
-            StopCoroutine(blinkCoroutine);
-        }
-        continueText.gameObject.SetActive(false);
-
-        currentLineIndex++;
-        if (currentLineIndex < lines.Length)
-        {
-            StartCoroutine(TypeText(lines[currentLineIndex]));
+            StopAllCoroutines();
+            dialogueText.text = lines[currentLineIndex];
+            isTyping = false;
+            ShowContinueMessage();
         }
         else
         {
-            EndDialogue();
+            HideContinueMessage();
+
+            currentLineIndex++;
+
+            if (currentLineIndex < lines.Length)
+            {
+                StartCoroutine(TypeText(lines[currentLineIndex]));
+            }
+            else
+            {
+                EndDialogue();
+            }
         }
     }
 
@@ -167,30 +204,40 @@ public class DialogueUI : MonoBehaviour
     {
         dialogueImage.enabled = false;
         dialogueObject.SetActive(false);
-        dialogueText.text = "";
+        dialogueText.text = string.Empty;
 
-        if (additionalImage != null)
-        {
-            additionalImage.enabled = false; // Desativa a nova imagem
-        }
+        HideContinueMessage();
 
-        if (additionalText != null)
-        {
-            additionalText.text = ""; // Limpa o texto adicional
-        }
+        if (playerController != null) TogglePlayerControl(true);
+        isDialogueActive = false;
+        OnDialogueEnded?.Invoke();
+    }
 
-        if (playerController != null)
+    private void TogglePlayerControl(bool state)
+    {
+        playerController.enabled = state;
+        if (playerAnimator != null) playerAnimator.enabled = state;
+    }
+
+    private string ProcessLine(string line)
+    {
+        string processedLine = "";
+        string[] words = line.Split(' ');
+
+        foreach (string word in words)
         {
-            playerController.enabled = true;
-            if (playerAnimator != null)
+            if (word.Length > 0 && colorMap.ContainsKey(word[0]))
             {
-                playerAnimator.enabled = true;
+                char specialChar = word[0];
+                string color = colorMap[specialChar];
+                processedLine += $"<color={color}>{word.Substring(1)}</color> ";
+            }
+            else
+            {
+                processedLine += word + " ";
             }
         }
 
-        isDialogueActive = false;
-
-        // Notifica o fim do di�logo
-        OnDialogueEnded?.Invoke();
+        return processedLine.Trim();
     }
 }
