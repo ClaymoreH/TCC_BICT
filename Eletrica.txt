@@ -1,0 +1,31 @@
+using UnityEngine;
+
+public class Mission : MonoBehaviour
+{
+    public string Eletrica;
+    public float timeLimit - 30f;
+    private float remainingTime;
+    private bool isCompleted = false;
+
+    void Start()
+    {
+        remainingTime = timeLimit;
+    }
+
+    public void CompleteMission()
+    {
+        isCompleted = true;
+        Debug.Log($"Missão {Eletrica} completa!");
+    }
+
+    public void ReduceTime(float amount)
+    {
+        remainingTime -= amount;
+        if (remainingTime <= 0)
+        {
+            Debug.Log($"Tempo acabou para a missão {Eletrica} segundos!");
+        }
+    }
+
+    public float RemainingTime => remainingTime;
+}
