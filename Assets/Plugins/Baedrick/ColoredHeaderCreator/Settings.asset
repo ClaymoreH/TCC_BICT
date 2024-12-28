@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Settings
   m_EditorClassIdentifier: 
   headerSettings:
-    headerText: DIALOGUE
-    headerColor: {r: 0.19971518, g: 0.5550958, b: 0.8301887, a: 1}
+    headerText: MISSIONS
+    headerColor: {r: 0.83137256, g: 0.3289178, b: 0.19999999, a: 1}
     textAlignmentOptions: 0
     fontStyleOptions: 0
     fontSize: 12
