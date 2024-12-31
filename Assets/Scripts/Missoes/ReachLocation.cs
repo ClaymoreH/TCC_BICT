@@ -15,10 +15,17 @@ public class ReachLocation : MonoBehaviour
                 return;
             }
 
-            questManager.UpdateQuestProgress(locationID, ObjectiveType.ReachLocation);
-            Debug.Log($"Chegou ao local: {locationID}");
-            Destroy(gameObject);
+            // Verificar se o objetivo pode ser completado
+            if (questManager.CanCompleteObjective(locationID, ObjectiveType.ReachLocation))
+            {
+                questManager.UpdateQuestProgress(locationID, ObjectiveType.ReachLocation);
+                Debug.Log($"Chegou ao local: {locationID}");
+                Destroy(gameObject);
+            }
+            else
+            {
+                Debug.Log($"Você não pode completar este objetivo ainda. Verifique os objetivos anteriores.");
+            }
         }
     }
-
 }

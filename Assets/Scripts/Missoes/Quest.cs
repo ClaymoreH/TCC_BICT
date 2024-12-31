@@ -11,17 +11,34 @@ public class Quest : ScriptableObject
 
     public int rewardExperience;
     public Item rewardItem;
+
+    public Quest nextQuest;
 }
+
 
 [System.Serializable]
 public class QuestObjective
 {
+    public string title;
     public string description;
     public ObjectiveType type;
-    public int requiredAmount; 
+    public int requiredAmount;
     public int targetID;
     public bool isCompleted;
+    public int initialRequiredAmount; // Valor inicial para resetar
+    public bool isSequential; // Indica se este objetivo depende do anterior
+
+    public int rewardExperience;
+    public Item rewardItem;
+
+    public QuestObjective nextObjective;
+
+    public void Initialize()
+    {
+        initialRequiredAmount = requiredAmount; // Salva o valor inicial
+    }
 }
+
 
 public enum ObjectiveType
 {
@@ -29,4 +46,5 @@ public enum ObjectiveType
     ReachLocation,
     InteractWithObject,
     DeliverItem,
+    SolvePuzzle,
 }

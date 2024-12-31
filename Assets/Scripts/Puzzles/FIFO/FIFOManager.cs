@@ -7,6 +7,9 @@ public class FifoManager : PuzzleManager
     [Header("Configurações do Puzzle")]
     public List<Transform> slots;
 
+    [Header("Referência ao Puzzle")]
+    public Puzzle puzzle; // Arraste o GameObject que contém o script Puzzle aqui no Inspector
+
     private void Start()
     {
         base.Start();
@@ -71,6 +74,12 @@ public class FifoManager : PuzzleManager
             }
         }
 
+        // Validação bem-sucedida
         ExibirFeedback("Sucesso! A ordem está correta.", successSound);
+
+        if (puzzle != null)
+        {
+            puzzle.CompletePuzzle();
+        }
     }
 }

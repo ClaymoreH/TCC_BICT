@@ -12,13 +12,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e39ed8e3850baa942ae337da3df6a77a, type: 3}
   m_Name: Quest1
   m_EditorClassIdentifier: 
-  questName: Coletar Item 1
-  description: Primiera Missao
+  questName: Recuperando o Passado
+  description: "Ap\xF3s um longo per\xEDodo de inatividade devido \xE0 falha de mem\xF3ria,
+    o rob\xF4 explorador desperta em um estado confuso. Seus sistemas de diagn\xF3stico
+    indicam uma s\xE9rie de alertas cr\xEDticos que se acumularam na fila de eventos.
+    \xC9 preciso processar os alertas em ordem de chegada para entender a cadeia
+    de erros"
   objectives:
-  - description: Chega no corredor
+  - title: Chega no corredor
+    description: "entrar na ala princi\xB4pal abaiixo da sala e controle"
     type: 1
-    requiredAmount: 1
+    requiredAmount: 0
     targetID: 1
-    isCompleted: 0
+    isCompleted: 1
+    initialRequiredAmount: 1
+    isSequential: 0
+    rewardExperience: 0
+    rewardItem: {fileID: 0}
+  - title: Chegar na sala de Energia
+    description: "Siga para baoxp e v[a \xB4\xB4ara a dirieit qunado vir centrais
+      de armazenamento"
+    type: 1
+    requiredAmount: 0
+    targetID: 2
+    isCompleted: 1
+    initialRequiredAmount: 1
+    isSequential: 0
+    rewardExperience: 0
+    rewardItem: {fileID: 11400000, guid: 9f98e421d1b25ec44a3fb136ae4e4374, type: 2}
   rewardExperience: 0
-  rewardItem: {fileID: 11400000, guid: cd5a1f633dc79694db082553c8988fa9, type: 2}
+  rewardItem: {fileID: 0}
+  nextQuest: {fileID: 11400000, guid: ca21856a92454ce43b44610c60ea32ba, type: 2}

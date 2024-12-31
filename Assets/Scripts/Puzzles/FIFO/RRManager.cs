@@ -65,7 +65,7 @@ public class RRManager : PuzzleManager
                     if (slotManager.tableID > maxCycleAppeared + 1)
                     {
                         // Erro de ciclo: O objeto pulou ciclos
-                        Debug.LogError($"Erro de Aparição Irregular: Objeto {obj.name} pulou ciclos. " +
+                        Debug.LogWarning($"Erro de Aparição Irregular: Objeto {obj.name} pulou ciclos. " +
                             $"Apareceu no ciclo {slotManager.tableID}, mas o ciclo {maxCycleAppeared + 1} não foi processado.");
                         
                         // Marcar objeto como com erro de ciclo
@@ -113,7 +113,7 @@ public class RRManager : PuzzleManager
                 if (tempoExecucaoTotal != valorOriginal)
                 {
                     // Erro de tempoExecucaoTotal: Valor incorreto
-                    Debug.LogError($"Inconsistência de tempoExecucaoTotal: Objeto {obj.name} tem tempoExecucaoTotal de {tempoExecucaoTotal} mas ValorOriginal é {valorOriginal}.");
+                    Debug.LogWarning($"Inconsistência de tempoExecucaoTotal: Objeto {obj.name} tem tempoExecucaoTotal de {tempoExecucaoTotal} mas ValorOriginal é {valorOriginal}.");
                     ExibirFeedback($"Erro no processo {objectData.processo}: tempo total incorreto.", errorSound);
                     erroEncontrado = true; // Marcar que ocorreu erro
                     return; // Interrompe a validação após o erro

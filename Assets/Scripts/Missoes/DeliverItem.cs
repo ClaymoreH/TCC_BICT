@@ -2,50 +2,77 @@ using UnityEngine;
 
 public class DeliverItem : MonoBehaviour
 {
-    public int objectID;         // ID do objeto (correspondente ao objetivo)
-    public int requiredItemID;   // ID do item necessário para entregar
-    public int requiredItemAmount; // Quantidade necessária do item
+    public int objectID;             // ID do objeto (correspondente ao objetivo)
+    public int requiredItemID;       // ID do item necessário para entregar
+    public int requiredItemAmount;   // Quantidade necessária do item
+    private bool isPlayerInArea = false; // Flag para verificar se o jogador está na área de entrega
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E)) // Verificar se a tecla "E" é pressionada
+        if (isPlayerInArea && Input.GetKeyDown(KeyCode.E)) // Verificar se o jogador está na área e tecla "E" é pressionada
         {
             TryDeliverItem();
         }
     }
 
-    void TryDeliverItem()
+    private void TryDeliverItem()
     {
+        QuestManager questManager = FindObjectOfType<QuestManager>();
         InventoryManager inventoryManager = FindObjectOfType<InventoryManager>();
-        if (inventoryManager == null)
+
+        if (questManager == null || inventoryManager == null)
         {
-            Debug.LogError("InventoryManager não encontrado na cena!");
+            Debug.LogError("QuestManager ou InventoryManager não encontrado na cena!");
             return;
         }
 
-        Item item = inventoryManager.GetItemByID(requiredItemID);
-
-        if (item != null && item.quantity >= requiredItemAmount)
+        // Verificar se o objetivo de entrega pode ser completado
+        if (questManager.CanCompleteObjective(objectID, ObjectiveType.DeliverItem))
         {
-            item.quantity -= requiredItemAmount;
+            Item item = inventoryManager.GetItemByID(requiredItemID);
 
-            if (item.quantity == 0)
+            if (item != null && item.quantity >= requiredItemAmount)
             {
-                inventoryManager.RemoveItem(item);
-            }
+                // Atualizar quantidade no inventário
+                item.quantity -= requiredItemAmount;
 
-            QuestManager questManager = FindObjectOfType<QuestManager>();
-            if (questManager != null)
+                if (item.quantity == 0)
+                {
+                    inventoryManager.RemoveItem(item);
+                }
+
+                // Atualizar o progresso da missão
+                questManager.UpdateQuestProgress(objectID, ObjectiveType.DeliverItem, requiredItemAmount);
+
+                Debug.Log($"Item '{item.itemName}' entregue. Objetivo concluído!");
+                Destroy(gameObject);
+            }
+            else
             {
-                questManager.UpdateQuestProgress(requiredItemID, ObjectiveType.DeliverItem, requiredItemAmount);
+                Debug.Log($"Não há itens suficientes de '{requiredItemID}' no inventário.");
             }
-
-            Debug.Log($"Item '{item.itemName}' entregue. Objetivo concluído!");
-            Destroy(gameObject);
         }
         else
         {
-            Debug.Log($"Não há itens suficientes de '{requiredItemID}' no inventário.");
+            Debug.Log($"Você não pode entregar o item {requiredItemID} ainda. Complete os objetivos anteriores.");
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player")) // Verificar se o jogador entrou na área
+        {
+            isPlayerInArea = true;
+            Debug.Log("Jogador entrou na área de entrega.");
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player")) // Verificar se o jogador saiu da área
+        {
+            isPlayerInArea = false;
+            Debug.Log("Jogador saiu da área de entrega.");
         }
     }
 }

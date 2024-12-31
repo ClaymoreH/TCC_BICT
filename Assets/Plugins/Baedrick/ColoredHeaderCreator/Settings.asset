@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Settings
   m_EditorClassIdentifier: 
   headerSettings:
-    headerText: MISSIONS
-    headerColor: {r: 0.83137256, g: 0.3289178, b: 0.19999999, a: 1}
+    headerText: QUESTS
+    headerColor: {r: 0.8509804, g: 0.07330448, b: 0, a: 1}
     textAlignmentOptions: 0
     fontStyleOptions: 0
     fontSize: 12

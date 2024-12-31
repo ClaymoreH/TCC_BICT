@@ -17,13 +17,23 @@ public class CollectableObject : MonoBehaviour
                 return;
             }
 
-            // Adicionar o item ao inventário
-            inventoryManager.AddItem(item);
-            Debug.Log($"Item '{item.itemName}' adicionado ao inventário.");
+            // Verificar se o objetivo pode ser completado
+            if (questManager.CanCompleteObjective(item.itemID, ObjectiveType.CollectItem))
+            {
+                // Adicionar o item ao inventário
+                inventoryManager.AddItem(item);
+                Debug.Log($"Item '{item.itemName}' adicionado ao inventário.");
 
-            questManager.UpdateQuestProgress(item.itemID, ObjectiveType.CollectItem, item.quantity);
+                // Atualizar o progresso da missão
+                questManager.UpdateQuestProgress(item.itemID, ObjectiveType.CollectItem, item.quantity);
 
-            Destroy(gameObject);
+                // Destruir o objeto coletável
+                Destroy(gameObject);
+            }
+            else
+            {
+                Debug.Log($"Não é possível coletar '{item.itemName}' ainda. Complete os objetivos anteriores.");
+            }
         }
     }
 }

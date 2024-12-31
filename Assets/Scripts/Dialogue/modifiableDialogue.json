@@ -11,7 +11,7 @@
         },
         {
             "id": 1,
-            "status":1,
+            "status": 1,
             "next_status": 0,
             "lines": [
                 "À frente, uma antena de @comunicação torta e coberta de #poeira.",
@@ -92,4 +92,3 @@
         }
     ]
 }
-
