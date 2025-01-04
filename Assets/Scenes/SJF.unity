@@ -539,6 +539,7 @@ MonoBehaviour:
   ValorOriginal: 0
   ordemChegada: 8
   processo: 0
+  dropzoneID: 0
   descricao: 
 --- !u!114 &127361347
 MonoBehaviour:
@@ -845,6 +846,7 @@ MonoBehaviour:
   ValorOriginal: 0
   ordemChegada: 0
   processo: 0
+  dropzoneID: 0
   descricao: 
 --- !u!114 &438706139
 MonoBehaviour:
@@ -1964,6 +1966,7 @@ MonoBehaviour:
   ValorOriginal: 0
   ordemChegada: 4
   processo: 0
+  dropzoneID: 0
   descricao: 
 --- !u!114 &646191929
 MonoBehaviour:
@@ -2270,6 +2273,7 @@ MonoBehaviour:
   ValorOriginal: 0
   ordemChegada: 12
   processo: 0
+  dropzoneID: 0
   descricao: 
 --- !u!114 &788841002
 MonoBehaviour:
@@ -2705,6 +2709,7 @@ MonoBehaviour:
   ValorOriginal: 0
   ordemChegada: 12
   processo: 0
+  dropzoneID: 0
   descricao: 
 --- !u!114 &903093738
 MonoBehaviour:
@@ -3058,9 +3063,14 @@ MonoBehaviour:
   closeSound: {fileID: 8300000, guid: 0e01248f19942644cbde256d221c25e5, type: 3}
   audioSource: {fileID: 948386054}
   images:
-  - {fileID: 21300000, guid: 250f0ba4f1fbdd94eb3b0d33d06cc4b4, type: 3}
-  - {fileID: 21300000, guid: 7383c549a58ae6e45ae9137b42706e8e, type: 3}
-  - {fileID: 21300000, guid: 49fad2b9653db994181a947e079bf0da, type: 3}
+  - {fileID: 21300000, guid: 2174a57d9c08f02418a1cf0f3635911a, type: 3}
+  - {fileID: 21300000, guid: 8c2e3dca3c46cc8409b6c7f66ca07613, type: 3}
+  - {fileID: 21300000, guid: f6c88b19a4d8b094f8037dc52de32371, type: 3}
+  - {fileID: 21300000, guid: 7ad238b461f8e4749bb65233b18ec8de, type: 3}
+  - {fileID: 21300000, guid: 9251af5e8946d6d4fb3914184b8dac9f, type: 3}
+  - {fileID: 21300000, guid: ec41268220badd840bca1ff7a8fb7508, type: 3}
+  - {fileID: 21300000, guid: d38d6fc05f746ef439141265072708f1, type: 3}
+  - {fileID: 21300000, guid: 9399363063211184397287e10aed012c, type: 3}
 --- !u!224 &1076538631
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4048,6 +4058,7 @@ MonoBehaviour:
   ValorOriginal: 0
   ordemChegada: 8
   processo: 0
+  dropzoneID: 0
   descricao: 
 --- !u!114 &1408945856
 MonoBehaviour:
@@ -4935,6 +4946,7 @@ MonoBehaviour:
   ValorOriginal: 0
   ordemChegada: 0
   processo: 0
+  dropzoneID: 0
   descricao: 
 --- !u!114 &1760533303
 MonoBehaviour:
@@ -5274,6 +5286,7 @@ MonoBehaviour:
   ValorOriginal: 0
   ordemChegada: 4
   processo: 0
+  dropzoneID: 0
   descricao: 
 --- !u!114 &1835345857
 MonoBehaviour:
@@ -5401,6 +5414,7 @@ MonoBehaviour:
   ValorOriginal: 0
   ordemChegada: 2
   processo: 0
+  dropzoneID: 0
   descricao: 
 --- !u!114 &1859958682
 MonoBehaviour:
@@ -6064,6 +6078,7 @@ MonoBehaviour:
   ValorOriginal: 0
   ordemChegada: 2
   processo: 0
+  dropzoneID: 0
   descricao: 
 --- !u!114 &2013701878
 MonoBehaviour:

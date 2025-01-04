@@ -5457,9 +5457,8 @@ MonoBehaviour:
   closeSound: {fileID: 8300000, guid: 0e01248f19942644cbde256d221c25e5, type: 3}
   audioSource: {fileID: 948386054}
   images:
-  - {fileID: 21300000, guid: 250f0ba4f1fbdd94eb3b0d33d06cc4b4, type: 3}
-  - {fileID: 21300000, guid: 7383c549a58ae6e45ae9137b42706e8e, type: 3}
-  - {fileID: 21300000, guid: 49fad2b9653db994181a947e079bf0da, type: 3}
+  - {fileID: 21300000, guid: bfbb5d74572b6da4185a0423bf5f5e11, type: 3}
+  - {fileID: 21300000, guid: 9bcdb0d788b6c6c409aba4e205e3141a, type: 3}
 --- !u!224 &2045081138
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5560,7 +5559,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.5130369, g: 1, b: 0.1745283, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5602,7 +5601,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 711, y: 250}
+  m_AnchoredPosition: {x: 712.6, y: 239}
   m_SizeDelta: {x: 341.8393, y: 99.6688}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2067141811

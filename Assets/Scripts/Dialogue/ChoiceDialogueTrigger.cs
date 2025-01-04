@@ -12,12 +12,12 @@ public class ChoiceDialogueDatabase
 [System.Serializable]
 public class ChoiceDialogueData
 {
-    public int id;          // ID do diálogo
-    public int status;      // Status do diálogo
-    public int next_status; // Próximo status do diálogo
-    public string[] lines;  // Linhas do diálogo
-    public string[] choices; // Opções de escolha
-    public int[] nextDialogues; // Índices dos diálogos seguintes para cada escolha
+    public int id;          // ID do diï¿½logo
+    public int status;      // Status do diï¿½logo
+    public int next_status; // Prï¿½ximo status do diï¿½logo
+    public string[] lines;  // Linhas do diï¿½logo
+    public string[] choices; // Opï¿½ï¿½es de escolha
+    public int[] nextDialogues; // ï¿½ndices dos diï¿½logos seguintes para cada escolha
 }
 
 public class ChoiceDialogueTrigger : MonoBehaviour
@@ -33,13 +33,13 @@ public class ChoiceDialogueTrigger : MonoBehaviour
 
     void Start()
     {
-        InitializeDialogue(); // Chama o método para iniciar o carregamento do diálogo
+        InitializeDialogue(); // Chama o mï¿½todo para iniciar o carregamento do diï¿½logo
     }
 
     private void InitializeDialogue()
     {
-        LoadDialogueData();  // Chama o método para carregar o arquivo JSON
-        DisplayDialogue(currentDialogueIndex);  // Exibe o diálogo inicial
+        LoadDialogueData();  // Chama o mï¿½todo para carregar o arquivo JSON
+        DisplayDialogue(currentDialogueIndex);  // Exibe o diï¿½logo inicial
     }
 
     private void LoadDialogueData()
@@ -52,24 +52,24 @@ public class ChoiceDialogueTrigger : MonoBehaviour
         {
             Debug.Log("Arquivo JSON encontrado.");
             string jsonContent = File.ReadAllText(filePath);
-            Debug.Log("Conteúdo do JSON: " + jsonContent);  // Verifique se o conteúdo foi lido corretamente
+            Debug.Log("Conteï¿½do do JSON: " + jsonContent);  // Verifique se o conteï¿½do foi lido corretamente
 
             // Deserializa o JSON para o formato de ChoiceDialogueDatabase
             ChoiceDialogueDatabase container = JsonUtility.FromJson<ChoiceDialogueDatabase>(jsonContent);
 
             if (container != null && container.dialogues != null && container.dialogues.Length > 0)
             {
-                dialogues = container.dialogues; // Carrega os diálogos do JSON
-                Debug.Log("Diálogos carregados com sucesso.");
+                dialogues = container.dialogues; // Carrega os diï¿½logos do JSON
+                Debug.Log("Diï¿½logos carregados com sucesso.");
             }
             else
             {
-                Debug.LogError("O arquivo JSON foi lido, mas não contém diálogos válidos.");
+                Debug.LogError("O arquivo JSON foi lido, mas nï¿½o contï¿½m diï¿½logos vï¿½lidos.");
             }
         }
         else
         {
-            Debug.LogError($"Arquivo JSON não encontrado em {filePath}. Verifique o caminho e o nome do arquivo.");
+            Debug.LogError($"Arquivo JSON nï¿½o encontrado em {filePath}. Verifique o caminho e o nome do arquivo.");
         }
     }
 
@@ -77,13 +77,13 @@ public class ChoiceDialogueTrigger : MonoBehaviour
     {
         if (dialogues == null || dialogues.Length == 0)
         {
-            Debug.LogError("Nenhum diálogo encontrado no banco de dados.");
+            Debug.LogError("Nenhum diï¿½logo encontrado no banco de dados.");
             return;
         }
 
         if (dialogueIndex < 0 || dialogueIndex >= dialogues.Length)
         {
-            Debug.LogError("Índice de diálogo inválido.");
+            Debug.LogError("ï¿½ndice de diï¿½logo invï¿½lido.");
             return;
         }
 
@@ -91,40 +91,40 @@ public class ChoiceDialogueTrigger : MonoBehaviour
         
         if (dialogue == null)
         {
-            Debug.LogError("Diálogo não encontrado.");
+            Debug.LogError("Diï¿½logo nï¿½o encontrado.");
             return;
         }
 
-        // Verifique se questionText não é nulo
+        // Verifique se questionText nï¿½o ï¿½ nulo
         if (questionText == null)
         {
-            Debug.LogError("questionText não está atribuído.");
+            Debug.LogError("questionText nï¿½o estï¿½ atribuï¿½do.");
             return;
         }
 
         if (dialogue.lines != null)
         {
-            questionText.text = string.Join("\n", dialogue.lines); // Exibe todas as linhas do diálogo
+            questionText.text = string.Join("\n", dialogue.lines); // Exibe todas as linhas do diï¿½logo
         }
         else
         {
-            Debug.LogError("As linhas do diálogo são nulas.");
+            Debug.LogError("As linhas do diï¿½logo sï¿½o nulas.");
         }
 
-        // Verifique se os botões estão atribuídos
+        // Verifique se os botï¿½es estï¿½o atribuï¿½dos
         if (choiceButtons == null || choiceButtons.Length == 0)
         {
-            Debug.LogError("Nenhum botão de escolha foi atribuído.");
+            Debug.LogError("Nenhum botï¿½o de escolha foi atribuï¿½do.");
             return;
         }
 
-        // Preenche os botões de escolha com base nas opções do diálogo
+        // Preenche os botï¿½es de escolha com base nas opï¿½ï¿½es do diï¿½logo
         for (int i = 0; i < choiceButtons.Length; i++)
         {
-            // Verificar se o botão não está nulo
+            // Verificar se o botï¿½o nï¿½o estï¿½ nulo
             if (choiceButtons[i] == null)
             {
-                Debug.LogError($"Botão de escolha {i} está nulo.");
+                Debug.LogError($"Botï¿½o de escolha {i} estï¿½ nulo.");
                 continue;
             }
 
@@ -133,26 +133,26 @@ public class ChoiceDialogueTrigger : MonoBehaviour
                 TMP_Text buttonText = choiceButtons[i].GetComponentInChildren<TMP_Text>();
                 if (buttonText == null)
                 {
-                    Debug.LogError($"Botão de escolha {i} não contém o componente TMP_Text.");
+                    Debug.LogError($"Botï¿½o de escolha {i} nï¿½o contï¿½m o componente TMP_Text.");
                     continue;
                 }
 
-                buttonText.text = dialogue.choices[i]; // Define o texto do botão para cada escolha
-                int choiceIndex = i; // Captura o índice atual
+                buttonText.text = dialogue.choices[i]; // Define o texto do botï¿½o para cada escolha
+                int choiceIndex = i; // Captura o ï¿½ndice atual
                 choiceButtons[i].onClick.RemoveAllListeners();
-                choiceButtons[i].onClick.AddListener(() => OnChoiceMade(choiceIndex)); // Define o comportamento ao clicar no botão
-                choiceButtons[i].gameObject.SetActive(true); // Torna o botão visível
+                choiceButtons[i].onClick.AddListener(() => OnChoiceMade(choiceIndex)); // Define o comportamento ao clicar no botï¿½o
+                choiceButtons[i].gameObject.SetActive(true); // Torna o botï¿½o visï¿½vel
             }
             else
             {
-                choiceButtons[i].gameObject.SetActive(false); // Torna o botão invisível se não houver mais opções
+                choiceButtons[i].gameObject.SetActive(false); // Torna o botï¿½o invisï¿½vel se nï¿½o houver mais opï¿½ï¿½es
             }
         }
     }
 
     private void OnChoiceMade(int choiceIndex)
     {
-        // Lógica para lidar com a escolha do jogador
+        // Lï¿½gica para lidar com a escolha do jogador
         if (choiceIndex < dialogues[currentDialogueIndex].nextDialogues.Length)
         {
             currentDialogueIndex = dialogues[currentDialogueIndex].nextDialogues[choiceIndex];
@@ -160,7 +160,7 @@ public class ChoiceDialogueTrigger : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Índice de escolha inválido.");
+            Debug.LogError("ï¿½ndice de escolha invï¿½lido.");
         }
     }
 }
