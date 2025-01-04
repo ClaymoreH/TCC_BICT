@@ -8,7 +8,7 @@ public class FifoManager : PuzzleManager
     public List<Transform> slots;
 
     [Header("Referência ao Puzzle")]
-    public Puzzle puzzle; // Arraste o GameObject que contém o script Puzzle aqui no Inspector
+    public Puzzle puzzle;
 
     private void Start()
     {
@@ -17,10 +17,10 @@ public class FifoManager : PuzzleManager
 
     public override void ValidarPuzzle()
     {
-        StartCoroutine(PlayValidationSounds());
+        StartCoroutine(ValidateFIFO());
     }
 
-    private IEnumerator PlayValidationSounds()
+    private IEnumerator ValidateFIFO()
     {
         if (audioSource != null && clickSound != null)
         {
@@ -53,7 +53,6 @@ public class FifoManager : PuzzleManager
             }
         }
 
-        // Validação FIFO
         for (int i = 0; i < objectsInSlots.Count - 1; i++)
         {
             try
@@ -74,7 +73,6 @@ public class FifoManager : PuzzleManager
             }
         }
 
-        // Validação bem-sucedida
         ExibirFeedback("Sucesso! A ordem está correta.", successSound);
 
         if (puzzle != null)

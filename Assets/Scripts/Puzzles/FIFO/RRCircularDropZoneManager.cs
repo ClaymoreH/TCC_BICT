@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro; // Necessário para usar o TMP_Dropdown
+using TMPro; 
 using UnityEngine.UI;
 
 public class CircularDropZoneManager : MonoBehaviour
 {
     public TMP_Dropdown dropdownMenu;
-    public List<GameObject> circularDropZones;  // A lista já é pública, então você pode acessá-la diretamente
+    public List<GameObject> circularDropZones; 
     public List<GameObject> tables;
     public GameObject dropZonePrefab;
     public GameObject tablePrefab;
@@ -15,7 +15,6 @@ public class CircularDropZoneManager : MonoBehaviour
     public Button addButton;
     public Button removeButton;
 
-    // Método de acesso à lista de DropZones
     public List<GameObject> GetCircularDropZones()
     {
         return circularDropZones;
@@ -23,13 +22,16 @@ public class CircularDropZoneManager : MonoBehaviour
 
     private void Start()
     {
+        // Encontra automaticamente o RRSlotManager na cena
+        RRSlotManager rrSlotManager = FindObjectOfType<RRSlotManager>();
+
         if (circularDropZones.Count == 0)
         {
             AddDropZone();
         }
         dropdownMenu.onValueChanged.AddListener(OnDropdownValueChanged);
         addButton.onClick.AddListener(AddDropZone);
-        removeButton.onClick.AddListener(RemoveDropZone);
+        removeButton.onClick.AddListener(() => RemoveDropZone(rrSlotManager));
 
         UpdateDropZoneVisibility(dropdownMenu.value);
     }
@@ -53,15 +55,31 @@ public class CircularDropZoneManager : MonoBehaviour
         GameObject newDropZone = Instantiate(dropZonePrefab, parentPanel);
         newDropZone.transform.localPosition = Vector3.zero;
         newDropZone.transform.localScale = Vector3.one;
+
+        // Busca o componente CircularDropZone no objeto filho "Ciclo"
+        Transform ciclo = newDropZone.transform.Find("Ciclo");
+        if (ciclo != null)
+        {
+            CircularDropZone dropZoneScript = ciclo.GetComponent<CircularDropZone>();
+            if (dropZoneScript != null)
+            {
+                dropZoneScript.dropzoneID = circularDropZones.Count;  // Atribuindo o dropzoneID
+                Debug.Log("DropZone ID atribuído: " + dropZoneScript.dropzoneID);
+            }
+            else
+            {
+                Debug.LogError("CircularDropZone não encontrado no objeto 'Ciclo'!");
+            }
+        }
+        else
+        {
+            Debug.LogError("Objeto 'Ciclo' não encontrado no novo GameObject!");
+        }
+
+        // Adiciona a DropZone e a Tabela às listas
         circularDropZones.Add(newDropZone);
 
-        // Instancia a Tabela correspondente
-        GameObject newTable = Instantiate(tablePrefab, parentTablePanel);
-        newTable.transform.localPosition = Vector3.zero;
-        newTable.transform.localScale = Vector3.one;
-        tables.Add(newTable);
-
-        PositionTables();
+        // Atualiza a posição das tabelas e o dropdown
         UpdateDropdownOptions();
         dropdownMenu.value = circularDropZones.Count - 1;
 
@@ -69,21 +87,34 @@ public class CircularDropZoneManager : MonoBehaviour
         UpdateDropZoneVisibility(dropdownMenu.value);
     }
 
-
-    private void RemoveDropZone()
+ 
+    private void RemoveDropZone(RRSlotManager rrSlotManager)
     {
         int lastIndex = circularDropZones.Count - 1;
-        Destroy(circularDropZones[lastIndex]);
-        Destroy(tables[lastIndex]);
-        circularDropZones.RemoveAt(lastIndex);
-        tables.RemoveAt(lastIndex);
+        
+        // Chama o método ClearTable em vez de destruir a tabela diretamente
+        int dropzoneIDToClear = circularDropZones[lastIndex].GetComponentInChildren<CircularDropZone>().dropzoneID;
+        if (rrSlotManager != null)
+        {
+            rrSlotManager.ClearTable(dropzoneIDToClear);  // Chama ClearTable para limpar a tabela
+        }
+        else
+        {
+            Debug.LogError("RRSlotManager não encontrado!");
+        }
 
-        PositionTables();
+        // Agora remove apenas a DropZone (sem destruir a tabela)
+        Destroy(circularDropZones[lastIndex]);
+
+        // Remove a DropZone da lista
+        circularDropZones.RemoveAt(lastIndex);
+        
+        // Atualiza a posição das tabelas e o dropdown
         UpdateDropdownOptions();
         dropdownMenu.value = circularDropZones.Count - 1;
         UpdateDropZoneVisibility(dropdownMenu.value);
-
     }
+
 
     private void UpdateDropdownOptions()
     {
@@ -94,18 +125,5 @@ public class CircularDropZoneManager : MonoBehaviour
             options.Add("CIRCLE " + (i + 1));
         }
         dropdownMenu.AddOptions(options);
-    }
-
-    private void PositionTables()
-    {
-        float spacing = 200f;
-        for (int i = 0; i < tables.Count; i++)
-        {
-            RectTransform rectTransform = tables[i].GetComponent<RectTransform>();
-            if (rectTransform != null)
-            {
-                rectTransform.anchoredPosition = new Vector2(i * spacing, 0);
-            }
-        }
     }
 }

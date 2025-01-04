@@ -8,29 +8,26 @@ public class RRSlotManager : MonoBehaviour
 {
     public List<GameObject> slots = new List<GameObject>();
     public DynamicTableGenerator tableGenerator;
-    public int Quantum = 3; // Determina quantas colunas cada processo ocupa
+    public int Quantum = 3;
     private Dictionary<int, List<GameObject>> processObjects = new Dictionary<int, List<GameObject>>();
     private HashSet<GameObject> objectsAlreadyAdded = new HashSet<GameObject>();
     private int lastUsedColumn = 1;
-    public int tableID;  // ID único para identificar a tabela
+    public int tableID;
     public Dictionary<GameObject, int> quantumSubtracted = new Dictionary<GameObject, int>();
-    private static int nextTableID = 1;
+    private static int nextTableID = 0;
     private static List<int> deletedTableIDs = new List<int>();
+    public Dictionary<GameObject, Dictionary<int, int>> quantumSubtractedByDropZone = new Dictionary<GameObject, Dictionary<int, int>>();
 
-    // Método para obter o próximo ID disponível
     private static int GetNextTableID()
     {
-        // Verifica se há IDs excluídos que podem ser reutilizados
         if (deletedTableIDs.Count > 0)
         {
-            // Reutiliza o menor ID disponível
             int availableID = deletedTableIDs.Min();
-            deletedTableIDs.Remove(availableID); // Remove o ID da lista de IDs excluídos
+            deletedTableIDs.Remove(availableID); 
             return availableID;
         }
         else
         {
-            // Se não houver IDs excluídos, usa o próximo ID sequencial
             return nextTableID++;
         }
     }
@@ -39,18 +36,14 @@ public class RRSlotManager : MonoBehaviour
     void Start()
     {
 
-        // Gerar um ID sequencial para a tabela
-        tableID = GetNextTableID(); // Usa o novo método para obter o ID
+        tableID = GetNextTableID(); 
         tableGenerator.SetTableID(tableID);
 
-        // Assinar eventos locais
         tableGenerator.OnTableGenerated += PopulateSlots;
         GenerateTable();
 
-        // Passa o tableID para todas as DropZones
         SetTableIDForDropZones();
 
-        // Assinar o evento OnDrop apenas para esta tabela
         DragAndDrop2D.OnDrop += OnObjectDropped;
         
     }
@@ -58,7 +51,6 @@ public class RRSlotManager : MonoBehaviour
 
     private void SetTableIDForDropZones()
     {
-        // Encontre todos os CircularDropZones na cena ou dentro de um painel específico
         CircularDropZone[] dropZones = FindObjectsOfType<CircularDropZone>();
         
         foreach (var dropZone in dropZones)
@@ -66,15 +58,11 @@ public class RRSlotManager : MonoBehaviour
             dropZone.SetTableID(tableID);
         }
     }
+
     private void OnDestroy()
     {
-        // Adiciona o ID da tabela excluída na lista
         deletedTableIDs.Add(tableID);
-        // Cancelar inscrição para evitar referências a objetos destruídos
         DragAndDrop2D.OnDrop -= OnObjectDropped;
-        RestoreQuantum();
-        
-
     }
 
     private void GenerateTable()
@@ -91,9 +79,122 @@ public class RRSlotManager : MonoBehaviour
         }
     }
 
+    private void UpdateLastUsedColumn()
+    {
+        int lastColumnFound = 0;
+
+        foreach (GameObject slot in slots)
+        {
+            SlotIdentifier slotIdentifier = slot.GetComponent<SlotIdentifier>();
+            
+            if (slotIdentifier != null && slot.transform.childCount > 0)
+            {
+                // Atualiza a última coluna encontrada se for maior que o valor atual
+                lastColumnFound = Mathf.Max(lastColumnFound, slotIdentifier.column);
+            }
+        }
+
+        // Define a última coluna como a próxima após a maior ocupada, ou 1 se nenhuma estiver ocupada
+        lastUsedColumn = lastColumnFound + 1;
+    }
+
+    public void ClearTable(int dropzoneIDToClear)
+    {
+        // Cria uma lista temporária com as chaves do dicionário
+        List<GameObject> objectsToRestore = new List<GameObject>(quantumSubtractedByDropZone.Keys);
+
+        // Restaura valores de todos os objetos que estavam associados a esta DropZone
+        foreach (var obj in objectsToRestore)
+        {
+            RestoreObjectValues(obj, dropzoneIDToClear);
+        }
+
+        // Limpa os objetos da DropZone específica
+        foreach (GameObject slot in slots)
+        {
+            bool slotHasObjectsToClear = false;
+
+            foreach (Transform child in slot.transform)
+            {
+                PuzzleObjectData objectData = child.gameObject.GetComponent<PuzzleObjectData>();
+                if (objectData != null && objectData.dropzoneID == dropzoneIDToClear)
+                {
+                    slotHasObjectsToClear = true;
+
+                    child.SetParent(null);
+                    child.gameObject.SetActive(false);
+                }
+            }
+            if (slotHasObjectsToClear)
+            {
+                Image slotImage = slot.GetComponent<Image>();
+                if (slotImage != null)
+                {
+                    slotImage.color = new Color32(0xC3, 0xC3, 0xC3, 0xFF);
+                }
+            }
+        }
+
+        UpdateLastUsedColumn();
+        Debug.Log($"DropZone {dropzoneIDToClear} limpa e valores restaurados.");
+    }
+
+    public void RestoreObjectValues(GameObject obj, int dropzoneID)
+    {
+        if (quantumSubtractedByDropZone.TryGetValue(obj, out Dictionary<int, int> dropzoneQuantums))
+        {
+            if (dropzoneQuantums.ContainsKey(dropzoneID))
+            {
+                int quantumToRestore = dropzoneQuantums[dropzoneID];
+                
+                // Restaura o valor para o objeto
+                PuzzleObjectData objectData = obj.GetComponent<PuzzleObjectData>();
+                if (objectData != null)
+                {
+                    objectData.tempoExecucao += quantumToRestore;
+                    objectData.tempoExecucaoTotal -= quantumToRestore;
+
+                    Debug.Log($"Quantum {quantumToRestore} restaurado para o objeto {objectData.name} na DropZone {dropzoneID}.");
+                }
+
+                // Remove apenas o quantum da DropZone específica, não excluindo tudo ainda
+                dropzoneQuantums[dropzoneID] = 0; // Marque como restaurado para essa DropZone
+
+                // Se todas as subtrações da DropZone foram restauradas, remove o objeto completamente do dicionário
+                if (dropzoneQuantums.Values.All(v => v == 0))
+                {
+                    quantumSubtractedByDropZone.Remove(obj);
+                    Debug.Log($"Todas as subtrações restauradas para o objeto {obj.name}. Removido do dicionário.");
+                }
+            }
+        }
+    }
+    public void SubtractObjectValue(GameObject obj, int quantum, int dropzoneID)
+    {
+        if (!quantumSubtractedByDropZone.ContainsKey(obj))
+        {
+            quantumSubtractedByDropZone[obj] = new Dictionary<int, int>();
+        }
+
+        if (!quantumSubtractedByDropZone[obj].ContainsKey(dropzoneID))
+        {
+            quantumSubtractedByDropZone[obj][dropzoneID] = 0;
+        }
+
+        quantumSubtractedByDropZone[obj][dropzoneID] += quantum;
+
+        PuzzleObjectData objectData = obj.GetComponent<PuzzleObjectData>();
+        if (objectData != null)
+        {
+            objectData.tempoExecucao -= quantum;
+            objectData.tempoExecucaoTotal += quantum;
+
+            Debug.Log($"Quantum {quantum} subtraído de {objectData.name} pela DropZone {dropzoneID}.");
+        }
+    }
+
     public void OnObjectDropped(GameObject droppedObject)
     {
-        if (objectsAlreadyAdded.Contains(droppedObject)) return;
 
         PuzzleObjectData objectData = droppedObject.GetComponent<PuzzleObjectData>();
         if (objectData == null) return;
@@ -111,7 +212,6 @@ public class RRSlotManager : MonoBehaviour
 
         foreach (RaycastResult result in raycastResults)
         {
-            // Verifica se é um CircularDropZone e pertence à tabela correta
             CircularDropZone dropZone = result.gameObject.GetComponent<CircularDropZone>();
             if (dropZone != null && dropZone.tableID == tableID)
             {
@@ -137,7 +237,6 @@ public class RRSlotManager : MonoBehaviour
         }
     }
 
-
     private void AddObjectToProcess(int processo, GameObject droppedObject)
     {
         if (!processObjects.ContainsKey(processo))
@@ -149,27 +248,29 @@ public class RRSlotManager : MonoBehaviour
 
     private void CloneObjectToColumns(GameObject obj, int processo, float executionTime)
     {
-        // Calcula quantas colunas o objeto vai ocupar
         int columnsToOccupy = Mathf.Min(Quantum, Mathf.CeilToInt(executionTime));
 
-        // Reduz o tempoExecucao do objeto e registra o quantum subtraído
         PuzzleObjectData objectData = obj.GetComponent<PuzzleObjectData>();
         if (objectData != null)
         {
             int previousTempo = objectData.tempoExecucao;
 
-            // Subtração com limite mínimo de zero
-            int subtracted = Mathf.Min(Quantum, previousTempo); // Subtração sem passar do limite
+            int subtracted = Mathf.Min(Quantum, previousTempo);
             objectData.tempoExecucao = Mathf.Max(0, previousTempo - Quantum);
 
-            // Registra o quantum realmente subtraído
-            if (!quantumSubtracted.ContainsKey(obj))
+            // Armazenar o quantum subtraído por dropzone
+            if (!quantumSubtractedByDropZone.ContainsKey(obj))
             {
-                quantumSubtracted[obj] = 0;
+                quantumSubtractedByDropZone[obj] = new Dictionary<int, int>();
             }
-            quantumSubtracted[obj] += subtracted;
 
-            // Acumula o valor subtraído no tempoExecucaoTotal
+            if (!quantumSubtractedByDropZone[obj].ContainsKey(objectData.dropzoneID))
+            {
+                quantumSubtractedByDropZone[obj][objectData.dropzoneID] = 0;
+            }
+
+            quantumSubtractedByDropZone[obj][objectData.dropzoneID] += subtracted;
+
             objectData.tempoExecucaoTotal += subtracted;
             Debug.Log($"Tempo total executado para {objectData.name}: {objectData.tempoExecucaoTotal}");
         }
@@ -188,40 +289,13 @@ public class RRSlotManager : MonoBehaviour
         }
     }
 
-
-    public void RestoreQuantum()
-    {
-        foreach (var entry in quantumSubtracted)
-        {
-            GameObject obj = entry.Key;
-            int quantumToRestore = entry.Value;
-
-            PuzzleObjectData objectData = obj.GetComponent<PuzzleObjectData>();
-            if (objectData != null)
-            {
-                // Restaurar o tempoExecucao original
-                objectData.tempoExecucao += quantumToRestore;
-                Debug.Log($"Quantum {quantumToRestore} restaurado para o objeto {objectData.name}.");
-
-                // Restaurar o tempoExecucaoTotal também
-                objectData.tempoExecucaoTotal -= quantumToRestore;
-                Debug.Log($"Tempo total executado restaurado para {objectData.name}: {objectData.tempoExecucaoTotal}");
-            }
-        }
-
-        // Limpa o registro após a restauração
-        quantumSubtracted.Clear();
-    }
-
-
-
     private GameObject FindNextAvailableSlot(int processo)
     {
         foreach (GameObject slot in slots)
         {
             SlotIdentifier slotIdentifier = slot.GetComponent<SlotIdentifier>();
             if (slotIdentifier != null && 
-                slotIdentifier.tableID == tableID &&  // Filtra pela tabela correta
+                slotIdentifier.tableID == tableID && 
                 IsSlotAvailableForProcess(slotIdentifier, processo))
             {
                 lastUsedColumn = slotIdentifier.column + 1;
@@ -249,5 +323,16 @@ public class RRSlotManager : MonoBehaviour
         obj.transform.SetParent(slot.transform);
         obj.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
         obj.GetComponent<RectTransform>().localScale = Vector3.one;
+
+        Image slotImage = slot.GetComponent<Image>();
+        Image objImage = obj.GetComponent<Image>();
+
+        if (slotImage != null && objImage != null)
+        {
+            slotImage.color = objImage.color;
+
+            objImage.enabled = false;
+        }
     }
+
 }

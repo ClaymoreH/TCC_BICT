@@ -39,34 +39,28 @@ public class DragAndDrop2D : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        // Salva a posição inicial e o pai inicial
         initialPosition = rectTransform.anchoredPosition;
         initialParent = transform.parent;
 
-        // Configura o Canvas Group para permitir arrastar REFAZER 
         canvasGroup.alpha = 0.6f;
         canvasGroup.blocksRaycasts = false;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        // Move com o mouse
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        // Reseta o Canvas Group
         canvasGroup.alpha = 1f;
         canvasGroup.blocksRaycasts = true;
 
-        // Se nãosolto em uma área válida, retorna à posição inicial
         if (transform.parent == initialParent && returnToOriginalPosition)
         {
             rectTransform.anchoredPosition = initialPosition;
         }
 
-        // Dispara o drop para o controlador
         OnDrop?.Invoke(gameObject);
 
         TocarSomDeDrop();

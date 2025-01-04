@@ -30,7 +30,6 @@ public class PuzzleManager : MonoBehaviour
         }
     }
 
-    // Função para exibir feedback com som
     public void ExibirFeedback(string mensagem, AudioClip som)
     {
         if (feedbackText != null)
@@ -60,9 +59,8 @@ public class PuzzleManager : MonoBehaviour
         }
     }
 
-    // Função genérica de validação, chamada pelos scripts específicos
     public virtual void ValidarPuzzle()
     {
-        // Este método pode ser sobrescrito nos scripts específicos
+        // método pode ser sobrescrito nos scripts específicos
     }
 }

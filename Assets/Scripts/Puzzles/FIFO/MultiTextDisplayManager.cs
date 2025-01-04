@@ -7,12 +7,12 @@ using TMPro;
 public class MultiTextDisplayManager : MonoBehaviour
 {
     [Header("Referências de Texto")]
-    public List<Text> uiTextAreas;
-    public List<TMP_Text> tmpTextAreas;
+    public List<Text> uiTextAreas; // Áreas de texto para UI Text
+    public List<TMP_Text> tmpTextAreas; // Áreas de texto para TextMeshPro
 
     [Header("Configuração de Botões e Textos")]
-    public List<Button> buttons;
-    public List<TextContent> buttonContents;
+    public List<Button> buttons; // Botões para interação
+    public List<TextContent> buttonContents; // Conteúdos associados aos botões
 
     [Header("Configurações de Áudio")]
     public AudioSource audioSource;
@@ -23,25 +23,36 @@ public class MultiTextDisplayManager : MonoBehaviour
     public float typeSpeed = 0.0f;
     public AudioClip typingSound;
 
-    private Coroutine currentTypingCoroutine; // Coroutine para controlar o efeito de digitação.
+    private Coroutine currentTypingCoroutine;
     private AudioSource typingAudioSource;
-
 
     private void Start()
     {
-        // Adiciona listeners aos botões para chamar OnButtonClicked quando clicados.
-        for (int i = 0; i < buttons.Count; i++)
+        for (int buttonIndex = 0; buttonIndex < buttons.Count; buttonIndex++)
         {
-            int index = i;
-            buttons[i].onClick.AddListener(() => OnButtonClicked(index));
+            int index = buttonIndex; // Captura o índice do botão
+            buttons[index].onClick.AddListener(() => HandleButtonClick(index));
         }
 
         typingAudioSource = gameObject.AddComponent<AudioSource>();
     }
 
+    private void HandleButtonClick(int buttonIndex)
+    {
+        foreach (var content in buttonContents)
+        {
+            if (content.associatedButtonIndices.Contains(buttonIndex))
+            {
+                OnButtonClicked(buttonContents.IndexOf(content));
+                return;
+            }
+        }
+
+        Debug.LogWarning("Nenhum conteúdo associado a este botão!");
+    }
+
     private void OnButtonClicked(int index)
     {
-        // Reproduz o som de clique do botão.
         if (audioSource != null && buttonClickSound != null)
         {
             audioSource.PlayOneShot(buttonClickSound);
@@ -63,7 +74,6 @@ public class MultiTextDisplayManager : MonoBehaviour
             return;
         }
 
-        // Para a coroutine de digitação anterior
         if (currentTypingCoroutine != null)
         {
             StopCoroutine(currentTypingCoroutine);
@@ -71,6 +81,7 @@ public class MultiTextDisplayManager : MonoBehaviour
 
         currentTypingCoroutine = StartCoroutine(TypeOutText(buttonContents[index]));
     }
+
     private IEnumerator TypeOutText(TextContent content)
     {
         foreach (var textArea in uiTextAreas)
@@ -99,8 +110,7 @@ public class MultiTextDisplayManager : MonoBehaviour
 
         PlayTypingSound();
 
-        // Define o tamanho do chunk de texto a ser exibido por frame ("suavidade" da digitação).
-        int chunkSize = 3; 
+        int chunkSize = 5; // Tamanho do bloco de texto para digitação
 
         for (int i = 0; i < uiTextAreas.Count && i < content.uiTexts.Count; i++)
         {
@@ -135,7 +145,6 @@ public class MultiTextDisplayManager : MonoBehaviour
         }
     }
 
-
     private void PlayTypingSound()
     {
         if (typingSound != null && typingAudioSource != null)
@@ -153,6 +162,7 @@ public class MultiTextDisplayManager : MonoBehaviour
 [System.Serializable]
 public class TextContent
 {
-    public List<string> uiTexts;
-    public List<string> tmpTexts;
+    public List<int> associatedButtonIndices; // Índices dos botões associados a este conteúdo
+    public List<string> uiTexts; // Textos para UI Text
+    public List<string> tmpTexts; // Textos para TMP_Text
 }

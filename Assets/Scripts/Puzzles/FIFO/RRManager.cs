@@ -6,87 +6,57 @@ public class RRManager : PuzzleManager
 {
     [Header("Configurações do Puzzle")]
     public Transform panelTransform;
-    public Transform painelProcessos; // Novo painel que contém todos os processos
+    public Transform painelProcessos; 
 
     public override void ValidarPuzzle()
     {
         ValidateRoundRobinCycles();
     }
-
-    // Método para validar os ciclos de Round Robin
     private void ValidateRoundRobinCycles()
     {
-        // Variável para controlar se ocorreu algum erro durante a validação
-        bool erroEncontrado = false;
 
-        // Encontrar todos os RRSlotManagers dentro do painel
+        // Obtenha todos os objetos de cada slot
         RRSlotManager[] slotManagersInPanel = panelTransform.GetComponentsInChildren<RRSlotManager>();
+        Debug.Log($"Encontrados {slotManagersInPanel.Length} slotManagers no painel.");
 
-        // Dicionário para acompanhar a execução de cada processo por ciclo
         Dictionary<int, HashSet<int>> processCycles = new Dictionary<int, HashSet<int>>();
-
-        // Dicionário para armazenar a última aparição do tempoExecucaoTotal de cada objeto
         Dictionary<GameObject, int> lastExecutionTime = new Dictionary<GameObject, int>();
-
-        // Dicionário para somar o quantum subtraído por processo
         Dictionary<int, int> processQuantumSum = new Dictionary<int, int>();
-
-        // Lista para armazenar objetos com erro de ciclo
         List<GameObject> erroDeCicloObjects = new List<GameObject>();
 
-        foreach (var slotManager in slotManagersInPanel)
+// Dicionário para armazenar as aparições de cada processo (processo -> lista de dropzoneIDs)
+Dictionary<int, HashSet<int>> processAppearances = new Dictionary<int, HashSet<int>>();
+
+// Recalcular dinamicamente as aparições de cada processo
+foreach (var slotManager in slotManagersInPanel)
+{
+    Debug.Log($"Validando RRSlotManager com ID: {slotManager.tableID}");
+
+    // Iterar sobre todos os objetos atualmente presentes no slotManager
+    foreach (Transform slot in slotManager.GetComponentsInChildren<Transform>())
+    {
+        if (slot.childCount > 0) // Verifica se há objetos dentro do slot
         {
-            Debug.Log($"Validando RRSlotManager com ID: {slotManager.tableID}");
-
-            // Iterar sobre cada objeto no SlotManager
-            foreach (var entry in slotManager.quantumSubtracted)
+            foreach (Transform objTransform in slot)
             {
-                GameObject obj = entry.Key; // Objeto processado
-                int quantumUsed = entry.Value; // Quantum total usado no objeto
+                GameObject obj = objTransform.gameObject;
 
-                // Acessar o componente PuzzleObjectData para pegar processo, tempoExecucaoTotal e ValorOriginal
+                // Acessar o componente PuzzleObjectData para pegar o ID do processo
                 PuzzleObjectData objectData = obj.GetComponent<PuzzleObjectData>();
                 if (objectData != null)
                 {
                     int processo = objectData.processo; // ID do processo
-                    int valorOriginal = objectData.ValorOriginal;
-                    int tempoExecucaoTotal = objectData.tempoExecucaoTotal;
+                    int dropzoneID = objectData.dropzoneID; // ID da DropZone atual do objeto
 
-                    // Verificar se o objeto foi processado no ciclo correto
-                    if (!processCycles.ContainsKey(processo))
+                    // Certificar-se de que o processo já existe no dicionário
+                    if (!processAppearances.ContainsKey(processo))
                     {
-                        processCycles[processo] = new HashSet<int>();
+                        processAppearances[processo] = new HashSet<int>();
                     }
 
-                    // Verificar se o objeto já apareceu em ciclos anteriores
-                    int maxCycleAppeared = processCycles[processo].Count > 0 ? processCycles[processo].Max() : 0;
-
-                    // Se o objeto aparece no ciclo atual, deve ter aparecido em todos os ciclos anteriores
-                    if (slotManager.tableID > maxCycleAppeared + 1)
-                    {
-                        // Erro de ciclo: O objeto pulou ciclos
-                        Debug.LogWarning($"Erro de Aparição Irregular: Objeto {obj.name} pulou ciclos. " +
-                            $"Apareceu no ciclo {slotManager.tableID}, mas o ciclo {maxCycleAppeared + 1} não foi processado.");
-                        
-                        // Marcar objeto como com erro de ciclo
-                        erroDeCicloObjects.Add(obj);
-                        ExibirFeedback($"Erro de ciclo no processo {objectData.processo}: ciclo inválido!", errorSound);
-                        erroEncontrado = true; // Marcar que ocorreu erro
-                        return; // Interrompe a validação após o erro
-                    }
-
-                    // Agora, adiciona o ciclo atual ao conjunto de ciclos em que o processo foi executado
-                    processCycles[processo].Add(slotManager.tableID);
-
-                    // Somar o quantum subtraído para o processo específico
-                    if (!processQuantumSum.ContainsKey(processo))
-                    {
-                        processQuantumSum[processo] = 0;
-                    }
-                    processQuantumSum[processo] += quantumUsed;
-
-                    // Verificar a consistência de tempoExecucaoTotal no último ciclo
-                    lastExecutionTime[obj] = tempoExecucaoTotal;
+                    // Adicionar o dropzoneID ao conjunto de aparições
+                    processAppearances[processo].Add(dropzoneID);
+                    Debug.Log($"Objeto {obj.name} (Processo {processo}) está atualmente na DropZoneID: {dropzoneID}");
                 }
                 else
                 {
@@ -94,59 +64,83 @@ public class RRManager : PuzzleManager
                 }
             }
         }
+    }
+}
 
-        // Validação final dos objetos, verificando se há algum erro antes
-        foreach (var entry in lastExecutionTime)
+// Após a coleta dinâmica, validar a sequência dos DropZoneIDs de cada processo
+Debug.Log("Validando a sequência dos DropZoneIDs de cada processo...");
+
+bool erroEncontrado = false;
+foreach (var entry in processAppearances)
+{
+    int processo = entry.Key;
+    var aparicoes = entry.Value.OrderBy(id => id).ToList(); // Ordenar os IDs para verificar a sequência
+    Debug.Log($"Processo {processo}: DropZoneIDs -> {string.Join(", ", aparicoes)}");
+
+    // Verificar se os IDs são sequenciais
+    for (int i = 0; i < aparicoes.Count; i++)
+    {
+        if (aparicoes[i] != i)
         {
-            GameObject obj = entry.Key;
-            if (erroDeCicloObjects.Contains(obj))
-            {
-                // Se o objeto já tem erro de ciclo, pular validação
-                continue;
-            }
+            // Encontrado um erro de sequência
+            Debug.LogWarning($"Erro: Processo {processo} tem DropZoneIDs não sequenciais! " +
+                             $"Esperado: {i}, Encontrado: {aparicoes[i]}.");
+            ExibirFeedback($"Erro no processo {processo}: DropZoneIDs não sequenciais.", errorSound);
+            erroEncontrado = true;
+            break;
+        }
+    }
 
-            int tempoExecucaoTotal = entry.Value;
-            PuzzleObjectData objectData = obj.GetComponent<PuzzleObjectData>();
-            if (objectData != null)
+    if (erroEncontrado) continue;
+
+    // Validar o tempoExecucaoTotal na última DropZone
+    int ultimaDropZone = aparicoes.Max();
+    Debug.Log($"Validando tempoExecucaoTotal para o processo {processo} na última DropZoneID: {ultimaDropZone}");
+
+    foreach (var slotManager in slotManagersInPanel)
+    {
+        foreach (Transform slot in slotManager.GetComponentsInChildren<Transform>())
+        {
+            if (slot.childCount > 0)
             {
-                int valorOriginal = objectData.ValorOriginal;
-                if (tempoExecucaoTotal != valorOriginal)
+                foreach (Transform objTransform in slot)
                 {
-                    // Erro de tempoExecucaoTotal: Valor incorreto
-                    Debug.LogWarning($"Inconsistência de tempoExecucaoTotal: Objeto {obj.name} tem tempoExecucaoTotal de {tempoExecucaoTotal} mas ValorOriginal é {valorOriginal}.");
-                    ExibirFeedback($"Erro no processo {objectData.processo}: tempo total incorreto.", errorSound);
-                    erroEncontrado = true; // Marcar que ocorreu erro
-                    return; // Interrompe a validação após o erro
-                }
-                else
-                {
-                    Debug.Log($"Objeto {obj.name} validado corretamente com tempoExecucaoTotal = {tempoExecucaoTotal}.");
-                    ExibirFeedback($"Processo {objectData.processo} validado com sucesso!", successSound);
+                    GameObject obj = objTransform.gameObject;
+
+                    // Acessar o componente PuzzleObjectData para verificar o processo e o dropzone
+                    PuzzleObjectData objectData = obj.GetComponent<PuzzleObjectData>();
+                    if (objectData != null && objectData.processo == processo && objectData.dropzoneID == ultimaDropZone)
+                    {
+                        int valorOriginal = objectData.ValorOriginal;
+                        int tempoExecucaoTotal = objectData.tempoExecucaoTotal;
+
+                        // Validar se o tempoExecucaoTotal é igual ao valorOriginal
+                        if (tempoExecucaoTotal != valorOriginal)
+                        {
+                            Debug.LogWarning($"Erro: Processo {processo} na última DropZoneID {ultimaDropZone} tem tempoExecucaoTotal = {tempoExecucaoTotal}, mas ValorOriginal = {valorOriginal}.");
+                            ExibirFeedback($"Erro no processo {processo}: tempo total incorreto na última DropZone!", errorSound);
+                            erroEncontrado = true;
+                        }
+                        else
+                        {
+                            Debug.Log($"Validação bem-sucedida: Processo {processo} na última DropZoneID {ultimaDropZone} tem tempoExecucaoTotal = {tempoExecucaoTotal} e ValorOriginal = {valorOriginal}.");
+                            ExibirFeedback($"Processo {processo} validado com sucesso na última DropZone!", successSound);
+                        }
+                        break;
+                    }
                 }
             }
         }
+    }
+}
 
-        // Validação das tarefas do painel adicional (todos os processos precisam ser validados corretamente)
-        bool todosProcessosValidos = true;
-        var processosNoPainel = painelProcessos.GetComponentsInChildren<PuzzleObjectData>();
-        foreach (var processo in processosNoPainel)
-        {
-            // Verifique se o processo foi validado corretamente
-            if (processo.tempoExecucaoTotal != processo.ValorOriginal)
-            {
-                todosProcessosValidos = false;
-                break;
-            }
-        }
+// Feedback geral
+if (!erroEncontrado)
+{
+    Debug.Log("Validação finalizada com sucesso! Todos os processos são válidos.");
+    ExibirFeedback("Validação concluída com sucesso! Todos os processos são válidos.", successSound);
+}
 
-        // Se todos os processos do painel adicional foram validados corretamente, exibe um feedback geral
-        if (!erroEncontrado && todosProcessosValidos)
-        {
-            ExibirFeedback("Todos os processos concluídos com sucesso!", successSound);
-        }
-        else if (!todosProcessosValidos)
-        {
-            ExibirFeedback("Erro: Alguns processos não foram validados corretamente no painel.", errorSound);
-        }
+
     }
 }
