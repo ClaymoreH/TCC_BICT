@@ -1,5 +1,4 @@
-
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.Collections;
@@ -37,6 +36,10 @@ public class DialogueUI : MonoBehaviour
         { '&', "green" }
     };
 
+    // Cont�iner de escolhas e o prefab do bot�o
+    public Transform choicesContainer; // O painel ou cont�iner onde os bot�es de escolha ser�o instanciados
+    public GameObject choiceButtonPrefab; // O prefab do bot�o de escolha
+
     void Start()
     {
         dialogueObject.SetActive(false);
@@ -56,10 +59,7 @@ public class DialogueUI : MonoBehaviour
     {
         SetUIElementState(pressXImage, true);
         SetUIElementState(pressXText, true);
-
-        
     }
-
 
     public void HidePressXMessage()
     {
@@ -239,5 +239,35 @@ public class DialogueUI : MonoBehaviour
         }
 
         return processedLine.Trim();
+    }
+
+    // M�todo para exibir as escolhas
+    public void SetChoices(string[] choices, System.Action<int> onChoiceSelected)
+    {
+        // Verifica se o prefab do bot�o de escolha est� atribu�do
+        if (choiceButtonPrefab == null)
+        {
+            Debug.LogError("Choice button prefab is missing!");
+            return;
+        }
+
+        // Limpa as escolhas anteriores
+        foreach (Transform child in choicesContainer)
+        {
+            Destroy(child.gameObject);
+        }
+
+        for (int i = 0; i < choices.Length; i++)
+        {
+            var choiceButton = Instantiate(choiceButtonPrefab, choicesContainer);
+            var buttonText = choiceButton.GetComponentInChildren<TMP_Text>();
+            if (buttonText != null)
+            {
+                buttonText.text = choices[i];
+            }
+
+            int index = i; // Armazena o �ndice da escolha
+            choiceButton.GetComponent<Button>().onClick.AddListener(() => onChoiceSelected(index)); // Lida com o clique
+        }
     }
 }

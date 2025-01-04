@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 using System.IO;
 
 [System.Serializable]
@@ -12,155 +10,112 @@ public class ChoiceDialogueDatabase
 [System.Serializable]
 public class ChoiceDialogueData
 {
-    public int id;          // ID do di�logo
-    public int status;      // Status do di�logo
-    public int next_status; // Pr�ximo status do di�logo
-    public string[] lines;  // Linhas do di�logo
-    public string[] choices; // Op��es de escolha
-    public int[] nextDialogues; // �ndices dos di�logos seguintes para cada escolha
+    public int id; // ID do di�logo
+    public int status;
+    public int next_status;
+    public string[] lines;
+    public string[] choices;
+    public int[] nextDialogues;
+    public string[] missionObjectives;
+    public int locationId; // Adicionado: ID do local associado
 }
 
 public class ChoiceDialogueTrigger : MonoBehaviour
 {
-    [Header("UI Elements")]
-    public TMP_Text questionText;
-    public Button[] choiceButtons;
+    [Header("Dialogue UI")]
+    public DialogueUI dialogueUI; // Refer�ncia ao script de UI
 
     [Header("JSON Data")]
-    public string jsonFilePath = "Dialogues.json";  // Nome do arquivo JSON
+    public string jsonFilePath = "Dialogues.json";
     private ChoiceDialogueData[] dialogues;
     private int currentDialogueIndex = 0;
 
     void Start()
     {
-        InitializeDialogue(); // Chama o m�todo para iniciar o carregamento do di�logo
+        if (LoadDialogueData())
+        {
+            DisplayDialogue(currentDialogueIndex);
+        }
     }
 
-    private void InitializeDialogue()
+    private bool LoadDialogueData()
     {
-        LoadDialogueData();  // Chama o m�todo para carregar o arquivo JSON
-        DisplayDialogue(currentDialogueIndex);  // Exibe o di�logo inicial
-    }
-
-    private void LoadDialogueData()
-    {
-        // Caminho para o arquivo JSON na pasta "Assets/Scripts/Dialogue"
         string filePath = Path.Combine(Application.dataPath, "Scripts/Dialogue", jsonFilePath);
-        Debug.Log($"Caminho do arquivo JSON: {filePath}");
-
-        if (File.Exists(filePath))
+        if (!File.Exists(filePath))
         {
-            Debug.Log("Arquivo JSON encontrado.");
+            Debug.LogError($"JSON file not found at {filePath}");
+            return false;
+        }
+
+        try
+        {
             string jsonContent = File.ReadAllText(filePath);
-            Debug.Log("Conte�do do JSON: " + jsonContent);  // Verifique se o conte�do foi lido corretamente
+            var container = JsonUtility.FromJson<ChoiceDialogueDatabase>(jsonContent);
 
-            // Deserializa o JSON para o formato de ChoiceDialogueDatabase
-            ChoiceDialogueDatabase container = JsonUtility.FromJson<ChoiceDialogueDatabase>(jsonContent);
+            if (container?.dialogues == null || container.dialogues.Length == 0)
+            {
+                Debug.LogError("No valid dialogues found in the JSON file.");
+                return false;
+            }
 
-            if (container != null && container.dialogues != null && container.dialogues.Length > 0)
-            {
-                dialogues = container.dialogues; // Carrega os di�logos do JSON
-                Debug.Log("Di�logos carregados com sucesso.");
-            }
-            else
-            {
-                Debug.LogError("O arquivo JSON foi lido, mas n�o cont�m di�logos v�lidos.");
-            }
+            dialogues = container.dialogues;
+            return true;
         }
-        else
+        catch (System.Exception ex)
         {
-            Debug.LogError($"Arquivo JSON n�o encontrado em {filePath}. Verifique o caminho e o nome do arquivo.");
+            Debug.LogError($"Error reading JSON file: {ex.Message}");
+            return false;
         }
     }
 
-    public void DisplayDialogue(int dialogueIndex)
+    private void DisplayDialogue(int dialogueIndex)
     {
-        if (dialogues == null || dialogues.Length == 0)
+        if (dialogues == null || dialogueIndex < 0 || dialogueIndex >= dialogues.Length)
         {
-            Debug.LogError("Nenhum di�logo encontrado no banco de dados.");
+            Debug.LogError("Invalid dialogue index.");
             return;
         }
 
-        if (dialogueIndex < 0 || dialogueIndex >= dialogues.Length)
-        {
-            Debug.LogError("�ndice de di�logo inv�lido.");
-            return;
-        }
+        var dialogue = dialogues[dialogueIndex];
 
-        ChoiceDialogueData dialogue = dialogues[dialogueIndex];
-        
-        if (dialogue == null)
-        {
-            Debug.LogError("Di�logo n�o encontrado.");
-            return;
-        }
+        // Usar o DialogueUI para exibir as linhas
+        dialogueUI.StartDialogue(dialogue.lines);
 
-        // Verifique se questionText n�o � nulo
-        if (questionText == null)
-        {
-            Debug.LogError("questionText n�o est� atribu�do.");
-            return;
-        }
+        // Opcional: Atualize outras informa��es relacionadas, se necess�rio
+        dialogueUI.ShowPressXMessage(); // Se necess�rio mostrar mensagem para avan�ar
+    }
 
-        if (dialogue.lines != null)
-        {
-            questionText.text = string.Join("\n", dialogue.lines); // Exibe todas as linhas do di�logo
-        }
-        else
-        {
-            Debug.LogError("As linhas do di�logo s�o nulas.");
-        }
+    void Update()
+    {
+        if (dialogueUI.IsDialogueActive) return;
 
-        // Verifique se os bot�es est�o atribu�dos
-        if (choiceButtons == null || choiceButtons.Length == 0)
+        // Verificar se o jogador est� pronto para tomar uma decis�o
+        if (dialogues[currentDialogueIndex].choices.Length > 0)
         {
-            Debug.LogError("Nenhum bot�o de escolha foi atribu�do.");
-            return;
-        }
-
-        // Preenche os bot�es de escolha com base nas op��es do di�logo
-        for (int i = 0; i < choiceButtons.Length; i++)
-        {
-            // Verificar se o bot�o n�o est� nulo
-            if (choiceButtons[i] == null)
-            {
-                Debug.LogError($"Bot�o de escolha {i} est� nulo.");
-                continue;
-            }
-
-            if (i < dialogue.choices.Length)
-            {
-                TMP_Text buttonText = choiceButtons[i].GetComponentInChildren<TMP_Text>();
-                if (buttonText == null)
-                {
-                    Debug.LogError($"Bot�o de escolha {i} n�o cont�m o componente TMP_Text.");
-                    continue;
-                }
-
-                buttonText.text = dialogue.choices[i]; // Define o texto do bot�o para cada escolha
-                int choiceIndex = i; // Captura o �ndice atual
-                choiceButtons[i].onClick.RemoveAllListeners();
-                choiceButtons[i].onClick.AddListener(() => OnChoiceMade(choiceIndex)); // Define o comportamento ao clicar no bot�o
-                choiceButtons[i].gameObject.SetActive(true); // Torna o bot�o vis�vel
-            }
-            else
-            {
-                choiceButtons[i].gameObject.SetActive(false); // Torna o bot�o invis�vel se n�o houver mais op��es
-            }
+            DisplayChoices();
         }
     }
 
-    private void OnChoiceMade(int choiceIndex)
+    private void DisplayChoices()
     {
-        // L�gica para lidar com a escolha do jogador
-        if (choiceIndex < dialogues[currentDialogueIndex].nextDialogues.Length)
+        var dialogue = dialogues[currentDialogueIndex];
+
+        dialogueUI.HidePressXMessage(); // Ocultar mensagem "pressione X"
+        dialogueUI.SetChoices(dialogue.choices, HandleChoice); // Configurar escolhas
+    }
+
+    private void HandleChoice(int choiceIndex)
+    {
+        var dialogue = dialogues[currentDialogueIndex];
+
+        if (choiceIndex < dialogue.nextDialogues.Length)
         {
-            currentDialogueIndex = dialogues[currentDialogueIndex].nextDialogues[choiceIndex];
+            currentDialogueIndex = dialogue.nextDialogues[choiceIndex];
             DisplayDialogue(currentDialogueIndex);
         }
         else
         {
-            Debug.LogError("�ndice de escolha inv�lido.");
+            Debug.LogError("Invalid choice index.");
         }
     }
 }
