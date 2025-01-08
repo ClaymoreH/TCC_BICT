@@ -16,6 +16,7 @@ public class PuzzleObjectData : MonoBehaviour
     public int ordemChegada; 
     public int processo;
     public int dropzoneID; // ID da DropZone a qual o objeto pertence
+    public int PainelPuzzle;
 
     [TextArea]
     public string descricao; 

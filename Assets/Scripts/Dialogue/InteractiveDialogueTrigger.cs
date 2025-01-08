@@ -4,18 +4,19 @@ using UnityEngine;
 public class InteractiveDialogueTrigger : MonoBehaviour
 {
     public TextAsset initialDialogueFile; // Arquivo JSON do estado inicial
-    private string modifiableDialoguePath; // Caminho para o JSON modificável
+    public string modifiableDialoguePath; // Caminho para o JSON modificável
     public int dialogueID;
 
-    private DialogueUI dialogueUI;
-    private DialogueDatabase dialogueDatabase;
-    private DialogueData currentDialogue;
+    public DialogueManager dialogueManager;
+    public DialogueDatabase dialogueDatabase;
+    public DialogueData currentDialogue;
 
-    private bool canShowDialogue = false;
-    private Collider2D playerCollider = null;
-    void Start()
+    public bool canShowDialogue = false;
+    public Collider2D playerCollider = null;
+
+    public void Start()
     {
-        dialogueUI = FindObjectOfType<DialogueUI>();
+        dialogueManager = FindObjectOfType<DialogueManager>();
 
         // Define o caminho para o arquivo modificável na pasta Assets/Scripts/Dialogue
         modifiableDialoguePath = Path.Combine(Application.dataPath, "Scripts", "Dialogue", "modifiableDialogue.json");
@@ -33,19 +34,18 @@ public class InteractiveDialogueTrigger : MonoBehaviour
         LoadModifiableDialogue();
     }
 
-
-    void Update()
+    public void Update()
     {
         if (canShowDialogue && Input.GetKeyDown(KeyCode.X) && playerCollider != null)
         {
-            if (!dialogueUI.IsDialogueActive)
+            if (!dialogueManager.IsDialogueActive)
             {
                 StartDialogue();
             }
         }
     }
 
-    private void StartDialogue()
+    public virtual void StartDialogue()
     {
         LoadModifiableDialogue(); // Recarregar o estado atual antes de iniciar
 
@@ -64,20 +64,20 @@ public class InteractiveDialogueTrigger : MonoBehaviour
 
                     // Inicia o diálogo
                     currentDialogue = dialogue;
-                    dialogueUI.StartDialogue(currentDialogue.lines);
-                    dialogueUI.HidePressXMessage();
+                    dialogueManager.StartDialogue(currentDialogue.lines, currentDialogue.choices);
+                    dialogueManager.dialogueUI.HidePressXMessage();       // Usa o DialogueUI para esconder a mensagem "Press X"
                     canShowDialogue = false;
                     break;
                 }
                 else
                 {
-                    dialogueUI.HidePressXMessage();
+                    dialogueManager.dialogueUI.HidePressXMessage();
                 }
             }
         }
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    public void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
@@ -89,15 +89,15 @@ public class InteractiveDialogueTrigger : MonoBehaviour
                 {
                     playerCollider = other;
                     canShowDialogue = true;
-                    dialogueUI.ShowPressXMessage();
+                    dialogueManager.dialogueUI.ShowPressXMessage(); // Usa o DialogueUI para mostrar a mensagem "Press X"
                     return;
                 }
             }
-            dialogueUI.HidePressXMessage();
+            dialogueManager.dialogueUI.HidePressXMessage();
         }
     }
 
-    void OnTriggerExit2D(Collider2D other)
+    public void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
@@ -105,12 +105,12 @@ public class InteractiveDialogueTrigger : MonoBehaviour
             {
                 playerCollider = null;
                 canShowDialogue = false;
-                dialogueUI.HidePressXMessage();
+                dialogueManager.dialogueUI.HidePressXMessage();
             }
         }
     }
 
-    private void LoadModifiableDialogue()
+    public void LoadModifiableDialogue()
     {
         if (File.Exists(modifiableDialoguePath))
         {
@@ -119,7 +119,7 @@ public class InteractiveDialogueTrigger : MonoBehaviour
         }
     }
 
-    private void SaveModifiableDialogue()
+    public void SaveModifiableDialogue()
     {
         string jsonContent = JsonUtility.ToJson(dialogueDatabase, true);
         File.WriteAllText(modifiableDialoguePath, jsonContent);

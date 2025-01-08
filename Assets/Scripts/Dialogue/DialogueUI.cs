@@ -6,151 +6,133 @@ using System.Collections.Generic;
 
 public class DialogueUI : MonoBehaviour
 {
+    [Header("UI Elements")]
     public Image dialogueImage;
     public TMP_Text dialogueText;
     public GameObject dialogueObject;
     public TMP_Text continueText;
     public float typingSpeed = 0.05f;
     public float blinkSpeed = 0.5f;
-
     public Image pressXImage;
     public TMP_Text pressXText;
+    public GameObject choicesContainer;
+    public GameObject choiceButtonPrefab;
 
-    private string[] lines;
-    private int currentLineIndex = 0;
-    private bool isTyping = false;
-    private bool isDialogueActive = false;
     private Coroutine blinkCoroutine;
+    public GameObject choicePrefab;
+    public List<ChoiceText> choiceTextList = new List<ChoiceText>();
+    public int currentChoiceIndex = 0;
 
-    private PlayerController playerController;
-    private Animator playerAnimator;
+public void AddChoiceText(string choiceText, System.Action onClickAction)
+{
+    var choiceTextObject = Instantiate(choicePrefab, choicesContainer.transform);
+    var choiceComponent = choiceTextObject.GetComponent<ChoiceText>();
 
-    public event System.Action OnDialogueEnded;
+    if (choiceComponent != null)
+    {
+        choiceComponent.SetAction(onClickAction, choiceText);  // Passando o texto da escolha
+        choiceTextList.Add(choiceComponent);
+    }
 
-    public bool IsDialogueActive => isDialogueActive;
+    // Inicialmente, nenhuma opção é selecionada
+    choiceComponent.SetSelected(false);
+}
 
+    public void ShowChoices()
+    {
+        currentChoiceIndex = 0; // Reseta o índice
+        UpdateChoiceSelection(); // Atualiza a seleção da escolha
+
+        // Permite a navegação pelo teclado
+        StartCoroutine(NavigateChoices());
+    }
+
+    private void UpdateChoiceSelection()
+    {
+        // Atualiza a seleção visual das escolhas
+        for (int i = 0; i < choiceTextList.Count; i++)
+        {
+            choiceTextList[i].SetSelected(i == currentChoiceIndex);
+        }
+    }
+
+    private System.Collections.IEnumerator NavigateChoices()
+    {
+        while (true)
+        {
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                currentChoiceIndex = (currentChoiceIndex > 0) ? currentChoiceIndex - 1 : choiceTextList.Count - 1;
+                UpdateChoiceSelection();
+            }
+
+            if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                currentChoiceIndex = (currentChoiceIndex < choiceTextList.Count - 1) ? currentChoiceIndex + 1 : 0;
+                UpdateChoiceSelection();
+            }
+
+            if (Input.GetKeyDown(KeyCode.Return)) // Seleção com Enter (ou qualquer outra tecla de sua escolha)
+            {
+                choiceTextList[currentChoiceIndex].SetSelected(false); // Desmarcar a escolha selecionada
+                choiceTextList[currentChoiceIndex].onClickAction?.Invoke(); // Executa a ação da escolha
+                break; // Sai da navegação de escolhas
+            }
+
+            yield return null;
+        }
+    }
     private readonly Dictionary<char, string> colorMap = new Dictionary<char, string>
     {
-        { '#', "red" },
-        { '@', "blue" },
-        { '&', "green" }
+        { '#', "red" }, { '@', "blue" }, { '&', "green" }
     };
 
-    // Cont�iner de escolhas e o prefab do bot�o
-    public Transform choicesContainer; // O painel ou cont�iner onde os bot�es de escolha ser�o instanciados
-    public GameObject choiceButtonPrefab; // O prefab do bot�o de escolha
-
-    void Start()
+    public void InitializeUI()
     {
         dialogueObject.SetActive(false);
-        playerController = FindObjectOfType<PlayerController>();
-        playerAnimator = playerController?.GetComponent<Animator>();
-
-        SetUIElementState(pressXImage, false);
-        SetUIElementState(pressXText, false);
+        SetUIElementState(false, pressXImage, pressXText);
     }
 
-    private void SetUIElementState(Graphic element, bool state)
+    private void SetUIElementState(bool state, params Graphic[] elements)
     {
-        if (element != null) element.enabled = state;
+        foreach (var element in elements)
+            if (element != null) element.enabled = state;
     }
 
-    public void ShowPressXMessage()
-    {
-        SetUIElementState(pressXImage, true);
-        SetUIElementState(pressXText, true);
-    }
-
-    public void HidePressXMessage()
-    {
-        SetUIElementState(pressXImage, false);
-        SetUIElementState(pressXText, false);
-    }
+    public void ShowPressXMessage() => SetUIElementState(true, pressXImage, pressXText);
+    public void HidePressXMessage() => SetUIElementState(false, pressXImage, pressXText);
 
     public void ShowContinueMessage()
     {
-        if (continueText != null)
-        {
+        if (continueText != null && blinkCoroutine == null)
+            blinkCoroutine = StartCoroutine(BlinkText());
             continueText.gameObject.SetActive(true);
-            if (blinkCoroutine == null)
-                blinkCoroutine = StartCoroutine(BlinkText());
-        }
     }
 
     public void HideContinueMessage()
     {
-        if (continueText != null)
-        {
-            continueText.gameObject.SetActive(false);
-            if (blinkCoroutine != null)
-            {
-                StopCoroutine(blinkCoroutine);
-                blinkCoroutine = null;
-            }
-        }
+        if (blinkCoroutine != null) StopCoroutine(blinkCoroutine);
+        blinkCoroutine = null;
+        if (continueText != null) continueText.gameObject.SetActive(false);
     }
 
-    public void StartDialogue(string[] dialogueLines)
+    public IEnumerator TypeText(string line)
     {
-        ResetDialogueState();
-
-        lines = new string[dialogueLines.Length];
-        for (int i = 0; i < dialogueLines.Length; i++)
-        {
-            lines[i] = ProcessLine(dialogueLines[i]);
-        }
-        currentLineIndex = 0;
-
-        dialogueObject.SetActive(true);
-        dialogueImage.enabled = true;
-        dialogueText.text = "";
-        HidePressXMessage();
-
-        if (playerController != null) TogglePlayerControl(false);
-        isDialogueActive = true;
-
-        StartCoroutine(TypeText(lines[currentLineIndex]));
-    }
-
-    private void ResetDialogueState()
-    {
-        HideContinueMessage();
-        dialogueText.text = string.Empty;
-        isTyping = false;
-    }
-
-    private IEnumerator TypeText(string line)
-    {
-        isTyping = true;
         dialogueText.text = string.Empty;
 
-        int charIndex = 0;
-        while (charIndex < line.Length)
+        for (int i = 0; i < line.Length; i++)
         {
-            if (line[charIndex] == '<')
+            if (line[i] == '<' && line.IndexOf('>', i) is var endTag && endTag > 0)
             {
-                int closingIndex = line.IndexOf('>', charIndex);
-                if (closingIndex != -1)
-                {
-                    dialogueText.text += line.Substring(charIndex, closingIndex - charIndex + 1);
-                    charIndex = closingIndex + 1;
-                }
-                else
-                {
-                    dialogueText.text += line[charIndex];
-                    charIndex++;
-                }
+                dialogueText.text += line.Substring(i, endTag - i + 1);
+                i = endTag;
             }
             else
             {
-                dialogueText.text += line[charIndex];
-                charIndex++;
+                dialogueText.text += line[i];
+                yield return new WaitForSeconds(typingSpeed);
             }
-            yield return new WaitForSeconds(typingSpeed);
         }
-
-        isTyping = false;
-        ShowContinueMessage();
     }
 
     private IEnumerator BlinkText()
@@ -164,110 +146,21 @@ public class DialogueUI : MonoBehaviour
         }
     }
 
-    void Update()
+    public void AddChoiceButton(string choiceText, System.Action onClickAction)
     {
-        if (!isDialogueActive) return;
-
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            AdvanceDialogue();
-        }
+        var choiceButton = Instantiate(choiceButtonPrefab, choicesContainer.transform);
+        choiceButton.GetComponentInChildren<TMP_Text>()?.SetText(choiceText);
+        choiceButton.GetComponent<Button>()?.onClick.AddListener(() => onClickAction());
     }
 
-    private void AdvanceDialogue()
+    public string ProcessLine(string line)
     {
-        if (isTyping)
+        var words = line.Split(' ');
+        for (int i = 0; i < words.Length; i++)
         {
-            StopAllCoroutines();
-            dialogueText.text = lines[currentLineIndex];
-            isTyping = false;
-            ShowContinueMessage();
+            if (words[i].Length > 0 && colorMap.TryGetValue(words[i][0], out string color))
+                words[i] = $"<color={color}>{words[i].Substring(1)}</color>";
         }
-        else
-        {
-            HideContinueMessage();
-
-            currentLineIndex++;
-
-            if (currentLineIndex < lines.Length)
-            {
-                StartCoroutine(TypeText(lines[currentLineIndex]));
-            }
-            else
-            {
-                EndDialogue();
-            }
-        }
-    }
-
-    private void EndDialogue()
-    {
-        dialogueImage.enabled = false;
-        dialogueObject.SetActive(false);
-        dialogueText.text = string.Empty;
-
-        HideContinueMessage();
-
-        if (playerController != null) TogglePlayerControl(true);
-        isDialogueActive = false;
-        OnDialogueEnded?.Invoke();
-    }
-
-    private void TogglePlayerControl(bool state)
-    {
-        playerController.enabled = state;
-        if (playerAnimator != null) playerAnimator.enabled = state;
-    }
-
-    private string ProcessLine(string line)
-    {
-        string processedLine = "";
-        string[] words = line.Split(' ');
-
-        foreach (string word in words)
-        {
-            if (word.Length > 0 && colorMap.ContainsKey(word[0]))
-            {
-                char specialChar = word[0];
-                string color = colorMap[specialChar];
-                processedLine += $"<color={color}>{word.Substring(1)}</color> ";
-            }
-            else
-            {
-                processedLine += word + " ";
-            }
-        }
-
-        return processedLine.Trim();
-    }
-
-    // M�todo para exibir as escolhas
-    public void SetChoices(string[] choices, System.Action<int> onChoiceSelected)
-    {
-        // Verifica se o prefab do bot�o de escolha est� atribu�do
-        if (choiceButtonPrefab == null)
-        {
-            Debug.LogError("Choice button prefab is missing!");
-            return;
-        }
-
-        // Limpa as escolhas anteriores
-        foreach (Transform child in choicesContainer)
-        {
-            Destroy(child.gameObject);
-        }
-
-        for (int i = 0; i < choices.Length; i++)
-        {
-            var choiceButton = Instantiate(choiceButtonPrefab, choicesContainer);
-            var buttonText = choiceButton.GetComponentInChildren<TMP_Text>();
-            if (buttonText != null)
-            {
-                buttonText.text = choices[i];
-            }
-
-            int index = i; // Armazena o �ndice da escolha
-            choiceButton.GetComponent<Button>().onClick.AddListener(() => onChoiceSelected(index)); // Lida com o clique
-        }
+        return string.Join(" ", words);
     }
 }

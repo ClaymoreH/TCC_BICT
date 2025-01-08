@@ -7,7 +7,7 @@ public class DeliverItem : MonoBehaviour
     public int requiredItemAmount;   // Quantidade necessária do item
     private bool isPlayerInArea = false; // Flag para verificar se o jogador está na área de entrega
 
-    private void Update()
+    public void Update()
     {
         if (isPlayerInArea && Input.GetKeyDown(KeyCode.E)) // Verificar se o jogador está na área e tecla "E" é pressionada
         {
@@ -15,7 +15,7 @@ public class DeliverItem : MonoBehaviour
         }
     }
 
-    private void TryDeliverItem()
+    public void TryDeliverItem()
     {
         QuestManager questManager = FindObjectOfType<QuestManager>();
         InventoryManager inventoryManager = FindObjectOfType<InventoryManager>();

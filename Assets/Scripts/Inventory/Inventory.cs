@@ -23,25 +23,21 @@ public class InventoryManager : MonoBehaviour
     {
         QuestManager questManager = FindObjectOfType<QuestManager>();
 
-        // Verifica se o item já existe no inventário
         Item existingItem = inventoryItems.Find(i => i.itemID == item.itemID);
 
         if (existingItem != null)
         {
-            // Se o item já existe, incrementa a quantidade em 1
-            existingItem.quantity += 1;  // Incrementa sempre +1 na quantidade
+            existingItem.quantity += 1;
         }
         else
         {
-            // Se o item não existe, adiciona ao inventário com a quantidade inicial igual a 1
-            item.quantity = 1;  // Define a quantidade como 1 quando o item for adicionado pela primeira vez
+            item.quantity = 1;
             inventoryItems.Add(item);
         }
 
-        // Instancia o item no painel de inventário, fazendo com que ele seja filho de um slot vazio
         foreach (Transform slot in slotsParent)
         {
-            if (slot.childCount == 0)  // Verifica se o slot está vazio
+            if (slot.childCount == 0)
             {
                 if (itemPrefab == null || item.itemSprite == null)
                 {
@@ -49,14 +45,12 @@ public class InventoryManager : MonoBehaviour
                     return;
                 }
 
-                // Instancia o prefab no slot
                 GameObject newItem = Instantiate(itemPrefab, slot);
 
-                // Configurar a imagem do item
                 Image itemImage = newItem.GetComponent<Image>();
                 if (itemImage != null)
                 {
-                    itemImage.sprite = item.itemSprite;  // Define a sprite do item
+                    itemImage.sprite = item.itemSprite;
                 }
                 else
                 {
@@ -65,21 +59,18 @@ public class InventoryManager : MonoBehaviour
                     return;
                 }
 
-                // Configurar o texto da quantidade (se existir)
                 TextMeshProUGUI quantityText = newItem.GetComponentInChildren<TextMeshProUGUI>();
                 if (quantityText != null)
                 {
-                    quantityText.text = item.quantity > 1 ? item.quantity.ToString() : "";  // Exibe a quantidade, se maior que 1
+                    quantityText.text = item.quantity > 1 ? item.quantity.ToString() : "";
                 }
                 else
                 {
                     Debug.LogWarning("Prefab não contém um componente TextMeshProUGUI! Quantidade não será exibida.");
                 }
 
-                // Configurar o nome do item
                 newItem.name = item.itemName;
 
-                // Atualizar o progresso da missão
                 if (questManager != null)
                 {
                     questManager.UpdateQuestProgress(item.itemID, ObjectiveType.CollectItem, item.quantity);
@@ -138,6 +129,24 @@ public class InventoryManager : MonoBehaviour
     public Item GetItemByID(int itemID)
     {
         return inventoryItems.Find(item => item.itemID == itemID);
+    }
+    // Método para buscar o item diretamente nas pastas de Resources
+    public Item FindItemByID(int itemID)
+    {
+        // Carregar todos os itens da pasta "Items" dentro da pasta Resources
+        Item[] allItems = Resources.LoadAll<Item>("Items");
+
+        // Procurar o item pelo itemID
+        foreach (Item item in allItems)
+        {
+            if (item.itemID == itemID)
+            {
+                return item;
+            }
+        }
+
+        // Se não encontrar, retorna null
+        return null;
     }
 
     void Update()

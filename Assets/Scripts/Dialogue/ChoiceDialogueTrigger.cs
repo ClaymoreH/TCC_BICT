@@ -1,121 +1,88 @@
 using UnityEngine;
-using System.IO;
+using System.Collections;
 
-[System.Serializable]
-public class ChoiceDialogueDatabase
+public class ChoiceDialogueTrigger : InteractiveDialogueTrigger
 {
-    public ChoiceDialogueData[] dialogues;
-}
-
-[System.Serializable]
-public class ChoiceDialogueData
-{
-    public int id; // ID do di�logo
-    public int status;
-    public int next_status;
-    public string[] lines;
-    public string[] choices;
-    public int[] nextDialogues;
-    public string[] missionObjectives;
-    public int locationId; // Adicionado: ID do local associado
-}
-
-public class ChoiceDialogueTrigger : MonoBehaviour
-{
-    [Header("Dialogue UI")]
-    public DialogueUI dialogueUI; // Refer�ncia ao script de UI
-
-    [Header("JSON Data")]
-    public string jsonFilePath = "Dialogues.json";
-    private ChoiceDialogueData[] dialogues;
-    private int currentDialogueIndex = 0;
+    private InventoryManager inventoryManager;
+    private QuestManager questManager;
 
     void Start()
     {
-        if (LoadDialogueData())
-        {
-            DisplayDialogue(currentDialogueIndex);
-        }
+        base.Start();
+        inventoryManager = FindObjectOfType<InventoryManager>();
+        questManager = FindObjectOfType<QuestManager>();
     }
-
-    private bool LoadDialogueData()
+    public override void StartDialogue()
     {
-        string filePath = Path.Combine(Application.dataPath, "Scripts/Dialogue", jsonFilePath);
-        if (!File.Exists(filePath))
+        base.StartDialogue();  // Chama o método Start do InteractiveDialogueTrigger
+        
+    }
+    public void CollectItem(int ActionID)
+    {
+        if (inventoryManager != null)
         {
-            Debug.LogError($"JSON file not found at {filePath}");
-            return false;
-        }
+            Item itemToAdd = inventoryManager.FindItemByID(ActionID);
 
-        try
-        {
-            string jsonContent = File.ReadAllText(filePath);
-            var container = JsonUtility.FromJson<ChoiceDialogueDatabase>(jsonContent);
-
-            if (container?.dialogues == null || container.dialogues.Length == 0)
+            if (itemToAdd != null)
             {
-                Debug.LogError("No valid dialogues found in the JSON file.");
-                return false;
+                inventoryManager.AddItem(itemToAdd);
+                Debug.Log("Item '" + itemToAdd.itemName + "' adicionado ao inventário.");
             }
-
-            dialogues = container.dialogues;
-            return true;
         }
-        catch (System.Exception ex)
-        {
-            Debug.LogError($"Error reading JSON file: {ex.Message}");
-            return false;
-        }
+        Destroy(gameObject);
     }
 
-    private void DisplayDialogue(int dialogueIndex)
+    public void InteractWithObject(int ActionID)
     {
-        if (dialogues == null || dialogueIndex < 0 || dialogueIndex >= dialogues.Length)
+        if (questManager != null)
         {
-            Debug.LogError("Invalid dialogue index.");
-            return;
+            questManager.UpdateQuestProgress(ActionID, ObjectiveType.InteractWithObject);
         }
-
-        var dialogue = dialogues[dialogueIndex];
-
-        // Usar o DialogueUI para exibir as linhas
-        dialogueUI.StartDialogue(dialogue.lines);
-
-        // Opcional: Atualize outras informa��es relacionadas, se necess�rio
-        dialogueUI.ShowPressXMessage(); // Se necess�rio mostrar mensagem para avan�ar
+        Destroy(gameObject);
     }
 
-    void Update()
+    public void DeliverItem(int ActionID)
     {
-        if (dialogueUI.IsDialogueActive) return;
+        DeliverItem deliverItem = FindObjectOfType<DeliverItem>();
 
-        // Verificar se o jogador est� pronto para tomar uma decis�o
-        if (dialogues[currentDialogueIndex].choices.Length > 0)
+        if (deliverItem != null)
         {
-            DisplayChoices();
+            deliverItem.objectID = ActionID; // Define o ID do objeto para entrega
+            deliverItem.TryDeliverItem();   // Tenta realizar a entrega
         }
+        Destroy(gameObject);
     }
 
-    private void DisplayChoices()
+public void OpenPuzzle(int ActionID)
+{
+    // Lógica para tornar o quebra-cabeça correspondente ao ActionID visível
+    Debug.Log("Quebra-cabeça com ID " + ActionID + " será mostrado.");
+
+    // Procurar todos os objetos do tipo PuzzleObjectData na cena
+    PuzzleObjectData[] puzzleObjects = FindObjectsOfType<PuzzleObjectData>();
+
+    foreach (PuzzleObjectData puzzleObject in puzzleObjects)
     {
-        var dialogue = dialogues[currentDialogueIndex];
-
-        dialogueUI.HidePressXMessage(); // Ocultar mensagem "pressione X"
-        dialogueUI.SetChoices(dialogue.choices, HandleChoice); // Configurar escolhas
-    }
-
-    private void HandleChoice(int choiceIndex)
-    {
-        var dialogue = dialogues[currentDialogueIndex];
-
-        if (choiceIndex < dialogue.nextDialogues.Length)
+        // Verifica se o PainelPuzzle do objeto é igual ao ActionID
+        if (puzzleObject.PainelPuzzle == ActionID)
         {
-            currentDialogueIndex = dialogue.nextDialogues[choiceIndex];
-            DisplayDialogue(currentDialogueIndex);
-        }
-        else
-        {
-            Debug.LogError("Invalid choice index.");
+            // Tenta encontrar o painel correspondente
+            GameObject puzzlePanel = GameObject.Find("PuzzlePanel" + puzzleObject.PainelPuzzle); // Certifique-se de que os nomes dos painéis seguem o padrão
+
+            if (puzzlePanel != null)
+            {
+                puzzlePanel.SetActive(true); // Torna o painel visível
+                Debug.Log("Painel de quebra-cabeça com ID " + puzzleObject.PainelPuzzle + " foi tornado visível.");
+                break; // Já encontrou o painel, então quebra o loop
+            }
+            else
+            {
+                Debug.LogWarning("Painel de quebra-cabeça com ID " + puzzleObject.PainelPuzzle + " não encontrado.");
+            }
         }
     }
+
+    Destroy(gameObject); // Destroi o objeto de diálogo, como no código original
+}
+
 }

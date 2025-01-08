@@ -39,7 +39,7 @@ MonoBehaviour:
     initialRequiredAmount: 1
     isSequential: 0
     rewardExperience: 0
-    rewardItem: {fileID: 11400000, guid: 9f98e421d1b25ec44a3fb136ae4e4374, type: 2}
+    rewardItem: {fileID: 11400000, guid: a7e0213fc09811843bef3b8584ad0fdc, type: 2}
   rewardExperience: 0
   rewardItem: {fileID: 0}
-  nextQuest: {fileID: 11400000, guid: ca21856a92454ce43b44610c60ea32ba, type: 2}
+  nextQuest: {fileID: 11400000, guid: f221d7ac43ecfc049b996517a6f57978, type: 2}

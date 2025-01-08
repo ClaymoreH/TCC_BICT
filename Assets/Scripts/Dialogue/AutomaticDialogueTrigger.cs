@@ -5,14 +5,14 @@ public class AutomaticDialogueTrigger : MonoBehaviour
     public TextAsset dialogueFile;
     public int dialogueID;
 
-    private DialogueUI dialogueUI;
+    private DialogueManager dialogueManager;
     private DialogueDatabase dialogueDatabase;
 
     private bool hasTriggered = false;
 
     void Start()
     {
-        dialogueUI = FindObjectOfType<DialogueUI>();
+        dialogueManager = FindObjectOfType<DialogueManager>();
         LoadDialogueDatabase();  // Carrega o banco de dados de diálogos na inicialização
     }
 
@@ -42,20 +42,16 @@ public class AutomaticDialogueTrigger : MonoBehaviour
         }
     }
 
-
     private void StartDialogue()
     {
         foreach (var dialogue in dialogueDatabase.dialogues)
         {
             if (dialogue.id == dialogueID)
             {
-                dialogueUI.StartDialogue(dialogue.lines);
-                dialogueUI.HidePressXMessage();
+                dialogueManager.StartDialogue(dialogue.lines);  // Usa o DialogueManager para iniciar o diálogo
+                dialogueManager.dialogueUI.HidePressXMessage(); // Usa o DialogueUI diretamente para esconder a mensagem "Press X"
                 break;
             }
         }
     }
-
 }
-
-
