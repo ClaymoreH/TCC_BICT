@@ -5,19 +5,28 @@
             "status": 1,
             "next_status": 1,
             "lines": [
-                "Vasculhando os armarios voce achou achou uma bateria!",
-                "Pegar a bateria?"
+                "Você se aproxima de um painel danificado próximo ao núcleo do reator.",
+                "As luzes piscam irregularmente, mas você consegue distinguir um HD preso ao sistema",
+		""
             ],
             "choices": [
                 {
-                    "choiceText": "Sim",
-                    "actionType": "CollectItem",
-                    "ActionID": 1
+                    "choiceText": "Examinar o painel",
+                    "actionType": "EndDialogue",
+                    "ActionID": 0,
+                    "responseLines": ["Painel em estado crítico. Backup identificado como funcional. Recuperação manual necessária."]
                 },
                 {
-                    "choiceText": "Não",
+                    "choiceText": "Pegar o HD",
+                    "actionType": "CollectItem",
+                    "ActionID": 1,
+                    "responseLines": ["HD do Reator Principal recuperado. Dados em estado parcial, pronto para análise."]
+                },
+                {
+                    "choiceText": "Sair",
                     "actionType": "EndDialogue",
-                    "ActionID": 0
+                    "ActionID": 0,
+                    "responseLines": ["Você decide sair sem pegar o HD. A missão não pode continuar sem ele."]
                 }
             ]
         },
@@ -27,18 +36,6 @@
             "next_status": 1,
             "lines": [
                 "Interagir com o Reator?"
-            ],
-            "choices": [
-                {
-                    "choiceText": "Sim",
-                    "actionType": "InteractWithObject",
-                    "ActionID": 1
-                },
-                {
-                    "choiceText": "Não",
-                    "actionType": "EndDialogue",
-                    "ActionID": 3
-                }
             ]
         },
         {

@@ -41,17 +41,31 @@ public class ChoiceDialogueTrigger : InteractiveDialogueTrigger
         Destroy(gameObject);
     }
 
-    public void DeliverItem(int ActionID)
-    {
-        DeliverItem deliverItem = FindObjectOfType<DeliverItem>();
+public void DeliverItem(int ActionID)
+{
+    DeliverItem deliverItem = FindObjectOfType<DeliverItem>();
 
-        if (deliverItem != null)
+    if (deliverItem != null)
+    {
+        // Verifique se o ActionID corresponde a algum item na lista
+        var requiredItem = deliverItem.requiredItems.Find(item => item.itemID == ActionID);
+
+        if (requiredItem != null)
         {
-            deliverItem.objectID = ActionID; // Define o ID do objeto para entrega
-            deliverItem.TryDeliverItem();   // Tenta realizar a entrega
+            deliverItem.TryDeliverItems(); // Chama o método para verificar e entregar os itens
         }
-        Destroy(gameObject);
+        else
+        {
+            Debug.LogWarning("Nenhum item correspondente ao ActionID foi encontrado na lista de entrega.");
+        }
     }
+    else
+    {
+        Debug.LogError("Nenhum objeto DeliverItem foi encontrado na cena.");
+    }
+    Destroy(gameObject);
+}
+
 
 public void OpenPuzzle(int ActionID)
 {

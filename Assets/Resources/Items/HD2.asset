@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a548c849e80020d4ab3c7b8271091e5a, type: 3}
-  m_Name: Battery
+  m_Name: HD2
   m_EditorClassIdentifier: 
-  itemName: Battery
-  itemID: 1
-  itemSprite: {fileID: 21300000, guid: fd9a053dd6de0b94e8437c669bd38545, type: 3}
+  itemName: HD_Refrigeracao
+  itemID: 3
+  itemSprite: {fileID: 21300000, guid: a8372879eda9caa4fb7c4b254b8ca95e, type: 3}
   quantity: 0

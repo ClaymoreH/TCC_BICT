@@ -22,21 +22,21 @@ MonoBehaviour:
   - title: Ligar o Reator
     description: Interaja com o painel ao lado do reator para ligar
     type: 2
-    requiredAmount: 1
+    requiredAmount: 0
     targetID: 3
-    isCompleted: 0
+    isCompleted: 1
     initialRequiredAmount: 1
     isSequential: 0
     rewardExperience: 0
-    rewardItem: {fileID: 0}
+    rewardItem: {fileID: 11400000, guid: ffe4bac70e97f8b42948f67da8f872f5, type: 2}
   - title: Recarregar a Bateria
     description: Coloque a bateria dentro do Reator
     type: 3
-    requiredAmount: 1
+    requiredAmount: 0
     targetID: 4
-    isCompleted: 0
+    isCompleted: 1
     initialRequiredAmount: 1
-    isSequential: 1
+    isSequential: 0
     rewardExperience: 0
     rewardItem: {fileID: 0}
   rewardExperience: 0

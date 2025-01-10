@@ -1,66 +1,79 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class DeliverItem : MonoBehaviour
 {
-    public int objectID;             // ID do objeto (correspondente ao objetivo)
-    public int requiredItemID;       // ID do item necessário para entregar
-    public int requiredItemAmount;   // Quantidade necessária do item
-    private bool isPlayerInArea = false; // Flag para verificar se o jogador está na área de entrega
+    public int objectID;
 
-    public void Update()
+    [System.Serializable]
+    
+    public class RequiredItem
     {
-        if (isPlayerInArea && Input.GetKeyDown(KeyCode.E)) // Verificar se o jogador está na área e tecla "E" é pressionada
+        public int itemID;         
+        public int requiredAmount;  
+    }
+
+    public List<RequiredItem> requiredItems;
+    private bool isPlayerInArea = false;     
+
+    private void Update()
+    {
+        if (isPlayerInArea && Input.GetKeyDown(KeyCode.E))
         {
-            TryDeliverItem();
+            TryDeliverItems();
         }
     }
 
-    public void TryDeliverItem()
+    public void TryDeliverItems()
     {
         QuestManager questManager = FindObjectOfType<QuestManager>();
         InventoryManager inventoryManager = FindObjectOfType<InventoryManager>();
 
         if (questManager == null || inventoryManager == null)
         {
-            Debug.LogError("QuestManager ou InventoryManager não encontrado na cena!");
+            Debug.LogError("QuestManager ou InventoryManager não encontrado!");
             return;
         }
 
-        // Verificar se o objetivo de entrega pode ser completado
-        if (questManager.CanCompleteObjective(objectID, ObjectiveType.DeliverItem))
+        // Verificar se todos os itens necessários estão no inventário
+        foreach (var requiredItem in requiredItems)
         {
-            Item item = inventoryManager.GetItemByID(requiredItemID);
-
-            if (item != null && item.quantity >= requiredItemAmount)
+            Item item = inventoryManager.GetItemByID(requiredItem.itemID);
+            if (item == null || item.quantity < requiredItem.requiredAmount)
             {
-                // Atualizar quantidade no inventário
-                item.quantity -= requiredItemAmount;
+                Debug.Log($"Você não possui os itens suficientes para entregar '{requiredItem.itemID}'.");
+                return;
+            }
+        }
 
-                if (item.quantity == 0)
+        // Se todos os itens estiverem disponíveis, remova-os do inventário e conclua a missão
+        foreach (var requiredItem in requiredItems)
+        {
+            Item item = inventoryManager.GetItemByID(requiredItem.itemID);
+            if (item != null)
+            {
+                item.quantity -= requiredItem.requiredAmount;
+                if (item.quantity <= 0)
                 {
                     inventoryManager.RemoveItem(item);
                 }
-
-                // Atualizar o progresso da missão
-                questManager.UpdateQuestProgress(objectID, ObjectiveType.DeliverItem, requiredItemAmount);
-
-                Debug.Log($"Item '{item.itemName}' entregue. Objetivo concluído!");
-                Destroy(gameObject);
-            }
-            else
-            {
-                Debug.Log($"Não há itens suficientes de '{requiredItemID}' no inventário.");
             }
         }
-        else
+
+        // Atualizar o progresso da missão
+        foreach (var requiredItem in requiredItems)
         {
-            Debug.Log($"Você não pode entregar o item {requiredItemID} ainda. Complete os objetivos anteriores.");
+            questManager.UpdateQuestProgress(objectID, ObjectiveType.DeliverItem, requiredItem.requiredAmount);
+            
         }
+
+        Debug.Log("Todos os itens foram entregues! Objetivo concluído!");
+        Destroy(gameObject); // Remove o objeto da cena após a entrega
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player")) // Verificar se o jogador entrou na área
+        if (collision.CompareTag("Player"))
         {
             isPlayerInArea = true;
             Debug.Log("Jogador entrou na área de entrega.");
@@ -69,7 +82,7 @@ public class DeliverItem : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player")) // Verificar se o jogador saiu da área
+        if (collision.CompareTag("Player"))
         {
             isPlayerInArea = false;
             Debug.Log("Jogador saiu da área de entrega.");

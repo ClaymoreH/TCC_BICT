@@ -84,47 +84,74 @@ public class InventoryManager : MonoBehaviour
         Debug.Log("Inventário cheio! Não foi possível adicionar o item.");
     }
 
-
-    public void RemoveItem(Item item)
+public void RemoveItem(Item item)
+{
+    if (inventoryItems.Contains(item))
     {
-        if (inventoryItems.Contains(item))
+        // Reduz a quantidade do item
+        item.quantity--;
+
+        // Remove o item da lista se a quantidade chegar a 0
+        if (item.quantity <= 0)
         {
             inventoryItems.Remove(item);
-            UpdateInventoryUI(); 
+        }
+
+        // Atualiza a interface do inventário
+        UpdateInventoryUI();
+    }
+    else
+    {
+        Debug.LogWarning($"Item '{item.itemName}' não encontrado no inventário para remoção.");
+    }
+}
+
+public void RemoveItems(List<Item> itemsToRemove)
+{
+    foreach (Item item in itemsToRemove)
+    {
+        RemoveItem(item); // Usa o método individual para garantir consistência
+    }
+}
+
+private void UpdateInventoryUI()
+{
+    // Limpa todos os slots
+    foreach (Transform slot in slotsParent)
+    {
+        if (slot.childCount > 0)
+        {
+            Destroy(slot.GetChild(0).gameObject); // Destrói os objetos dentro dos slots
         }
     }
 
-
-    private void UpdateInventoryUI()
+    // Recria os itens do inventário na interface
+    foreach (var item in inventoryItems)
     {
         foreach (Transform slot in slotsParent)
         {
-            if (slot.childCount > 0)
+            if (slot.childCount == 0) // Encontra um slot vazio
             {
-                Destroy(slot.GetChild(0).gameObject);
+                GameObject newItem = Instantiate(itemPrefab, slot);
+                
+                Image itemImage = newItem.GetComponent<Image>();
+                if (itemImage != null)
+                {
+                    itemImage.sprite = item.itemSprite;
+                }
+
+                TextMeshProUGUI quantityText = newItem.GetComponentInChildren<TextMeshProUGUI>();
+                if (quantityText != null)
+                {
+                    quantityText.text = item.quantity > 1 ? item.quantity.ToString() : "";
+                }
+
+                newItem.name = item.itemName;
+                break; // Sai do loop após adicionar o item a um slot
             }
-        }
-
-        foreach (var item in inventoryItems)
-        {
-            GameObject newItem = Instantiate(itemPrefab, slotsParent);
-            newItem.transform.SetParent(slotsParent, false);
-
-            Image itemImage = newItem.GetComponent<Image>();
-            if (itemImage != null)
-            {
-                itemImage.sprite = item.itemSprite;
-            }
-
-            TextMeshProUGUI quantityText = newItem.GetComponentInChildren<TextMeshProUGUI>();
-            if (quantityText != null)
-            {
-                quantityText.text = item.quantity > 1 ? item.quantity.ToString() : "";
-            }
-
-            newItem.name = item.itemName;
         }
     }
+}
 
     public Item GetItemByID(int itemID)
     {

@@ -22,13 +22,13 @@ MonoBehaviour:
   - title: Chega no corredor
     description: "entrar na ala princi\xB4pal abaiixo da sala e controle"
     type: 1
-    requiredAmount: 0
+    requiredAmount: 1
     targetID: 1
-    isCompleted: 1
+    isCompleted: 0
     initialRequiredAmount: 1
     isSequential: 0
     rewardExperience: 0
-    rewardItem: {fileID: 0}
+    rewardItem: {fileID: 11400000, guid: 3598b918284c4c04cb41a9abc1ee3b02, type: 2}
   - title: Chegar na sala de Energia
     description: "Siga para baoxp e v[a \xB4\xB4ara a dirieit qunado vir centrais
       de armazenamento"
@@ -41,5 +41,5 @@ MonoBehaviour:
     rewardExperience: 0
     rewardItem: {fileID: 11400000, guid: a7e0213fc09811843bef3b8584ad0fdc, type: 2}
   rewardExperience: 0
-  rewardItem: {fileID: 0}
+  rewardItem: {fileID: 11400000, guid: 68c96efb6fbefe54296f278bf12f7099, type: 2}
   nextQuest: {fileID: 11400000, guid: f221d7ac43ecfc049b996517a6f57978, type: 2}

@@ -28,7 +28,7 @@ public class DialogueManager : MonoBehaviour
     {
         ResetDialogue();
         lines = ProcessLines(dialogueLines);
-        choices = dialogueChoices;  // Armazena as escolhas, se houver
+        choices = dialogueChoices;
         currentLineIndex = 0;
         dialogueUI.dialogueObject.SetActive(true);
         dialogueUI.HidePressXMessage();
@@ -60,7 +60,6 @@ public class DialogueManager : MonoBehaviour
     }
 private void AdvanceDialogue()
 {
-    // Impede que o jogador avance o diálogo enquanto as escolhas estão visíveis
     if (isShowingChoices)
         return;
 
@@ -80,16 +79,22 @@ private void AdvanceDialogue()
         }
         else
         {
-            // Mostrar as escolhas imediatamente após a última linha
-            ShowChoices();
+            if (choices != null && choices.Length > 0)
+            {
+                ShowChoices();
+            }
+            else
+            {
+                EndDialogue();
+            }
         }
     }
 }
 
+
 private void ShowChoices()
 {
     isShowingChoices = true;  // As escolhas estão sendo mostradas
-    DestroyChoiceTextObjects();
     foreach (var choice in choices)
     {
         dialogueUI.AddChoiceText(choice.choiceText, () => HandleChoice(choice));
@@ -98,57 +103,112 @@ private void ShowChoices()
     dialogueUI.ShowChoices(); // Ativa a navegação e seleção das escolhas
 }
 
-// Função para destruir os objetos de texto das escolhas anteriores
-private void DestroyChoiceTextObjects()
+private void HandleChoice(DialogueChoice choice)
 {
-    foreach (Transform child in dialogueUI.choicesContainer.transform)
-    {
-        Destroy(child.gameObject);  // Remove a escolha do painel
-    }
+    // Acesso ao ChoiceDialogueTrigger
+    ChoiceDialogueTrigger choiceTrigger = FindObjectOfType<ChoiceDialogueTrigger>();
 
-    // Limpa a lista que armazena as escolhas
-    dialogueUI.choiceTextList.Clear();  // Limpa a lista de escolhas para não deixar rastros
+    // Exibe as linhas de resposta antes de realizar a ação
+    if (choice.responseLines != null && choice.responseLines.Length > 0)
+    {
+        StartCoroutine(ShowResponseAndExecute(choice));
+    }
+    else
+    {
+        ExecuteChoiceAction(choice, choiceTrigger);
+    }
 }
 
-    private void HandleChoice(DialogueChoice choice)
+// Método para exibir a resposta e depois executar a ação
+private IEnumerator ShowResponseAndExecute(DialogueChoice choice)
+{
+    DestroyChoiceButtons();
+    
+    foreach (string responseLine in choice.responseLines)
     {
-        // Acesso ao ChoiceDialogueTrigger
-        ChoiceDialogueTrigger choiceTrigger = FindObjectOfType<ChoiceDialogueTrigger>();
-
-        // Lógica para lidar com a escolha (conforme suas ações definidas)
-        switch (choice.actionType)
-        {
-            case "EndDialogue":
-                EndDialogue();
-                break;
-
-            case "CollectItem":
-                choiceTrigger?.CollectItem(choice.ActionID);  // Chama a função do ChoiceDialogueTrigger
-                EndDialogue();
-                break;
-
-            case "InteractWithObject":
-                choiceTrigger?.InteractWithObject(choice.ActionID);  // Chama a função do ChoiceDialogueTrigger
-                EndDialogue();
-                break;
-
-            case "DeliverItem":
-                choiceTrigger?.DeliverItem(choice.ActionID);  // Chama a função do ChoiceDialogueTrigger
-                EndDialogue();
-                break;
-
-            case "OpenPuzzle":
-                choiceTrigger?.OpenPuzzle(choice.ActionID);  // Chama a função do ChoiceDialogueTrigger
-                EndDialogue();
-                break;
-
-            default:
-                Debug.LogWarning("Ação desconhecida: " + choice.actionType);
-                break;
-        }
-        isShowingChoices = false;
-
+        dialogueUI.dialogueText.text = ""; // Limpa o texto atual
+        yield return StartCoroutine(dialogueUI.TypeText(responseLine)); // Digita cada linha de resposta
+        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.X)); // Aguarda o jogador pressionar X
     }
+
+    // Após exibir a resposta, executa a ação associada
+    ChoiceDialogueTrigger choiceTrigger = FindObjectOfType<ChoiceDialogueTrigger>();
+    ExecuteChoiceAction(choice, choiceTrigger);
+}
+
+// Método separado para executar a ação
+private void ExecuteChoiceAction(DialogueChoice choice, ChoiceDialogueTrigger choiceTrigger)
+{
+    switch (choice.actionType)
+    {
+        case "EndDialogue":
+            EndDialogue();
+            break;
+
+        case "CollectItem":
+            choiceTrigger?.CollectItem(choice.ActionID);
+            EndDialogue();
+            break;
+
+        case "InteractWithObject":
+            choiceTrigger?.InteractWithObject(choice.ActionID);
+            EndDialogue();
+            break;
+
+        case "DeliverItem":
+            choiceTrigger?.DeliverItem(choice.ActionID);
+            EndDialogue();
+            break;
+
+        case "OpenPuzzle":
+            choiceTrigger?.OpenPuzzle(choice.ActionID);
+            EndDialogue();
+            break;
+
+        default:
+            Debug.LogWarning("Ação desconhecida: " + choice.actionType);
+            break;
+    }
+    isShowingChoices = false;
+}
+
+private void ExecuteChoiceAction(DialogueChoice choice)
+{
+    // Acesso ao ChoiceDialogueTrigger
+    ChoiceDialogueTrigger choiceTrigger = FindObjectOfType<ChoiceDialogueTrigger>();
+
+    // Executa a ação baseada no tipo
+    switch (choice.actionType)
+    {
+        case "EndDialogue":
+            EndDialogue();
+            break;
+
+        case "CollectItem":
+            choiceTrigger?.CollectItem(choice.ActionID);
+            EndDialogue();
+            break;
+
+        case "InteractWithObject":
+            choiceTrigger?.InteractWithObject(choice.ActionID);
+            EndDialogue();
+            break;
+
+        case "DeliverItem":
+            choiceTrigger?.DeliverItem(choice.ActionID);
+            EndDialogue();
+            break;
+
+        case "OpenPuzzle":
+            choiceTrigger?.OpenPuzzle(choice.ActionID);
+            EndDialogue();
+            break;
+
+        default:
+            Debug.LogWarning("Ação desconhecida: " + choice.actionType);
+            break;
+    }
+}
 
 
 private void EndDialogue()
@@ -173,6 +233,8 @@ private void DestroyChoiceButtons()
     {
         Destroy(child.gameObject);
     }
+    dialogueUI.choiceTextList.Clear();  // Limpa a lista de escolhas para não deixar rastros
+
 }
 
     private void TogglePlayerControl(bool state)
