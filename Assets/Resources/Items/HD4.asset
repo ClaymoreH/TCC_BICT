@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: HD4
   m_EditorClassIdentifier: 
   itemName: HD_Central de Energia
-  itemID: 5
-  itemSprite: {fileID: 21300000, guid: 889f78b03a2bf6a4b8414b07230ec97c, type: 3}
+  itemID: 7
+  itemSprite: {fileID: 21300000, guid: b8107d24fcf61d341b9b9c8900ae5c89, type: 3}
   quantity: 0
