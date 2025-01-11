@@ -584,6 +584,8 @@ MonoBehaviour:
   ordemChegada: 0
   processo: 1
   dropzoneID: 0
+  PainelPuzzle: 0
+  Painel: {fileID: 0}
   descricao: 
 --- !u!114 &67814365
 MonoBehaviour:
@@ -1104,6 +1106,8 @@ MonoBehaviour:
   ordemChegada: 0
   processo: 5
   dropzoneID: 0
+  PainelPuzzle: 0
+  Painel: {fileID: 0}
   descricao: 
 --- !u!114 &257787091
 MonoBehaviour:
@@ -1891,7 +1895,7 @@ GameObject:
   - component: {fileID: 566146195}
   - component: {fileID: 566146194}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: RR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4094,6 +4098,8 @@ MonoBehaviour:
   ordemChegada: 0
   processo: 4
   dropzoneID: 0
+  PainelPuzzle: 0
+  Painel: {fileID: 0}
   descricao: 
 --- !u!114 &1570478251
 MonoBehaviour:
@@ -4587,6 +4593,8 @@ MonoBehaviour:
   ordemChegada: 0
   processo: 3
   dropzoneID: 0
+  PainelPuzzle: 0
+  Painel: {fileID: 0}
   descricao: 
 --- !u!114 &1749176148
 MonoBehaviour:
@@ -4835,6 +4843,8 @@ MonoBehaviour:
   ordemChegada: 0
   processo: 2
   dropzoneID: 0
+  PainelPuzzle: 0
+  Painel: {fileID: 0}
   descricao: 
 --- !u!114 &1772200875
 MonoBehaviour:
@@ -5626,6 +5636,7 @@ MonoBehaviour:
   feedbackDuration: 1
   panelTransform: {fileID: 453571187}
   painelProcessos: {fileID: 598153729}
+  puzzle: {fileID: 0}
 --- !u!1 &2093521104
 GameObject:
   m_ObjectHideFlags: 0

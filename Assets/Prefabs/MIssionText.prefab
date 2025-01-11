@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1856099571013243337}
   - component: {fileID: 9157104232962942918}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: MIssionText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

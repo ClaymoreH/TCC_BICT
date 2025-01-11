@@ -5,28 +5,28 @@
             "status": 1,
             "next_status": 1,
             "lines": [
-                "Você se aproxima de um painel danificado próximo ao núcleo do reator.",
+                "#Você se aproxima de um painel danificado próximo ao núcleo do reator.",
                 "As luzes piscam irregularmente, mas você consegue distinguir um HD preso ao sistema",
 		""
             ],
             "choices": [
                 {
                     "choiceText": "Examinar o painel",
-                    "actionType": "EndDialogue",
-                    "ActionID": 0,
-                    "responseLines": ["Painel em estado crítico. Backup identificado como funcional. Recuperação manual necessária."]
+                    "actionType": "InteractWithObject",
+                    "ActionID": 1,
+                    "responseLines": ["Painel em estado crítico. #Backup identificado como funcional. Recuperação manual necessária."]
                 },
                 {
                     "choiceText": "Pegar o HD",
-                    "actionType": "CollectItem",
+                    "actionType": "InteractWithObject",
                     "ActionID": 1,
                     "responseLines": ["HD do Reator Principal recuperado. Dados em estado parcial, pronto para análise."]
                 },
                 {
                     "choiceText": "Sair",
-                    "actionType": "EndDialogue",
-                    "ActionID": 0,
-                    "responseLines": ["Você decide sair sem pegar o HD. A missão não pode continuar sem ele."]
+                    "actionType": "InteractWithObject",
+                    "ActionID": 1,
+                    "responseLines": ["#Você decide sair sem pegar o HD. A missão não pode continuar sem ele."]
                 }
             ]
         },
@@ -43,13 +43,13 @@
             "status": 1,
             "next_status": 1,
             "lines": [
-                "Colocar a Bateria no Reator?"
+                "#AbrirPuzzle?"
             ],
             "choices": [
                 {
                     "choiceText": "Sim",
-                    "actionType": "DeliverItem",
-                    "ActionID": 4
+                    "actionType": "InteractWithObject",
+                    "ActionID": 1
                 },
                 {
                     "choiceText": "Não",

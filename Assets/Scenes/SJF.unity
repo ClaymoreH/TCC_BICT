@@ -540,6 +540,8 @@ MonoBehaviour:
   ordemChegada: 8
   processo: 0
   dropzoneID: 0
+  PainelPuzzle: 0
+  Painel: {fileID: 0}
   descricao: 
 --- !u!114 &127361347
 MonoBehaviour:
@@ -847,6 +849,8 @@ MonoBehaviour:
   ordemChegada: 0
   processo: 0
   dropzoneID: 0
+  PainelPuzzle: 0
+  Painel: {fileID: 0}
   descricao: 
 --- !u!114 &438706139
 MonoBehaviour:
@@ -1163,7 +1167,7 @@ GameObject:
   - component: {fileID: 566146195}
   - component: {fileID: 566146194}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: SJF
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1967,6 +1971,8 @@ MonoBehaviour:
   ordemChegada: 4
   processo: 0
   dropzoneID: 0
+  PainelPuzzle: 0
+  Painel: {fileID: 0}
   descricao: 
 --- !u!114 &646191929
 MonoBehaviour:
@@ -2274,6 +2280,8 @@ MonoBehaviour:
   ordemChegada: 12
   processo: 0
   dropzoneID: 0
+  PainelPuzzle: 0
+  Painel: {fileID: 0}
   descricao: 
 --- !u!114 &788841002
 MonoBehaviour:
@@ -2710,6 +2718,8 @@ MonoBehaviour:
   ordemChegada: 12
   processo: 0
   dropzoneID: 0
+  PainelPuzzle: 0
+  Painel: {fileID: 0}
   descricao: 
 --- !u!114 &903093738
 MonoBehaviour:
@@ -3652,6 +3662,7 @@ MonoBehaviour:
   feedbackText: {fileID: 1925717918}
   feedbackDuration: 1
   slotManager: {fileID: 948386055}
+  puzzle: {fileID: 0}
 --- !u!114 &1249440638
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4059,6 +4070,8 @@ MonoBehaviour:
   ordemChegada: 8
   processo: 0
   dropzoneID: 0
+  PainelPuzzle: 0
+  Painel: {fileID: 0}
   descricao: 
 --- !u!114 &1408945856
 MonoBehaviour:
@@ -4947,6 +4960,8 @@ MonoBehaviour:
   ordemChegada: 0
   processo: 0
   dropzoneID: 0
+  PainelPuzzle: 0
+  Painel: {fileID: 0}
   descricao: 
 --- !u!114 &1760533303
 MonoBehaviour:
@@ -5287,6 +5302,8 @@ MonoBehaviour:
   ordemChegada: 4
   processo: 0
   dropzoneID: 0
+  PainelPuzzle: 0
+  Painel: {fileID: 0}
   descricao: 
 --- !u!114 &1835345857
 MonoBehaviour:
@@ -5415,6 +5432,8 @@ MonoBehaviour:
   ordemChegada: 2
   processo: 0
   dropzoneID: 0
+  PainelPuzzle: 0
+  Painel: {fileID: 0}
   descricao: 
 --- !u!114 &1859958682
 MonoBehaviour:
@@ -6079,6 +6098,8 @@ MonoBehaviour:
   ordemChegada: 2
   processo: 0
   dropzoneID: 0
+  PainelPuzzle: 0
+  Painel: {fileID: 0}
   descricao: 
 --- !u!114 &2013701878
 MonoBehaviour:

@@ -7,6 +7,9 @@ public class SJFManager : PuzzleManager
     [Header("Configurações do Puzzle")]
     public SlotManager slotManager;
 
+    [Header("Referência ao Puzzle")]
+    public Puzzle puzzle;
+
     private void Start()
     {
         base.Start();
@@ -76,7 +79,23 @@ public class SJFManager : PuzzleManager
         }
 
         ExibirFeedback("Sucesso! A ordem está correta.", successSound);
-    }
+        // Destroi todos os objetos filhos do painel
+        Transform panelTransform = puzzle.transform; // Substitua `puzzle` pelo seu painel, se necessário
+        foreach (Transform child in panelTransform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        if (puzzle != null)
+        {
+            puzzle.CompletePuzzle();
+        }
+            // Completar o puzzle
+            if (puzzle != null)
+            {
+                puzzle.CompletePuzzle();
+            }
+        }
 
     private bool ValidarOrdemTabelaLogic(List<PuzzleObjectData> objetos)
     {

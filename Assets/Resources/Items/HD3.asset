@@ -15,4 +15,4 @@ MonoBehaviour:
   itemName: HD_Coleta
   itemID: 4
   itemSprite: {fileID: 21300000, guid: e7cf2ea971a793944b9c7d6984bdfc34, type: 3}
-  quantity: 0
+  quantity: 1

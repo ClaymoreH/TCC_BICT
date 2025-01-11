@@ -4,6 +4,7 @@ using System.Collections;
 public class ChoiceDialogueTrigger : InteractiveDialogueTrigger
 {
     private InventoryManager inventoryManager;
+    private DialogueUI dialogueUI;
     private QuestManager questManager;
 
     void Start()
@@ -11,6 +12,7 @@ public class ChoiceDialogueTrigger : InteractiveDialogueTrigger
         base.Start();
         inventoryManager = FindObjectOfType<InventoryManager>();
         questManager = FindObjectOfType<QuestManager>();
+        dialogueUI = FindObjectOfType<DialogueUI>();
     }
     public override void StartDialogue()
     {
@@ -69,34 +71,27 @@ public void DeliverItem(int ActionID)
 
 public void OpenPuzzle(int ActionID)
 {
-    // Lógica para tornar o quebra-cabeça correspondente ao ActionID visível
-    Debug.Log("Quebra-cabeça com ID " + ActionID + " será mostrado.");
+    PuzzleObjectData[] puzzles = FindObjectsOfType<PuzzleObjectData>(true); // Inclui objetos desativados
 
-    // Procurar todos os objetos do tipo PuzzleObjectData na cena
-    PuzzleObjectData[] puzzleObjects = FindObjectsOfType<PuzzleObjectData>();
-
-    foreach (PuzzleObjectData puzzleObject in puzzleObjects)
+    foreach (PuzzleObjectData puzzle in puzzles)
     {
-        // Verifica se o PainelPuzzle do objeto é igual ao ActionID
-        if (puzzleObject.PainelPuzzle == ActionID)
+        if (puzzle.PainelPuzzle == ActionID)
         {
-            // Tenta encontrar o painel correspondente
-            GameObject puzzlePanel = GameObject.Find("PuzzlePanel" + puzzleObject.PainelPuzzle); // Certifique-se de que os nomes dos painéis seguem o padrão
-
-            if (puzzlePanel != null)
+            if (puzzle.Painel != null)
             {
-                puzzlePanel.SetActive(true); // Torna o painel visível
-                Debug.Log("Painel de quebra-cabeça com ID " + puzzleObject.PainelPuzzle + " foi tornado visível.");
-                break; // Já encontrou o painel, então quebra o loop
+                puzzle.Painel.SetActive(true);
+                Debug.Log($"Painel com ID {ActionID} foi ativado.");
+                return;
             }
             else
             {
-                Debug.LogWarning("Painel de quebra-cabeça com ID " + puzzleObject.PainelPuzzle + " não encontrado.");
+                Debug.LogWarning($"Objeto PuzzleObjectData com ID {ActionID} encontrado, mas o painel não foi atribuído.");
             }
         }
     }
-
-    Destroy(gameObject); // Destroi o objeto de diálogo, como no código original
+    Destroy(gameObject);
+    Debug.LogWarning($"Nenhum painel correspondente ao ID {ActionID} foi encontrado.");
 }
+
 
 }
