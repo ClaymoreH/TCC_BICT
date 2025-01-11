@@ -22,7 +22,7 @@ MonoBehaviour:
   - title: Ligar o Reator
     description: Interaja com o painel ao lado do reator para ligar
     type: 2
-    requiredAmount: 0
+    requiredAmount: 1
     targetID: 3
     isCompleted: 1
     initialRequiredAmount: 1
@@ -32,7 +32,7 @@ MonoBehaviour:
   - title: Recarregar a Bateria
     description: Coloque a bateria dentro do Reator
     type: 3
-    requiredAmount: 0
+    requiredAmount: 1
     targetID: 4
     isCompleted: 1
     initialRequiredAmount: 1

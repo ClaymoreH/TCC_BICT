@@ -1,10 +1,12 @@
 using System.IO;
 using UnityEngine;
+using System.Collections;
+
 
 public class InteractiveDialogueTrigger : MonoBehaviour
 {
-    public TextAsset initialDialogueFile; // Arquivo JSON do estado inicial
-    public string modifiableDialoguePath; // Caminho para o JSON modificável
+    public TextAsset initialDialogueFile;
+    public string modifiableDialoguePath;
     public int dialogueID;
 
     public DialogueManager dialogueManager;
@@ -18,24 +20,21 @@ public class InteractiveDialogueTrigger : MonoBehaviour
     {
         dialogueManager = FindObjectOfType<DialogueManager>();
 
-        // Define o caminho para o arquivo modificável na pasta Assets/Scripts/Dialogue
         modifiableDialoguePath = Path.Combine(Application.dataPath, "Scripts", "Dialogue", "modifiableDialogue.json");
 
-        // Exclui o arquivo existente, se houver
         if (File.Exists(modifiableDialoguePath))
         {
             File.Delete(modifiableDialoguePath);
         }
 
-        // Cria o novo arquivo com o estado inicial
         File.WriteAllText(modifiableDialoguePath, initialDialogueFile.text);
 
-        // Carregar o estado atual dos diálogos
         LoadModifiableDialogue();
     }
 
     public void Update()
     {
+        // Verifique se o player ainda está dentro da área e, se for, mostre a mensagem "Press X"
         if (canShowDialogue && Input.GetKeyDown(KeyCode.X) && playerCollider != null)
         {
             if (!dialogueManager.IsDialogueActive)
@@ -43,30 +42,35 @@ public class InteractiveDialogueTrigger : MonoBehaviour
                 StartDialogue();
             }
         }
+
+        // Se o GameObject for destruído e a interação com o diálogo ainda estiver ativa, esconda a mensagem "Press X"
+        if (playerCollider == null && canShowDialogue)
+        {
+            dialogueManager.dialogueUI.HidePressXMessage();
+            canShowDialogue = false;
+        }
     }
 
     public virtual void StartDialogue()
     {
-        LoadModifiableDialogue(); // Recarregar o estado atual antes de iniciar
+        LoadModifiableDialogue();
 
-        // Encontra o diálogo que será iniciado
         foreach (var dialogue in dialogueDatabase.dialogues)
         {
             if (dialogue.id == dialogueID)
             {
-                if (dialogue.status == 1) // Verifica se o diálogo está ativo
+                if (dialogue.status == 1)
                 {
-                    // Altera o status do diálogo para o próximo valor
                     dialogue.status = dialogue.next_status;
 
-                    // Salva o novo estado no arquivo modificável
                     SaveModifiableDialogue();
 
-                    // Inicia o diálogo
                     currentDialogue = dialogue;
                     dialogueManager.StartDialogue(currentDialogue.lines, currentDialogue.choices);
-                    dialogueManager.dialogueUI.HidePressXMessage();       // Usa o DialogueUI para esconder a mensagem "Press X"
+                    dialogueManager.dialogueUI.HidePressXMessage();
                     canShowDialogue = false;
+
+                    StartCoroutine(WaitForDialogueEnd());
                     break;
                 }
                 else
@@ -81,7 +85,7 @@ public class InteractiveDialogueTrigger : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            LoadModifiableDialogue(); // Certifique-se de carregar o estado mais recente
+            LoadModifiableDialogue();
 
             foreach (var dialogue in dialogueDatabase.dialogues)
             {
@@ -89,7 +93,7 @@ public class InteractiveDialogueTrigger : MonoBehaviour
                 {
                     playerCollider = other;
                     canShowDialogue = true;
-                    dialogueManager.dialogueUI.ShowPressXMessage(); // Usa o DialogueUI para mostrar a mensagem "Press X"
+                    dialogueManager.dialogueUI.ShowPressXMessage();
                     return;
                 }
             }
@@ -125,13 +129,33 @@ public class InteractiveDialogueTrigger : MonoBehaviour
         File.WriteAllText(modifiableDialoguePath, jsonContent);
     }
 
-    // Método para restaurar o estado inicial
     public void RestoreInitialState()
     {
         if (initialDialogueFile != null)
         {
             File.WriteAllText(modifiableDialoguePath, initialDialogueFile.text);
             LoadModifiableDialogue();
+        }
+    }
+
+    private IEnumerator WaitForDialogueEnd()
+    {
+        while (dialogueManager.IsDialogueActive)
+        {
+            yield return null;
+        }
+
+        canShowDialogue = true;
+        dialogueManager.dialogueUI.ShowPressXMessage();
+    }
+
+    // Método chamado quando o GameObject é destruído
+    private void OnDestroy()
+    {
+        // Verifique se a mensagem "Press X" ainda deve ser escondida
+        if (canShowDialogue)
+        {
+            dialogueManager.dialogueUI.HidePressXMessage();
         }
     }
 }

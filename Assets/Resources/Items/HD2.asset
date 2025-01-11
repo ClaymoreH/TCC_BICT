@@ -15,4 +15,4 @@ MonoBehaviour:
   itemName: HD_Refrigeracao
   itemID: 3
   itemSprite: {fileID: 21300000, guid: a8372879eda9caa4fb7c4b254b8ca95e, type: 3}
-  quantity: 0
+  quantity: -1

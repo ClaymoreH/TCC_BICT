@@ -6,7 +6,7 @@ public class FifoManager : PuzzleManager
 {
     [Header("Configurações do Puzzle")]
     public List<Transform> slots;
-
+    
     [Header("Referência ao Puzzle")]
     public Puzzle puzzle;
 
@@ -20,64 +20,72 @@ public class FifoManager : PuzzleManager
         StartCoroutine(ValidateFIFO());
     }
 
-    private IEnumerator ValidateFIFO()
+private IEnumerator ValidateFIFO()
+{
+    if (audioSource != null && clickSound != null)
     {
-        if (audioSource != null && clickSound != null)
+        audioSource.PlayOneShot(clickSound);
+    }
+
+    yield return new WaitForSeconds(clickSound.length);
+
+    List<PuzzleObjectData> objectsInSlots = new List<PuzzleObjectData>();
+
+    foreach (Transform slot in slots)
+    {
+        if (slot.childCount > 0)
         {
-            audioSource.PlayOneShot(clickSound);
-        }
-
-        yield return new WaitForSeconds(clickSound.length);
-
-        List<PuzzleObjectData> objectsInSlots = new List<PuzzleObjectData>();
-
-        foreach (Transform slot in slots)
-        {
-            if (slot.childCount > 0)
+            PuzzleObjectData objectData = slot.GetChild(0).GetComponent<PuzzleObjectData>();
+            if (objectData != null)
             {
-                PuzzleObjectData objectData = slot.GetChild(0).GetComponent<PuzzleObjectData>();
-                if (objectData != null)
-                {
-                    objectsInSlots.Add(objectData);
-                }
-                else
-                {
-                    ExibirFeedback("ERRO: Objeto inválido.", errorSound);
-                    yield break;
-                }
+                objectsInSlots.Add(objectData);
             }
             else
             {
-                ExibirFeedback("ERRO: Slot vazio.", errorSound);
+                ExibirFeedback("ERRO: Objeto inválido.", errorSound);
                 yield break;
             }
         }
-
-        for (int i = 0; i < objectsInSlots.Count - 1; i++)
+        else
         {
-            try
-            {
-                System.DateTime currentDateTime = System.DateTime.Parse($"{objectsInSlots[i].data} {objectsInSlots[i].hora}");
-                System.DateTime nextDateTime = System.DateTime.Parse($"{objectsInSlots[i + 1].data} {objectsInSlots[i + 1].hora}");
-
-                if (currentDateTime > nextDateTime)
-                {
-                    ExibirFeedback("ERRO: A ordem dos processos está incorreta.", errorSound);
-                    yield break;
-                }
-            }
-            catch (System.FormatException)
-            {
-                ExibirFeedback("ERRO: Formato inválido.", errorSound);
-                yield break;
-            }
-        }
-
-        ExibirFeedback("Sucesso! A ordem está correta.", successSound);
-
-        if (puzzle != null)
-        {
-            puzzle.CompletePuzzle();
+            ExibirFeedback("ERRO: Slot vazio.", errorSound);
+            yield break;
         }
     }
+
+    for (int i = 0; i < objectsInSlots.Count - 1; i++)
+    {
+        try
+        {
+            System.DateTime currentDateTime = System.DateTime.Parse($"{objectsInSlots[i].data} {objectsInSlots[i].hora}");
+            System.DateTime nextDateTime = System.DateTime.Parse($"{objectsInSlots[i + 1].data} {objectsInSlots[i + 1].hora}");
+
+            if (currentDateTime > nextDateTime)
+            {
+                ExibirFeedback("ERRO: A ordem dos processos está incorreta.", errorSound);
+                yield break;
+            }
+        }
+        catch (System.FormatException)
+        {
+            ExibirFeedback("ERRO: Formato inválido.", errorSound);
+            yield break;
+        }
+    }
+
+    ExibirFeedback("Sucesso! A ordem está correta.", successSound);
+
+    // Destroi todos os objetos filhos do painel
+    Transform panelTransform = puzzle.transform; // Substitua `puzzle` pelo seu painel, se necessário
+    foreach (Transform child in panelTransform)
+    {
+        Destroy(child.gameObject);
+    }
+
+    if (puzzle != null)
+    {
+        puzzle.CompletePuzzle();
+    }
+}
+
 }
