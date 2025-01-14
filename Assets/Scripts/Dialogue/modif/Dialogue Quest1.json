@@ -250,7 +250,7 @@
                 {
                     "choiceText": "Abrir tela de processo",
                     "actionType": "OpenPuzzle",
-                    "ActionID": 7,
+                    "ActionID": 6,
                     "responseLines": ["Solução correta do algoritmo garantirá funcionalidade temporária. Continue."]
                 }
             ]

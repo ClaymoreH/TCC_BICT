@@ -1,0 +1,201 @@
+{
+    "dialogues": [
+        {
+            "id": 20,
+            "status": 1,
+            "next_status": 1,
+            "lines": [
+                "Sequência de falhas recuperadas.",
+                "Análise concluída. A origem do problema foi identificada: superaquecimento crítico do reator principal.",
+                "Este evento causou uma falha em cascata nos sistemas, afetando a memória e prejudicando a navegação da Argos VII."
+            ]
+        },
+        {
+            "id": 21,
+            "status": 1,
+            "next_status": 1,
+            "lines": [
+                "Agora que a cadeia de eventos foi reconstruída, é necessário agir rapidamente para restaurar as funções vitais da nave.",
+                "O reator principal e as baterias de reserva estão comprometidos."
+            ]
+        },
+        {
+            "id": 22,
+            "status": 1,
+            "next_status": 1,
+            "lines": [
+                "Inspeção necessária. Identifique a condição das baterias e registre os níveis de carga.",""
+            ],
+            "choices": [
+                {
+                    "choiceText": "Inspecionar a bateria.",
+                    "actionType": "InteractWithObject",
+                    "ActionID": 8,
+                    "responseLines": [
+                        "Inspeção concluída. Estruturalmente, a bateria parece intacta. Apresenta nível estável de carga."
+                    ]
+                },
+                {
+                    "choiceText": "Deixar para depois.",
+                    "actionType": "EndDialogue",
+                    "ActionID": 0,
+                    "responseLines": [
+                        "Tarefa pendente. Inspecionar baterias é essencial para prosseguir."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 23,
+            "status": 1,
+            "next_status": 1,
+            "lines": [
+                "Inspeção necessária. Identifique a condição das baterias e registre os níveis de carga.",""
+            ],
+            "choices": [
+                {
+                    "choiceText": "Inspecionar a bateria.",
+                    "actionType": "InteractWithObject",
+                    "ActionID": 8,
+                    "responseLines": [
+                        "Inspeção concluída. Estruturalmente, a bateria parece intacta. Mas apresenta nível mínimo de carga.",
+                        "Continue com o protocolo de recarga."
+                    ]
+                },
+                {
+                    "choiceText": "Deixar para depois.",
+                    "actionType": "EndDialogue",
+                    "ActionID": 0,
+                    "responseLines": [
+                        "Tarefa pendente. Inspecionar baterias é essencial para prosseguir."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 24,
+            "status": 1,
+            "next_status": 1,
+            "lines": [
+                "Configure os sistemas para iniciar o processo de recarga. Tenha cuidado: a energia é limitada.",""
+            ],
+            "choices": [
+                {
+                    "choiceText": "Configurar o reator.",
+                    "actionType": "InteractWithObject",
+                    "ActionID": 9,
+                    "responseLines": [
+                        "Configurações ajustadas. O reator está pronto para receber a bateria reserva."
+                    ]
+                },
+                {
+                    "choiceText": "Verificar as configurações antes de ativar.",
+                    "actionType": "EndDialogue",
+                    "ActionID": 0,
+                    "responseLines": [
+                        "Configurações padrão do sistema verificadas. Ajuste concluído. Pode prosseguir."
+                    ]
+                },
+                {
+                    "choiceText": "Deixar para depois.",
+                    "actionType": "EndDialogue",
+                    "ActionID": 0,
+                    "responseLines": [
+                        "A configuração do reator é essencial para recarregar as baterias."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 25,
+            "status": 1,
+            "next_status": 1,
+            "lines": [
+                "O compartimento para inserção da bateria está aberto.",
+                "Insira a bateria no compartimento designado para iniciar a recarga.",""
+            ],
+            "choices": [
+                {
+                    "choiceText": "Inserir a bateria.",
+                    "actionType": "DeliverItem",
+                    "ActionID": 10,
+                    "responseLines": [
+                        "Bateria inserida. Recarga iniciada.",
+                        "Aguarde a conclusão do processo."
+                    ]
+                },
+                {
+                    "choiceText": "Verificar o compartimento antes de inserir.",
+                    "actionType": "EndDialogue",
+                    "ActionID": 0,
+                    "responseLines": [
+                        "Compartimento em condições operacionais.",
+                        "A recarga pode ser iniciada."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 26,
+            "status": 1,
+            "next_status": 1,
+            "lines": [
+                "O reator emite um som baixo e constante.",
+                "A bateria, agora completamente carregada, aguarda no compartimento.",""
+            ],
+            "choices": [
+                {
+                    "choiceText": "Pegar Bateria.",
+                    "actionType": "CollectItem",
+                    "ActionID": 7,
+                    "responseLines": [
+                        "Recuperação da bateria concluída.",
+                        "Pronta para substituir a unidade crítica."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 27,
+            "status": 1,
+            "next_status": 1,
+            "lines": [
+                "Na sala de controle, a bateria crítica exibe sinais de falha iminente.",
+                "O painel indica a necessidade de substituição imediata.",""
+            ],
+            "choices": [
+                {
+                    "choiceText": "Substituir a bateria.",
+                    "actionType": "DeliverItem",
+                    "ActionID": 12,
+                    "responseLines": [
+                        "Remoção da bateria crítica e inserção da unidade recarregada para restaurar as funções principais concluídas.",
+                        "É necessário ir ao painel para calibrar a distribuição."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 28,
+            "status": 1,
+            "next_status": 1,
+            "lines": [
+                "Energia em restauração.",
+                "Distribuição eficiente necessária.",
+                "Priorize tarefas de menor duração para otimizar o uso dos recursos restantes.",""
+            ],
+            "choices": [
+                {
+                    "choiceText": "Iniciar a distribuição de energia.",
+                    "actionType": "OpenPuzzle",
+                    "ActionID": 13,
+                    "responseLines": [
+                        "Solução correta do algoritmo garantirá restauração do sistema energético."
+                    ]
+                }
+            ]
+        }
+    ]
+}
+
+

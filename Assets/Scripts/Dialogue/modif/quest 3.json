@@ -1,0 +1,206 @@
+{
+    "dialogues": [
+      {
+        "id": 30,
+        "status": 1,
+        "next_status": 1,
+        "lines": [
+          "Funções principais restabelecidas.",
+  " A nave precisa transmitir informações para a Terra, no entanto, os sistemas de coleta ainda estão comprometidos.",
+          "A sala de coleta precisa de análise e reparos necessários.",
+  " O envio de dados é uma prioridade, e a integridade dos espécimes não pode ser prejudicados."
+        ]
+      },
+      {
+        "id": 31,
+        "status": 1,
+        "next_status": 1,
+        "lines": [
+          "Módulo central inoperante devido a sobrecarga.",
+  " Realize os ajustes necessários para garantir que os dados possam ser acessados e processados.",
+          "Escolha entre criptografia de dados, redundância de pacotes ou ambos para proteger o processamento.",""
+        ],
+        "choices": [
+          {
+            "choiceText": "Ativar criptografia de dados.",
+            "actionType": "InteractWithObject",
+            "ActionID": 14,
+            "responseLines": [
+              "Os dados estão protegidos contra interceptações, mas há maior consumo de energia."
+            ]
+          },
+          {
+            "choiceText": "Ativar redundância de pacotes.",
+            "actionType": "InteractWithObject",
+            "ActionID": 14,
+            "responseLines": [
+              "Pacotes são redundantes, garantindo confiabilidade, mas com maior tempo de transmissão." 
+            ]
+          },
+          {
+            "choiceText": "Ativar ambos os protocolos.",
+            "actionType": "InteractWithObject",
+            "ActionID": 14,
+            "responseLines": [
+              "Os dados estão altamente protegidos e confiáveis, mas o processo é mais lento e consome mais energia."
+            ]
+          }
+        ]
+      },
+      {
+        "id": 32,
+        "status": 1,
+        "next_status": 1,
+        "lines": [
+          "Cápsula de espécimes inativa. Configure os sistemas para proteger os espécimes durante o envio.",
+          "Distribua os recursos energéticos entre os sensores de monitoramento,",
+  " estabilizadores de ambiente e o campo eletromagnético de proteção." ,""
+        ],
+        "choices": [
+          {
+            "choiceText": "Alocar mais energia nos sensores.",
+            "actionType": "InteractWithObject",
+            "ActionID": 15,
+            "responseLines": [
+              "Os sensores estão otimizados, mas a proteção geral da cápsula pode estar comprometida."
+            ]
+          },
+          {
+            "choiceText": "Priorizar os estabilizadores de ambiente.",
+            "actionType": "InteractWithObject",
+            "ActionID": 15,
+            "responseLines": [
+              "O ambiente interno da cápsula está estável, mas os sensores têm menor eficiência."
+            ]
+          },
+          {
+            "choiceText": "Distribuir energia de forma equilibrada.",
+            "actionType": "InteractWithObject",
+            "ActionID": 15,
+            "responseLines": [
+              "Os recursos foram alocados de forma equilibrada. Sistema geral estável."
+            ]
+          }
+        ]
+      },
+      {
+        "id": 33,
+        "status": 1,
+        "next_status": 1,
+        "lines": [
+          "Cápsula de espécimes inativa. Configure os sistemas para proteger os espécimes durante o envio.",
+          "Escolha a ordem de verificação dos espécimes com base na prioridade atribuída.",""
+        ],
+        "choices": [
+          {
+            "choiceText": "Priorizar espécimes frágeis.",
+            "actionType": "InteractWithObject",
+            "ActionID": 15,
+            "responseLines": [
+              "Espécimes frágeis protegidos primeiro. Processo um pouco mais lento, mas seguro."
+            ]
+          },
+          {
+            "choiceText": "Priorizar espécimes resistentes.",
+            "actionType": "InteractWithObject",
+            "ActionID": 15,
+            "responseLines": [
+              "Espécimes resistentes tratados primeiro. Fragilidade dos outros aumenta o risco."
+            ]
+          },
+          {
+            "choiceText": "Tratar todos com a mesma prioridade.",
+            "actionType": "InteractWithObject",
+            "ActionID": 15,
+            "responseLines": [
+              "Processo uniforme, com leve impacto na eficiência."
+            ]
+          }
+        ]
+      },
+      {
+        "id": 34,
+        "status": 1,
+        "next_status": 1,
+        "lines": [
+          "Cápsula de espécimes inativa. Configure os sistemas para proteger os espécimes durante o envio.",
+          "Ajuste as condições ambientais para garantir a sobrevivência das plantas coletadas.",
+  " Espécies de diferentes planetas podem ter necessidades distintas de temperatura e umidade.",""
+        ],
+        "choices": [
+          {
+            "choiceText": "Ajustar para temperatura baixa e alta umidade.",
+            "actionType": "InteractWithObject",
+            "ActionID": 15,
+            "responseLines": [
+              "Plantas alienígenas com alta necessidade de umidade estão mais protegidas,",
+  " mas o consumo de energia do sistema aumenta."
+            ]
+          },
+          {
+            "choiceText": "Ajustar para temperatura moderada e umidade controlada.",
+            "actionType": "InteractWithObject",
+            "ActionID": 15,
+            "responseLines": [
+              "Ambiente equilibrado. As plantas têm uma chance maior de prosperar, e o consumo de energia é moderado."
+            ]
+          },
+          {
+            "choiceText": "Ajustar para temperatura alta e umidade baixa.",
+            "actionType": "InteractWithObject",
+            "ActionID": 15,
+            "responseLines": [
+              "Ambiente inadequado para algumas plantas, aumentando o risco de deterioração. A energia está sendo economizada."
+            ]
+          }
+        ]
+      },
+      {
+        "id": 35,
+        "status": 1,
+        "next_status": 1,
+        "lines": [
+          "Escondido debaixo de módulos de expansão se encontram os cabos de substituição. Deseja coletá-los?",""
+        ],
+        "choices": [
+          {
+            "choiceText": "Sim, coletar os cabos.",
+            "actionType": "CollectItem",
+            "ActionID": 8,
+            "responseLines": [
+              "Cabos coletados. Substitua-os no viveiro xenobotânico para restabelecer o ambiente vital."
+            ]
+          },
+          {
+            "choiceText": "Deixar os cabos por enquanto.",
+            "actionType": "EndDialogue",
+            "ActionID": 0,
+            "responseLines": [
+              "Tarefa pendente. Os cabos são necessários para restaurar o viveiro."
+            ]
+          }
+        ]
+      },
+      {
+        "id": 37,
+        "status": 1,
+        "next_status": 1,
+        "lines": [
+          "Próximo ao viveiro xenobotânico, os cabos danificados são aparentes,",
+  " impedindo o funcionamento adequado dos sistemas.",
+          "Com os novos cabos em mãos, é hora de restaurar a funcionalidade do ambiente.",""
+        ],
+        "choices": [
+          {
+            "choiceText": "Substituir cabos rompidos.",
+            "actionType": "DeliverItem",
+            "ActionID": 16,
+            "responseLines": [
+              "Substituindo... A substituição está concluída. O sistema de cultivo está agora operacional."
+            ]
+          }
+        ]
+      }
+    ]
+  }
+  
