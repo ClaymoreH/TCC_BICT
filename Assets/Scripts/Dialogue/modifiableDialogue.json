@@ -7,7 +7,7 @@
             "lines": [
                 "#Você se aproxima de um painel danificado próximo ao núcleo do reator.",
                 "As luzes piscam irregularmente, mas você consegue distinguir um HD preso ao sistema",
-		""
+		        ""
             ],
             "choices": [
                 {
@@ -19,7 +19,7 @@
                 {
                     "choiceText": "Pegar o HD",
                     "actionType": "InteractWithObject",
-                    "ActionID": 1,
+                    "ActionID": 2,
                     "responseLines": ["HD do Reator Principal recuperado. Dados em estado parcial, pronto para análise."]
                 },
                 {

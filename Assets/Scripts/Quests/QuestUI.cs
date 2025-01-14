@@ -96,20 +96,22 @@ public class QuestUIManager : MonoBehaviour
         }
     }
 
-    private void CreateObjectiveItem(QuestObjective objective)
+private void CreateObjectiveItem(QuestObjective objective)
+{
+    // Instancia o prefab para o Content do Scroll View
+    GameObject newItem = Instantiate(objectiveItemPrefab, objectiveListContainer);
+    var texts = newItem.GetComponentsInChildren<TextMeshProUGUI>();
+
+    if (texts.Length >= 3)
     {
-        GameObject newItem = Instantiate(objectiveItemPrefab, objectiveListContainer);
-        var texts = newItem.GetComponentsInChildren<TextMeshProUGUI>();
-
-        if (texts.Length >= 3)
-        {
-            texts[0].text = objective.title; // Título do objetivo
-            texts[1].text = objective.description; // Descrição do objetivo
-            texts[2].text = objective.isCompleted
-                ? "Status: Concluído"
-                : $"Status: {objective.requiredAmount} restantes"; // Status de conclusão
-        }
-
-        objectiveItems.Add(newItem);
+        texts[0].text = objective.title; // Título do objetivo
+        texts[1].text = objective.description; // Descrição do objetivo
+        texts[2].text = objective.isCompleted
+            ? "Status: Concluído"
+            : $"Status: {objective.requiredAmount} restantes"; // Status de conclusão
     }
+
+    objectiveItems.Add(newItem);
+}
+
 }

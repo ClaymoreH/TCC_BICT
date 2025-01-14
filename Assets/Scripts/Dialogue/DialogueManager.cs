@@ -45,7 +45,7 @@ public class DialogueManager : MonoBehaviour
         isTyping = false;
     }
 
-    private IEnumerator TypeCurrentLine()
+    public IEnumerator TypeCurrentLine()
     {
         isTyping = true;
         yield return StartCoroutine(dialogueUI.TypeText(lines[currentLineIndex]));
@@ -58,7 +58,7 @@ public class DialogueManager : MonoBehaviour
         if (isDialogueActive && Input.GetKeyDown(KeyCode.X))
             AdvanceDialogue();
     }
-private void AdvanceDialogue()
+public void AdvanceDialogue()
 {
     if (isShowingChoices)
         return;

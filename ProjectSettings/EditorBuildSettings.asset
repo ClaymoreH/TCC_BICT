@@ -9,6 +9,13 @@ EditorBuildSettings:
     path: Assets/Scenes/Main Menu.unity
     guid: b67e656f935cc5340abc0226bd914808
   - enabled: 1
+<<<<<<< Updated upstream
     path: Assets/Scenes/Quest 1.unity
+=======
+    path: Assets/Scenes/Introdution.unity
+    guid: c1dc8d38b05d1764ba9e56046087b559
+  - enabled: 1
+    path: Assets/Scenes/Game.unity
+>>>>>>> Stashed changes
     guid: 6231abc502b552c469fab6942b1e3831
   m_configObjects: {}

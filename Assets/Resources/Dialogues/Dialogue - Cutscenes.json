@@ -1,0 +1,45 @@
+{
+    "dialogues": 
+    [
+        {
+            "id": 1,
+            "status": 1,
+            "next_status": 0,
+            "lines": 
+            [
+                "Analisando... analisando... Erro crítico detectado!",
+                "Banco de dados comprometido. Energia em níveis perigosamente baixos."
+            ]
+        },
+        {
+            "id": 2,
+            "status": 1,
+            "next_status": 0,
+            "lines": 
+            [
+                "Estabilidade do sistema em 12%. Falha total em 60 segundos."
+            ]
+        },
+        {
+            "id": 3,
+            "status": 1,
+            "next_status": 0,
+            "lines": 
+            [
+                "Sistema em Colapso! Ativando protocolo de emergência...", 
+                "Inicializando hibernação para estabilizar sistemas!"
+            ]
+        },
+        {
+            "id": 4,
+            "status": 1,
+            "next_status": 0,
+            "lines": 
+            [
+                "...", 
+                "......", 
+                "..........."
+            ]
+        }
+    ]
+}

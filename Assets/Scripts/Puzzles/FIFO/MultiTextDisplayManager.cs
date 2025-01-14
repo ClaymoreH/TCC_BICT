@@ -1,8 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
+using System.Collections.Generic;
 
 public class MultiTextDisplayManager : MonoBehaviour
 {
@@ -20,7 +20,9 @@ public class MultiTextDisplayManager : MonoBehaviour
     public AudioClip textChangeSound;
 
     [Header("Configurações de Typewriter")]
-    public float typeSpeed = 0.0f;
+    public float typeSpeed = 0.05f; // Velocidade do efeito de digitação
+    public int chunkSize = 5; // Tamanho do bloco de texto para digitação
+    public float elementInterval = 0.5f; // Intervalo entre cada elemento de texto
     public AudioClip typingSound;
 
     private Coroutine currentTypingCoroutine;
@@ -37,7 +39,7 @@ public class MultiTextDisplayManager : MonoBehaviour
         typingAudioSource = gameObject.AddComponent<AudioSource>();
     }
 
-    private void HandleButtonClick(int buttonIndex)
+    public void HandleButtonClick(int buttonIndex)
     {
         foreach (var content in buttonContents)
         {
@@ -84,6 +86,7 @@ public class MultiTextDisplayManager : MonoBehaviour
 
     private IEnumerator TypeOutText(TextContent content)
     {
+        // Limpa todos os textos antes de iniciar a digitação
         foreach (var textArea in uiTextAreas)
         {
             textArea.text = "";
@@ -108,12 +111,10 @@ public class MultiTextDisplayManager : MonoBehaviour
             yield return new WaitForSeconds(buttonClickSound.length);
         }
 
-        PlayTypingSound();
-
-        int chunkSize = 5; // Tamanho do bloco de texto para digitação
-
+        // Digitação para UI Text
         for (int i = 0; i < uiTextAreas.Count && i < content.uiTexts.Count; i++)
         {
+            PlayTypingSound();
             string text = content.uiTexts[i];
             for (int j = 0; j < text.Length; j += chunkSize)
             {
@@ -121,10 +122,14 @@ public class MultiTextDisplayManager : MonoBehaviour
                 uiTextAreas[i].text += text.Substring(j, endIndex - j);
                 yield return new WaitForSeconds(typeSpeed);
             }
+            StopTypingSound(); // Para o som ao final do elemento
+            yield return new WaitForSeconds(elementInterval); // Espera entre elementos
         }
 
+        // Digitação para TMP_Text
         for (int i = 0; i < tmpTextAreas.Count && i < content.tmpTexts.Count; i++)
         {
+            PlayTypingSound();
             string text = content.tmpTexts[i];
             for (int j = 0; j < text.Length; j += chunkSize)
             {
@@ -132,13 +137,11 @@ public class MultiTextDisplayManager : MonoBehaviour
                 tmpTextAreas[i].text += text.Substring(j, endIndex - j);
                 yield return new WaitForSeconds(typeSpeed);
             }
+            StopTypingSound(); // Para o som ao final do elemento
+            yield return new WaitForSeconds(elementInterval); // Espera entre elementos
         }
 
-        if (typingAudioSource != null && typingAudioSource.isPlaying)
-        {
-            typingAudioSource.Stop();
-        }
-
+        StopTypingSound(); // Garantia de parar o som ao final
         if (audioSource != null && textChangeSound != null)
         {
             audioSource.PlayOneShot(textChangeSound);
@@ -155,6 +158,14 @@ public class MultiTextDisplayManager : MonoBehaviour
             {
                 typingAudioSource.Play();
             }
+        }
+    }
+
+    private void StopTypingSound()
+    {
+        if (typingAudioSource != null && typingAudioSource.isPlaying)
+        {
+            typingAudioSource.Stop();
         }
     }
 }
