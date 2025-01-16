@@ -14,25 +14,26 @@ public class ChoiceDialogueTrigger : InteractiveDialogueTrigger
         questManager = FindObjectOfType<QuestManager>();
         dialogueUI = FindObjectOfType<DialogueUI>();
     }
+
     public override void StartDialogue()
     {
         base.StartDialogue();  // Chama o método Start do InteractiveDialogueTrigger
-        
     }
-    public void CollectItem(int ActionID)
-    {
-        if (inventoryManager != null)
-        {
-            Item itemToAdd = inventoryManager.FindItemByID(ActionID);
 
-            if (itemToAdd != null)
-            {
-                inventoryManager.AddItem(itemToAdd);
-                Debug.Log("Item '" + itemToAdd.itemName + "' adicionado ao inventário.");
-            }
+public void CollectItem(int ActionID)
+{
+    if (inventoryManager != null)
+    {
+        Item itemToAdd = inventoryManager.FindItemByID(ActionID);
+
+        if (itemToAdd != null)
+        {
+            inventoryManager.AddItem(itemToAdd);
+            Debug.Log("Item '" + itemToAdd.itemName + "' adicionado ao inventário.");
         }
-        Destroy(gameObject);
     }
+}
+
 
     public void InteractWithObject(int ActionID)
     {
@@ -40,58 +41,45 @@ public class ChoiceDialogueTrigger : InteractiveDialogueTrigger
         {
             questManager.UpdateQuestProgress(ActionID, ObjectiveType.InteractWithObject);
         }
-        Destroy(gameObject);
+
     }
 
 public void DeliverItem(int ActionID)
 {
     DeliverItem deliverItem = FindObjectOfType<DeliverItem>();
-
-    if (deliverItem != null)
+    if (deliverItem != null && deliverItem.objectID == ActionID)
     {
-        // Verifique se o ActionID corresponde a algum item na lista
-        var requiredItem = deliverItem.requiredItems.Find(item => item.itemID == ActionID);
-
-        if (requiredItem != null)
-        {
-            deliverItem.TryDeliverItems(); // Chama o método para verificar e entregar os itens
-        }
-        else
-        {
-            Debug.LogWarning("Nenhum item correspondente ao ActionID foi encontrado na lista de entrega.");
-        }
+        deliverItem.TryDeliverItems();
     }
     else
     {
-        Debug.LogError("Nenhum objeto DeliverItem foi encontrado na cena.");
+        Debug.LogWarning($"Nenhum objeto de entrega correspondente ao ID {ActionID} foi encontrado.");
     }
-    Destroy(gameObject);
 }
 
 
-public void OpenPuzzle(int ActionID)
-{
-    PuzzleObjectData[] puzzles = FindObjectsOfType<PuzzleObjectData>(true); // Inclui objetos desativados
-
-    foreach (PuzzleObjectData puzzle in puzzles)
+    public void OpenPuzzle(int ActionID)
     {
-        if (puzzle.PainelPuzzle == ActionID)
+        PuzzleObjectData[] puzzles = FindObjectsOfType<PuzzleObjectData>(true); // Inclui objetos desativados
+
+        foreach (PuzzleObjectData puzzle in puzzles)
         {
-            if (puzzle.Painel != null)
+            if (puzzle.PainelPuzzle == ActionID)
             {
-                puzzle.Painel.SetActive(true);
-                Debug.Log($"Painel com ID {ActionID} foi ativado.");
-                return;
-            }
-            else
-            {
-                Debug.LogWarning($"Objeto PuzzleObjectData com ID {ActionID} encontrado, mas o painel não foi atribuído.");
+                if (puzzle.Painel != null)
+                {
+                    puzzle.Painel.SetActive(true);
+                    Debug.Log($"Painel com ID {ActionID} foi ativado.");
+                    return;
+                }
+                else
+                {
+                    Debug.LogWarning($"Objeto PuzzleObjectData com ID {ActionID} encontrado, mas o painel não foi atribuído.");
+                }
             }
         }
+
+        // Destrói o objeto que iniciou a interação
+        Debug.LogWarning($"Nenhum painel correspondente ao ID {ActionID} foi encontrado.");
     }
-    Destroy(gameObject);
-    Debug.LogWarning($"Nenhum painel correspondente ao ID {ActionID} foi encontrado.");
-}
-
-
 }

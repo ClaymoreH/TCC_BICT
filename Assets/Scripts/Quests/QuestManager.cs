@@ -8,6 +8,9 @@ public class QuestManager : MonoBehaviour
     public List<Quest> activeQuests;
     public List<Quest> completedQuests;
 
+    public NotificationManager notificationManager; // Arrastar no editor
+    public AudioManager audioManager; // Arrastar no editor
+
     private void Start()
     {
         ResetQuests();
@@ -28,21 +31,25 @@ public class QuestManager : MonoBehaviour
         }
     }
 
-    public void AddQuest(Quest newQuest)
+public void AddQuest(Quest newQuest)
+{
+    if (newQuest != null && !activeQuests.Contains(newQuest) && !completedQuests.Contains(newQuest))
     {
-        if (newQuest != null && !activeQuests.Contains(newQuest) && !completedQuests.Contains(newQuest))
-        {
-            activeQuests.Add(newQuest);
-            Debug.Log($"Missão '{newQuest.questName}' adicionada à lista de missões ativas!");
-            ResetQuests();
-            questUIManager.UpdateQuestUI(activeQuests, completedQuests); 
-            
-        }
-        else
-        {
-            Debug.LogWarning("Missão já está ativa, concluída ou é inválida.");
-        }
+        activeQuests.Add(newQuest);
+        ResetQuests();
+
+        // Exibir notificação e tocar som
+        notificationManager?.ShowNotification($"Missão adicionada: {newQuest.questName}");
+        audioManager?.PlayMissionAddedSound();
+
+        Debug.Log($"Missão '{newQuest.questName}' adicionada à lista de missões ativas!");
+        questUIManager.UpdateQuestUI(activeQuests, completedQuests);
     }
+    else
+    {
+        Debug.LogWarning("Missão já está ativa, concluída ou é inválida.");
+    }
+}
 
 
     public void UpdateQuestProgress(int targetID, ObjectiveType type, int amount = 1)
@@ -71,8 +78,14 @@ public class QuestManager : MonoBehaviour
                         objective.requiredAmount = 0;
                         objective.isCompleted = true;
                         GrantObjectiveReward(objective);
+
+                        // Exibir notificação e tocar som
+                        notificationManager?.ShowNotification($"Objetivo concluído: {objective.title}");
+                        audioManager?.PlayObjectiveCompletedSound();
+
                         Debug.Log($"Objetivo '{objective.description}' concluído!");
                     }
+
 
                     questUpdated = true;
                     questUIManager.DisplayQuestDetails(quest);
@@ -115,23 +128,39 @@ public class QuestManager : MonoBehaviour
         return false; 
     }
 
-    private void GrantObjectiveReward(QuestObjective objective)
+private void GrantObjectiveReward(QuestObjective objective)
+{
+    if (objective.rewardExperience > 0)
     {
-        if (objective.rewardExperience > 0)
-        {
-            Debug.Log($"Ganhou {objective.rewardExperience} XP pelo objetivo '{objective.description}'!");
-        }
+        Debug.Log($"Ganhou {objective.rewardExperience} XP pelo objetivo '{objective.description}'!");
+    }
 
-        if (objective.rewardItem != null)
+    if (objective.rewardItem != null)
+    {
+        InventoryManager inventoryManager = FindObjectOfType<InventoryManager>();
+        if (inventoryManager != null)
         {
-            InventoryManager inventoryManager = FindObjectOfType<InventoryManager>();
-            if (inventoryManager != null)
-            {
-                inventoryManager.AddItem(objective.rewardItem);
-                Debug.Log($"Recebeu o item '{objective.rewardItem.itemName}' pelo objetivo '{objective.description}'!");
-            }
+            inventoryManager.AddItem(objective.rewardItem);
+            Debug.Log($"Recebeu o item '{objective.rewardItem.itemName}' pelo objetivo '{objective.description}'!");
         }
     }
+
+    // Atualizar o status do diálogo com base no statusID
+    if (objective.statusID > 0)
+    {
+        InteractiveDialogueTrigger dialogueTrigger = FindObjectOfType<InteractiveDialogueTrigger>();
+        if (dialogueTrigger != null)
+        {
+            dialogueTrigger.SetDialogueStatus(objective.statusID, 1); // Altera o status para 1 (ativo)
+            Debug.Log($"O status do diálogo com ID {objective.statusID} foi alterado para ativo!");
+        }
+        else
+        {
+            Debug.LogWarning("InteractiveDialogueTrigger não encontrado na cena.");
+        }
+    }
+}
+
 
     public bool IsQuestComplete(Quest quest)
     {
@@ -143,30 +172,31 @@ public class QuestManager : MonoBehaviour
         return true;
     }
 
-    public void CompleteQuest(Quest quest)
+public void CompleteQuest(Quest quest)
+{
+    Debug.Log($"Missão '{quest.questName}' concluída!");
+    
+    // Recompensas e lógica
+    if (quest.rewardItem != null)
     {
-        Debug.Log($"Missão '{quest.questName}' concluída!");
-
-        // Recompensa e outras lógicas
-        if (quest.rewardItem != null)
-        {
-            InventoryManager inventoryManager = FindObjectOfType<InventoryManager>();
-            if (inventoryManager != null)
-            {
-                inventoryManager.AddItem(quest.rewardItem);
-            }
-        }
-
-        activeQuests.Remove(quest);
-        completedQuests.Add(quest);
-
-        // Adicionar a próxima missão, se houver
-        if (quest.nextQuest != null)
-        {
-            AddQuest(quest.nextQuest);
-        }
-
-        questUIManager.UpdateQuestUI(activeQuests, completedQuests); // Atualiza a interface
+        InventoryManager inventoryManager = FindObjectOfType<InventoryManager>();
+        inventoryManager?.AddItem(quest.rewardItem);
     }
+
+    activeQuests.Remove(quest);
+    completedQuests.Add(quest);
+
+    // Exibir notificação e tocar som
+    notificationManager?.ShowNotification($"Missão concluída: {quest.questName}");
+    audioManager?.PlayMissionCompletedSound();
+
+    // Adicionar próxima missão, se houver
+    if (quest.nextQuest != null)
+    {
+        AddQuest(quest.nextQuest);
+    }
+
+    questUIManager.UpdateQuestUI(activeQuests, completedQuests);
+}
 
 }

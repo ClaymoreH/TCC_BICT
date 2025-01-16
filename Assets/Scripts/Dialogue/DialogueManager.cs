@@ -17,6 +17,7 @@ public class DialogueManager : MonoBehaviour
     public event System.Action OnDialogueEnded;
     public bool IsDialogueActive => isDialogueActive;
     public bool isShowingChoices = false;  // As escolhas estão sendo mostradas
+    private GameObject callingObject;  // Definindo a variável para armazenar o objeto que chama
 
     void Start()
     {
@@ -24,19 +25,25 @@ public class DialogueManager : MonoBehaviour
         playerAnimator = playerController?.GetComponent<Animator>();
     }
 
-    public void StartDialogue(string[] dialogueLines, DialogueChoice[] dialogueChoices = null)
-    {
-        ResetDialogue();
-        lines = ProcessLines(dialogueLines);
-        choices = dialogueChoices;
-        currentLineIndex = 0;
-        dialogueUI.dialogueObject.SetActive(true);
-        dialogueUI.HidePressXMessage();
-        dialogueUI.ShowContinueMessage();
-        TogglePlayerControl(false);
-        isDialogueActive = true;
-        StartCoroutine(TypeCurrentLine());
-    }
+public void StartDialogue(string[] dialogueLines, DialogueChoice[] dialogueChoices = null, GameObject callingObject = null)
+{
+    ResetDialogue();
+    lines = ProcessLines(dialogueLines);
+    choices = dialogueChoices;
+    currentLineIndex = 0;
+    dialogueUI.dialogueObject.SetActive(true);
+    dialogueUI.HidePressXMessage();
+    dialogueUI.ShowContinueMessage();
+    TogglePlayerControl(false);
+    isDialogueActive = true;
+
+    // Agora você pode fazer algo com o callingObject, como armazená-lo
+    this.callingObject = callingObject;
+    Debug.Log("Objeto '" + callingObject + "' Start");
+
+    StartCoroutine(TypeCurrentLine());
+}
+
 
     private void ResetDialogue()
     {
@@ -105,19 +112,29 @@ private void ShowChoices()
 
 private void HandleChoice(DialogueChoice choice)
 {
-    // Acesso ao ChoiceDialogueTrigger
-    ChoiceDialogueTrigger choiceTrigger = FindObjectOfType<ChoiceDialogueTrigger>();
+    // Buscar o ChoiceDialogueTrigger apenas no callingObject
+    ChoiceDialogueTrigger choiceTrigger = callingObject.GetComponent<ChoiceDialogueTrigger>();
+    Debug.Log("Objeto '" + callingObject + "' Handle");
 
-    // Exibe as linhas de resposta antes de realizar a ação
-    if (choice.responseLines != null && choice.responseLines.Length > 0)
+
+    if (choiceTrigger != null)
     {
-        StartCoroutine(ShowResponseAndExecute(choice));
+        // Exibe as linhas de resposta antes de realizar a ação
+        if (choice.responseLines != null && choice.responseLines.Length > 0)
+        {
+            StartCoroutine(ShowResponseAndExecute(choice));
+        }
+        else
+        {
+            ExecuteChoiceAction(choice, choiceTrigger);
+        }
     }
     else
     {
-        ExecuteChoiceAction(choice, choiceTrigger);
+        Debug.LogWarning("ChoiceDialogueTrigger não encontrado no callingObject");
     }
 }
+
 
 private IEnumerator ShowResponseAndExecute(DialogueChoice choice)
 {
@@ -165,10 +182,12 @@ private void ExecuteChoiceAction(DialogueChoice choice, ChoiceDialogueTrigger ch
         case "CollectItem":
             EndDialogue();
             choiceTrigger?.CollectItem(choice.ActionID);
+            Destroy(callingObject); // Destrói o objeto que iniciou a interação
             break;
 
         case "InteractWithObject":
             choiceTrigger?.InteractWithObject(choice.ActionID);
+            Destroy(callingObject); // Destrói o objeto que iniciou a interação
             EndDialogue();
             break;
 
@@ -179,6 +198,7 @@ private void ExecuteChoiceAction(DialogueChoice choice, ChoiceDialogueTrigger ch
 
         case "OpenPuzzle":
             choiceTrigger?.OpenPuzzle(choice.ActionID);
+            Destroy(callingObject); // Destrói o objeto que iniciou a interação
             EndDialogue();
             break;
 

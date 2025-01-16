@@ -27,7 +27,7 @@ public class QuestObjective
     public bool isCompleted;
     public int initialRequiredAmount; // Valor inicial para resetar
     public bool isSequential; // Indica se este objetivo depende do anterior
-
+    public int statusID; // Numero do Id para definir o status como 1 o dialogo apos completar o objetivo
     public int rewardExperience;
     public Item rewardItem;
 

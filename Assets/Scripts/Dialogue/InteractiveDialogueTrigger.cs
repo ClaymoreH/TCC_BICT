@@ -15,6 +15,7 @@ public class InteractiveDialogueTrigger : MonoBehaviour
 
     public bool canShowDialogue = false;
     public Collider2D playerCollider = null;
+    public GameObject callingObject;  // Definindo a variável para armazenar o objeto que chama
 
     public void Start()
     {
@@ -51,35 +52,42 @@ public class InteractiveDialogueTrigger : MonoBehaviour
         }
     }
 
-    public virtual void StartDialogue()
+public virtual void StartDialogue()
+{
+    // Armazenar o GameObject atual que iniciou o diálogo
+    callingObject = this.gameObject; 
+
+    LoadModifiableDialogue();
+
+    foreach (var dialogue in dialogueDatabase.dialogues)
     {
-        LoadModifiableDialogue();
-
-        foreach (var dialogue in dialogueDatabase.dialogues)
+        if (dialogue.id == dialogueID)
         {
-            if (dialogue.id == dialogueID)
+            if (dialogue.status == 1)
             {
-                if (dialogue.status == 1)
-                {
-                    dialogue.status = dialogue.next_status;
+                dialogue.status = dialogue.next_status;
 
-                    SaveModifiableDialogue();
+                SaveModifiableDialogue();
 
-                    currentDialogue = dialogue;
-                    dialogueManager.StartDialogue(currentDialogue.lines, currentDialogue.choices);
-                    dialogueManager.dialogueUI.HidePressXMessage();
-                    canShowDialogue = false;
+                currentDialogue = dialogue;
 
-                    StartCoroutine(WaitForDialogueEnd());
-                    break;
-                }
-                else
-                {
-                    dialogueManager.dialogueUI.HidePressXMessage();
-                }
+                // Passar o callingObject para o DialogueManager
+                dialogueManager.StartDialogue(currentDialogue.lines, currentDialogue.choices, callingObject);
+
+                dialogueManager.dialogueUI.HidePressXMessage();
+                canShowDialogue = false;
+
+                StartCoroutine(WaitForDialogueEnd());
+                break;
+            }
+            else
+            {
+                dialogueManager.dialogueUI.HidePressXMessage();
             }
         }
     }
+}
+
 
     public void OnTriggerEnter2D(Collider2D other)
     {
@@ -137,6 +145,29 @@ public class InteractiveDialogueTrigger : MonoBehaviour
             LoadModifiableDialogue();
         }
     }
+public void SetDialogueStatus(int dialogueID, int newStatus)
+{
+    // Carrega os dados do JSON
+    LoadModifiableDialogue();
+
+    // Procura o diálogo com o ID correspondente
+    foreach (var dialogue in dialogueDatabase.dialogues)
+    {
+        if (dialogue.id == dialogueID)
+        {
+            // Atualiza o status do diálogo
+            dialogue.status = newStatus;
+
+            // Salva as alterações no JSON
+            SaveModifiableDialogue();
+
+            Debug.Log($"O status do diálogo com ID {dialogueID} foi alterado para {newStatus}.");
+            return;
+        }
+    }
+
+    Debug.LogWarning($"Nenhum diálogo com o ID {dialogueID} foi encontrado.");
+}
 
     private IEnumerator WaitForDialogueEnd()
     {
