@@ -1166,6 +1166,8 @@ GameObject:
   - component: {fileID: 566146196}
   - component: {fileID: 566146195}
   - component: {fileID: 566146194}
+  - component: {fileID: 566146198}
+  - component: {fileID: 566146199}
   m_Layer: 5
   m_Name: SJF
   m_TagString: Untagged
@@ -1262,6 +1264,44 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &566146198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 566146193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a5a7cd448e3a99428d918529f425db2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectName: 
+  data: 
+  hora: 
+  prioridade: 0
+  tempoExecucao: 0
+  tempoExecucaoTotal: 0
+  ValorOriginal: 0
+  ordemChegada: 0
+  processo: 0
+  dropzoneID: 0
+  PainelPuzzle: 13
+  Painel: {fileID: 566146193}
+  descricao: 
+--- !u!114 &566146199
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 566146193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64dfaed5483bc2c498ee555d5052b747, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  puzzleID: 13
 --- !u!1 &586299950
 GameObject:
   m_ObjectHideFlags: 0
@@ -1895,6 +1935,8 @@ MonoBehaviour:
   buttonClickSound: {fileID: 8300000, guid: ea8041a89a3b0494b985101acad70cc3, type: 3}
   textChangeSound: {fileID: 0}
   typeSpeed: 0
+  chunkSize: 5
+  elementInterval: 0
   typingSound: {fileID: 8300000, guid: 476a74b5fe753b343857b84248acf6cf, type: 3}
 --- !u!1 &646191925
 GameObject:
@@ -3661,8 +3703,9 @@ MonoBehaviour:
   feedbackPanel: {fileID: 1125987238}
   feedbackText: {fileID: 1925717918}
   feedbackDuration: 1
+  playerAnimatorPuzzle: {fileID: 0}
   slotManager: {fileID: 948386055}
-  puzzle: {fileID: 0}
+  puzzle: {fileID: 566146199}
 --- !u!114 &1249440638
 MonoBehaviour:
   m_ObjectHideFlags: 0

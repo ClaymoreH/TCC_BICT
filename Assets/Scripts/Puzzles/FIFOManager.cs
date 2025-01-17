@@ -78,8 +78,10 @@ private IEnumerator ValidateFIFO()
 
     ExibirFeedback("Sucesso! A ordem está correta.", successSound);
 
+    yield return new WaitForSeconds(2f); // Substitua 2f pelo tempo desejado
+
     // Destroi todos os objetos filhos do painel
-    Transform panelTransform = puzzle.transform; 
+    Transform panelTransform = puzzle.transform;
     foreach (Transform child in panelTransform)
     {
         Destroy(child.gameObject);

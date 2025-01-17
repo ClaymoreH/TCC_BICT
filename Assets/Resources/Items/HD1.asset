@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: HD1
   m_EditorClassIdentifier: 
   itemName: HD_Reator
-  itemID: 2
+  itemID: 1
   itemSprite: {fileID: 21300000, guid: 319868b94efe9f94290eb033a1cb1acd, type: 3}
   quantity: 1

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a548c849e80020d4ab3c7b8271091e5a, type: 3}
   m_Name: HD2
   m_EditorClassIdentifier: 
-  itemName: HD_Refrigeracao
-  itemID: 3
-  itemSprite: {fileID: 21300000, guid: a8372879eda9caa4fb7c4b254b8ca95e, type: 3}
-  quantity: -1
+  itemName: HD_Energia
+  itemID: 2
+  itemSprite: {fileID: 21300000, guid: e7cf2ea971a793944b9c7d6984bdfc34, type: 3}
+  quantity: 0

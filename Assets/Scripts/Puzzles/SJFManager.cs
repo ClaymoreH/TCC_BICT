@@ -80,15 +80,13 @@ public class SJFManager : PuzzleManager
 
         ExibirFeedback("Sucesso! A ordem está correta.", successSound);
         // Destroi todos os objetos filhos do painel
-        Transform panelTransform = puzzle.transform; // Substitua `puzzle` pelo seu painel, se necessário
+        yield return new WaitForSeconds(2f); // Substitua 2f pelo tempo desejado
+
+        // Destroi todos os objetos filhos do painel
+        Transform panelTransform = puzzle.transform;
         foreach (Transform child in panelTransform)
         {
             Destroy(child.gameObject);
-        }
-
-        if (puzzle != null)
-        {
-            puzzle.CompletePuzzle();
         }
             // Completar o puzzle
             if (puzzle != null)

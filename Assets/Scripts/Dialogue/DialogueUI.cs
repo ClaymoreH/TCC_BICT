@@ -18,10 +18,16 @@ public class DialogueUI : MonoBehaviour
     public GameObject choicesContainer;
     public GameObject choiceButtonPrefab;
 
+    [Header("Audio Settings")]
+    public AudioSource typingAudioSource; // Referência ao AudioSource
+    public AudioClip typingSound;        // Som de digitação
+    public AudioClip pressXSound;         // Som para o Press X
+
     private Coroutine blinkCoroutine;
     public GameObject choicePrefab;
     public List<ChoiceText> choiceTextList = new List<ChoiceText>();
     public int currentChoiceIndex = 0;
+
 
 public void AddChoiceText(string choiceText, System.Action onClickAction)
 {
@@ -99,7 +105,11 @@ public void AddChoiceText(string choiceText, System.Action onClickAction)
             if (element != null) element.enabled = state;
     }
 
-    public void ShowPressXMessage() => SetUIElementState(true, pressXImage, pressXText);
+    public void ShowPressXMessage()
+    {
+        SetUIElementState(true, pressXImage, pressXText);
+        PlayPressXSound();
+    }
     public void HidePressXMessage() => SetUIElementState(false, pressXImage, pressXText);
 
     public void ShowContinueMessage()
@@ -116,22 +126,47 @@ public void AddChoiceText(string choiceText, System.Action onClickAction)
         if (continueText != null) continueText.gameObject.SetActive(false);
     }
 
-    public IEnumerator TypeText(string line)
-    {
-        dialogueText.text = string.Empty;
+public IEnumerator TypeText(string line)
+{
+    dialogueText.text = string.Empty;
 
-        for (int i = 0; i < line.Length; i++)
+    for (int i = 0; i < line.Length; i++)
+    {
+        if (line[i] == '<' && line.IndexOf('>', i) is var endTag && endTag > 0)
         {
-            if (line[i] == '<' && line.IndexOf('>', i) is var endTag && endTag > 0)
+            // Adiciona a tag diretamente
+            dialogueText.text += line.Substring(i, endTag - i + 1);
+            i = endTag;
+        }
+        else
+        {
+            dialogueText.text += line[i];
+
+            // Verifica se 'i' é divisível por 2 (ou seja, um índice par)
+            if (i % 2 == 0)
             {
-                dialogueText.text += line.Substring(i, endTag - i + 1);
-                i = endTag;
+                PlayTypingSound(); // Toca o som
             }
-            else
-            {
-                dialogueText.text += line[i];
-                yield return new WaitForSeconds(typingSpeed);
-            }
+
+            yield return new WaitForSeconds(typingSpeed);
+        }
+    }
+}
+
+
+    private void PlayTypingSound()
+    {
+        if (typingAudioSource != null && typingSound != null)
+        {
+            // Garante que o som seja reproduzido corretamente
+            typingAudioSource.PlayOneShot(typingSound);
+        }
+    }
+    private void PlayPressXSound()
+    {
+        if (typingAudioSource != null && pressXSound != null)
+        {
+            typingAudioSource.PlayOneShot(pressXSound);
         }
     }
 

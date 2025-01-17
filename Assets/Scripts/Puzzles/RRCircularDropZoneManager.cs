@@ -122,7 +122,7 @@ public class CircularDropZoneManager : MonoBehaviour
         List<string> options = new List<string>();
         for (int i = 0; i < circularDropZones.Count; i++)
         {
-            options.Add("CIRCLE " + (i + 1));
+            options.Add("   CICLO " + (i + 1));
         }
         dropdownMenu.AddOptions(options);
     }
