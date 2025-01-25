@@ -194,6 +194,7 @@ private void ExecuteChoiceAction(DialogueChoice choice, ChoiceDialogueTrigger ch
         case "DeliverItem":
             choiceTrigger?.DeliverItem(choice.ActionID);
             EndDialogue();
+            Destroy(callingObject); // Destrói o objeto que iniciou a interação
             break;
 
         case "OpenPuzzle":

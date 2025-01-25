@@ -105,15 +105,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a5a7cd448e3a99428d918529f425db2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectName: 
-  data: 20-07-2104
-  hora: 03:00
+  name: 0
+  data: 0
+  hora: 0
   prioridade: 0
   tempoExecucao: 0
   tempoExecucaoTotal: 0
   ValorOriginal: 0
   ordemChegada: 0
   processo: 0
+  dropzoneID: 0
+  PainelPuzzle: 0
+  Painel: {fileID: 0}
   descricao: 
 --- !u!225 &4678406634736496322
 CanvasGroup:

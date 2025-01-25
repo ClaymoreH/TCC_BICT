@@ -180,6 +180,9 @@ MonoBehaviour:
   pressXText: {fileID: 1832789901}
   choicesContainer: {fileID: 1591851159}
   choiceButtonPrefab: {fileID: 7405400982844620240, guid: 2f54b598801727047965bf2c7cc357d7, type: 3}
+  typingAudioSource: {fileID: 1056325515}
+  typingSound: {fileID: 8300000, guid: 8d2f0870f72c5134e83a3597143eddb3, type: 3}
+  pressXSound: {fileID: 0}
   choicePrefab: {fileID: 4982409843401274652, guid: 23b2cd6a4f355704f91821a6fb8c69b0, type: 3}
   choiceTextList: []
   currentChoiceIndex: 0
@@ -764,7 +767,7 @@ Tilemap:
       - {fileID: 1044267060, guid: cff471e311006c44b96a0f9271b8a69f, type: 3}
       - {fileID: 1277134598, guid: cff471e311006c44b96a0f9271b8a69f, type: 3}
       - {fileID: 1322260906, guid: cff471e311006c44b96a0f9271b8a69f, type: 3}
-      m_AnimationSpeed: 13.818175
+      m_AnimationSpeed: 12.443897
       m_AnimationTimeOffset: 0
       m_Flags: 0
   m_TileAssetArray:
@@ -99499,7 +99502,7 @@ Tilemap:
       - {fileID: -1510998810, guid: 4c61f7d7407734d4aa98ebace2d2bb90, type: 3}
       - {fileID: -2121271292, guid: 4c61f7d7407734d4aa98ebace2d2bb90, type: 3}
       - {fileID: 296239472, guid: 4c61f7d7407734d4aa98ebace2d2bb90, type: 3}
-      m_AnimationSpeed: 11.600704
+      m_AnimationSpeed: 11.264021
       m_AnimationTimeOffset: 0
       m_Flags: 0
   m_TileAssetArray:
@@ -104588,7 +104591,7 @@ Tilemap:
       - {fileID: 1635390446, guid: 149f71cea41e6614a9ae23d467072f45, type: 3}
       - {fileID: 375417798, guid: 149f71cea41e6614a9ae23d467072f45, type: 3}
       - {fileID: 1218399489, guid: 149f71cea41e6614a9ae23d467072f45, type: 3}
-      m_AnimationSpeed: 14.389069
+      m_AnimationSpeed: 17.218819
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: -9, y: -89, z: 0}
@@ -104599,7 +104602,7 @@ Tilemap:
       - {fileID: 1635390446, guid: 149f71cea41e6614a9ae23d467072f45, type: 3}
       - {fileID: 375417798, guid: 149f71cea41e6614a9ae23d467072f45, type: 3}
       - {fileID: 1218399489, guid: 149f71cea41e6614a9ae23d467072f45, type: 3}
-      m_AnimationSpeed: 14.726143
+      m_AnimationSpeed: 14.75467
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: 49, y: -86, z: 0}
@@ -121459,10 +121462,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -121480,8 +121483,8 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 0
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
+  m_Camera: {fileID: 519420031}
+  m_PlaneDistance: 1
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -121489,9 +121492,9 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
   m_AdditionalShaderChannelsFlag: 25
-  m_UpdateRectTransformForStandalone: 0
+  m_UpdateRectTransformForStandalone: 1
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 100
   m_TargetDisplay: 0
 --- !u!114 &1785250083
 MonoBehaviour:

@@ -15,4 +15,4 @@ MonoBehaviour:
   itemName: Battery
   itemID: 6
   itemSprite: {fileID: 21300000, guid: fd9a053dd6de0b94e8437c669bd38545, type: 3}
-  quantity: 1
+  quantity: 0

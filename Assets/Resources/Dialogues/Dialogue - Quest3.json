@@ -6,9 +6,9 @@
         "next_status": 1,
         "lines": [
           "Funções principais restabelecidas.",
-  " A nave precisa transmitir informações para a Terra, no entanto, os sistemas de coleta ainda estão comprometidos.",
+          "A nave precisa &transmitir &informações &para &a &Terra, no entanto, os sistemas de coleta ainda estão comprometidos.",
           "A sala de coleta precisa de análise e reparos necessários.",
-  " O envio de dados é uma prioridade, e a integridade dos espécimes não pode ser prejudicados."
+          "O envio de dados é uma prioridade, e a &integridade &dos &espécimes &não &pode &ser &prejudicados."
         ]
       },
       {
@@ -16,9 +16,10 @@
         "status": 1,
         "next_status": 1,
         "lines": [
-          "Módulo central inoperante devido a sobrecarga.",
-  " Realize os ajustes necessários para garantir que os dados possam ser acessados e processados.",
-          "Escolha entre criptografia de dados, redundância de pacotes ou ambos para proteger o processamento.",""
+          "#Módulo #central #inoperante devido a sobrecarga.",
+          "&Realize &os &ajustes &necessários para que os dados possam ser acessados e processados.",
+          "Escolha entre @criptografia @de @dados, @redundância @de @pacotes ou @ambos para proteger o processamento.",
+          ""
         ],
         "choices": [
           {
@@ -52,9 +53,10 @@
         "status": 1,
         "next_status": 1,
         "lines": [
-          "Cápsula de espécimes inativa. Configure os sistemas para proteger os espécimes durante o envio.",
+          "Cápsula de espécimes inativa. @Configure @os @sistemas para proteger os espécimes durante o envio.",
           "Distribua os recursos energéticos entre os sensores de monitoramento,",
-  " estabilizadores de ambiente e o campo eletromagnético de proteção." ,""
+          "Estabilizadores de ambiente e o campo eletromagnético de proteção." ,
+          ""
         ],
         "choices": [
           {
@@ -89,7 +91,8 @@
         "next_status": 1,
         "lines": [
           "Cápsula de espécimes inativa. Configure os sistemas para proteger os espécimes durante o envio.",
-          "Escolha a ordem de verificação dos espécimes com base na prioridade atribuída.",""
+          "@Escolha @a @ordem @de @verificação dos espécimes com base na prioridade atribuída.",
+          ""
         ],
         "choices": [
           {
@@ -113,7 +116,7 @@
             "actionType": "InteractWithObject",
             "ActionID": 15,
             "responseLines": [
-              "Processo uniforme, com leve impacto na eficiência."
+              "Processo uniforme, mas com impacto na eficiência."
             ]
           }
         ]
@@ -125,7 +128,8 @@
         "lines": [
           "Cápsula de espécimes inativa. Configure os sistemas para proteger os espécimes durante o envio.",
           "Ajuste as condições ambientais para garantir a sobrevivência das plantas coletadas.",
-  " Espécies de diferentes planetas podem ter necessidades distintas de temperatura e umidade.",""
+          "Espécies de diferentes planetas podem ter necessidades distintas de temperatura e umidade.",
+          ""
         ],
         "choices": [
           {
@@ -134,7 +138,7 @@
             "ActionID": 15,
             "responseLines": [
               "Plantas alienígenas com alta necessidade de umidade estão mais protegidas,",
-  " mas o consumo de energia do sistema aumenta."
+              "Mas o consumo de energia do sistema aumenta."
             ]
           },
           {
@@ -142,7 +146,7 @@
             "actionType": "InteractWithObject",
             "ActionID": 15,
             "responseLines": [
-              "Ambiente equilibrado. As plantas têm uma chance maior de prosperar, e o consumo de energia é moderado."
+              "Ambiente equilibrado. As plantas têm uma chance maior de prosperar, consumo de energia é moderado."
             ]
           },
           {
@@ -150,13 +154,41 @@
             "actionType": "InteractWithObject",
             "ActionID": 15,
             "responseLines": [
-              "Ambiente inadequado para algumas plantas, aumentando o risco de deterioração. A energia está sendo economizada."
+              "Ambiente inadequado para algumas plantas, risco de deterioração. A energia está sendo economizada."
             ]
           }
         ]
       },
       {
         "id": 35,
+        "status": 1,
+        "next_status": 1,
+        "lines": [
+          "O viveiro parece estável à primeira vista, mas indica um superaquecimento no painel.",
+          ""
+        ],
+        "choices": [
+          {
+            "choiceText": "Inspecionar o compartimento.",
+            "actionType": "InteractWithObject",
+            "ActionID": 18,
+            "responseLines": [
+              "Ao se aproximar, você nota #cabos #danificados #e #faiscando. Precisam ser substituídos.",
+              "Você pode procurar os cabos de reposição no &gaveteiro &da &sala &inicial."
+            ]
+          },
+          {
+            "choiceText": "Ignorar por enquanto.",
+            "actionType": "EndDialogue",
+            "ActionID": 0,
+            "responseLines": [
+              "#Tarefa pendente: Você decide sair sem investigar mais o problema."
+            ]
+          }
+        ]
+      },
+      {
+        "id": 36,
         "status": 1,
         "next_status": 1,
         "lines": [
@@ -168,7 +200,7 @@
             "actionType": "CollectItem",
             "ActionID": 8,
             "responseLines": [
-              "Cabos coletados. Substitua-os no viveiro xenobotânico para restabelecer o ambiente vital."
+              "Cabos coletados. &Substitua-os &no &viveiro &xenobotânico para restabelecer o ambiente vital."
             ]
           },
           {
@@ -176,19 +208,19 @@
             "actionType": "EndDialogue",
             "ActionID": 0,
             "responseLines": [
-              "Tarefa pendente. Os cabos são necessários para restaurar o viveiro."
+              "#Tarefa #pendente. Os cabos são necessários para restaurar o viveiro."
             ]
           }
         ]
       },
       {
         "id": 37,
-        "status": 1,
+        "status": 0,
         "next_status": 1,
         "lines": [
-          "Próximo ao viveiro xenobotânico, os cabos danificados são aparentes,",
-  " impedindo o funcionamento adequado dos sistemas.",
-          "Com os novos cabos em mãos, é hora de restaurar a funcionalidade do ambiente.",""
+          "Os cabos danificados são aparentes, impedindo o funcionamento adequado do sistema.",
+          "Hora de restaurar a funcionalidade do ambiente.",
+          ""
         ],
         "choices": [
           {
@@ -196,7 +228,28 @@
             "actionType": "DeliverItem",
             "ActionID": 16,
             "responseLines": [
-              "Substituindo... A substituição está concluída. O sistema de cultivo está agora operacional."
+              "Substituindo...",
+              "A substituição está concluída. O sistema de cultivo está agora operacional."
+            ]
+          }
+        ]
+      },
+      {
+        "id": 38,
+        "status": 0,
+        "next_status": 1,
+        "lines": [
+          "Os dados e espécimes precisam ser organizados para transmissão",
+          "Ajuste a sequência de módulos de coleta para enviar os dados em ciclos regulares.",
+          ""
+        ],
+        "choices": [
+          {
+            "choiceText": "Iniciar o envio dos dados",
+            "actionType": "OpenPuzzle",
+            "ActionID": 17,
+            "responseLines": [
+              "A organização correta dos módulos permitirá que todos os os pacotes sejam transmitidos igualmente"
             ]
           }
         ]

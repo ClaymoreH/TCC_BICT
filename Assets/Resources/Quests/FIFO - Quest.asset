@@ -105,3 +105,4 @@ MonoBehaviour:
   rewardExperience: 0
   rewardItem: {fileID: 0}
   nextQuest: {fileID: 11400000, guid: b63422d76bc0e2048ae5357cafe7988a, type: 2}
+  dialoguePanelName: Quest 2

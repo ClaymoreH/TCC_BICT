@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: RRDatabase 1
+  m_EditorClassIdentifier: Assembly-CSharp::RRDatabase
+  alerts:
+  - iconDrag: {fileID: 0}
+    tempoExecucao: 1
+    ValorOriginal: 1
+    processo: 1
+    titulotext: AAA
+    tempotext: AAA
+    chegadatext: AAAA
+    descricaotext: AAAA
+  - iconDrag: {fileID: 0}
+    tempoExecucao: 2
+    ValorOriginal: 2
+    processo: 2
+    titulotext: BBB
+    tempotext: BBB
+    chegadatext: BBB
+    descricaotext: BBB
+  - iconDrag: {fileID: 0}
+    tempoExecucao: 3
+    ValorOriginal: 3
+    processo: 3
+    titulotext: CCC
+    tempotext: CCC
+    chegadatext: CCCC
+    descricaotext: CCCCC
+  - iconDrag: {fileID: 0}
+    tempoExecucao: 4
+    ValorOriginal: 4
+    processo: 4
+    titulotext: VV
+    tempotext: VVV
+    chegadatext: VV
+    descricaotext: VVVVV

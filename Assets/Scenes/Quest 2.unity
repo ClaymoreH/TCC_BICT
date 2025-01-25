@@ -9721,7 +9721,7 @@ Tilemap:
       - {fileID: -1510998810, guid: 4c61f7d7407734d4aa98ebace2d2bb90, type: 3}
       - {fileID: -2121271292, guid: 4c61f7d7407734d4aa98ebace2d2bb90, type: 3}
       - {fileID: 296239472, guid: 4c61f7d7407734d4aa98ebace2d2bb90, type: 3}
-      m_AnimationSpeed: 17.21366
+      m_AnimationSpeed: 19.692207
       m_AnimationTimeOffset: 0
       m_Flags: 0
   m_TileAssetArray:
@@ -12562,7 +12562,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a5a7cd448e3a99428d918529f425db2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectName: 
+  name: 
   data: 
   hora: 
   prioridade: 0
@@ -84264,7 +84264,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a5a7cd448e3a99428d918529f425db2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectName: 
+  name: 
   data: 
   hora: 
   prioridade: 0
@@ -84911,7 +84911,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1147615853
 RectTransform:
   m_ObjectHideFlags: 0
@@ -85014,7 +85014,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a5a7cd448e3a99428d918529f425db2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectName: 
+  name: 
   data: 
   hora: 
   prioridade: 0
@@ -88736,7 +88736,7 @@ Tilemap:
       - {fileID: -2075511706, guid: 42d78c8c8b1e24a48869d0140d4e6346, type: 3}
       - {fileID: -1392665799, guid: 42d78c8c8b1e24a48869d0140d4e6346, type: 3}
       - {fileID: 1560268586, guid: 42d78c8c8b1e24a48869d0140d4e6346, type: 3}
-      m_AnimationSpeed: 10.000001
+      m_AnimationSpeed: 10
       m_AnimationTimeOffset: 0
       m_Flags: 0
   m_TileAssetArray:
@@ -113800,7 +113800,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a5a7cd448e3a99428d918529f425db2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectName: 
+  name: 
   data: 
   hora: 
   prioridade: 0
@@ -114562,7 +114562,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a5a7cd448e3a99428d918529f425db2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectName: 
+  name: 
   data: 
   hora: 
   prioridade: 0
@@ -114737,7 +114737,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a5a7cd448e3a99428d918529f425db2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectName: 
+  name: 
   data: 
   hora: 
   prioridade: 0
@@ -114965,7 +114965,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a5a7cd448e3a99428d918529f425db2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectName: 
+  name: 
   data: 
   hora: 
   prioridade: 0
@@ -115278,7 +115278,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a5a7cd448e3a99428d918529f425db2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectName: 
+  name: 
   data: 
   hora: 
   prioridade: 0
@@ -115692,7 +115692,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a5a7cd448e3a99428d918529f425db2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectName: 
+  name: 
   data: 
   hora: 
   prioridade: 0
@@ -115907,7 +115907,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a5a7cd448e3a99428d918529f425db2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectName: 
+  name: 
   data: 
   hora: 
   prioridade: 0
@@ -131857,7 +131857,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a5a7cd448e3a99428d918529f425db2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectName: 
+  name: 
   data: 
   hora: 
   prioridade: 0

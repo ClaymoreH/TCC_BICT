@@ -28,6 +28,7 @@ MonoBehaviour:
     isCompleted: 1
     initialRequiredAmount: 4
     isSequential: 0
+    statusID: 24
     rewardExperience: 0
     rewardItem: {fileID: 11400000, guid: a7e0213fc09811843bef3b8584ad0fdc, type: 2}
   - title: 'Preparar o Reator para Recarregar a Bateria  '
@@ -38,7 +39,8 @@ MonoBehaviour:
     targetID: 9
     isCompleted: 1
     initialRequiredAmount: 1
-    isSequential: 1
+    isSequential: 0
+    statusID: 25
     rewardExperience: 0
     rewardItem: {fileID: 0}
   - title: 'Colocar a Bateria no Reator  '
@@ -49,41 +51,46 @@ MonoBehaviour:
     targetID: 10
     isCompleted: 1
     initialRequiredAmount: 1
-    isSequential: 1
+    isSequential: 0
+    statusID: 26
     rewardExperience: 0
     rewardItem: {fileID: 0}
   - title: 'Coletar a Bateria do Reator  '
     description: Recupere a bateria totalmente carregada do reator.
     type: 0
-    requiredAmount: 1
+    requiredAmount: 0
     targetID: 7
-    isCompleted: 0
+    isCompleted: 1
     initialRequiredAmount: 1
-    isSequential: 1
+    isSequential: 0
+    statusID: 27
     rewardExperience: 0
-    rewardItem: {fileID: 0}
+    rewardItem: {fileID: 11400000, guid: d77dcb36adb4e6d4085e48056512d5e6, type: 2}
   - title: "Substituir a bateria cr\xEDtica pela recarregada  "
     description: "Troque a bateria cr\xEDtica pela recarregada para restabelecer
       as fun\xE7\xF5es principais da nave.  "
     type: 3
-    requiredAmount: 1
+    requiredAmount: 0
     targetID: 12
-    isCompleted: 0
+    isCompleted: 1
     initialRequiredAmount: 1
     isSequential: 1
+    statusID: 28
     rewardExperience: 0
     rewardItem: {fileID: 0}
   - title: "Organizar a distribui\xE7\xE3o de Energia"
     description: "Distribua a energia de forma eficiente, priorizando as tarefas
       com menor tempo de execu\xE7\xE3o para otimizar o uso dos recursos."
     type: 4
-    requiredAmount: 1
+    requiredAmount: 0
     targetID: 13
-    isCompleted: 0
+    isCompleted: 1
     initialRequiredAmount: 1
     isSequential: 1
+    statusID: 0
     rewardExperience: 0
     rewardItem: {fileID: 0}
   rewardExperience: 0
   rewardItem: {fileID: 0}
   nextQuest: {fileID: 11400000, guid: 8bedc8e19fa770e4eb4988d5b78d4fbf, type: 2}
+  dialoguePanelName: Quest 3

@@ -20,6 +20,11 @@ public class InteractiveDialogueTrigger : MonoBehaviour
     public void Start()
     {
         dialogueManager = FindObjectOfType<DialogueManager>();
+        string directoryPath = Path.Combine(Application.dataPath, "Scripts", "Dialogue");
+        if (!Directory.Exists(directoryPath))
+        {
+            Directory.CreateDirectory(directoryPath);  // Cria o diretório se não existir
+        }
 
         modifiableDialoguePath = Path.Combine(Application.dataPath, "Scripts", "Dialogue", "modifiableDialogue.json");
 

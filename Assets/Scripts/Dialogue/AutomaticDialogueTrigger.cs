@@ -28,6 +28,8 @@ public class AutomaticDialogueTrigger : MonoBehaviour
                 {
                     hasTriggered = true;
                     StartDialogue();
+                    Destroy(gameObject);
+
                     return;
                 }
             }

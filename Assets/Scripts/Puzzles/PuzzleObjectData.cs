@@ -6,7 +6,7 @@ using UnityEngine;
 public class PuzzleObjectData : MonoBehaviour
 {
     [Header("Informações do Objeto")]
-    public string objectName; 
+    public string name; 
     public string data;       
     public string hora;       
     public int prioridade;    

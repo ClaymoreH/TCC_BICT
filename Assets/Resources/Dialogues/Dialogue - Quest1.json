@@ -59,8 +59,7 @@
             "next_status": 1,
             "lines": [
                 "Você entrou na &Central &de &Energia.",
-                "A Central de Energia é o núcleo da distribuição energética.",
-                "Sem ela, a Argos VII mal consegue operar."
+                "A Central de Energia é o núcleo da distribuição energética."
             ]
         },
         {
@@ -74,7 +73,7 @@
             ],
             "choices": [
                 {
-                    "choiceText": "Abrir o compartimento",
+                    "choiceText": "Abrir e pegar o HD",
                     "actionType": "CollectItem",
                     "ActionID": 2,
                     "responseLines": ["Compartimento aberto. &Recuperou &o &HD &da &Central &de &Energia com sucesso."]

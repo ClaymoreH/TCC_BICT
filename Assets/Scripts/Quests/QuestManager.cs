@@ -175,7 +175,7 @@ private void GrantObjectiveReward(QuestObjective objective)
 public void CompleteQuest(Quest quest)
 {
     Debug.Log($"Missão '{quest.questName}' concluída!");
-    
+
     // Recompensas e lógica
     if (quest.rewardItem != null)
     {
@@ -190,6 +190,33 @@ public void CompleteQuest(Quest quest)
     notificationManager?.ShowNotification($"Missão concluída: {quest.questName}");
     audioManager?.PlayMissionCompletedSound();
 
+    if (!string.IsNullOrEmpty(quest.dialoguePanelName))
+    {
+        // Buscar o painel mesmo que esteja desativado
+        Transform[] allTransforms = Resources.FindObjectsOfTypeAll<Transform>();
+        GameObject panel = null;
+
+        foreach (var t in allTransforms)
+        {
+            if (t.gameObject.name == quest.dialoguePanelName)
+            {
+                panel = t.gameObject;
+                break;
+            }
+        }
+
+        if (panel != null)
+        {
+            panel.SetActive(true);
+            Debug.Log($"Painel de diálogo '{panel.name}' ativado para a missão '{quest.questName}'.");
+        }
+        else
+        {
+            Debug.LogWarning($"Painel de diálogo com o nome '{quest.dialoguePanelName}' não foi encontrado na cena.");
+        }
+    }
+
+
     // Adicionar próxima missão, se houver
     if (quest.nextQuest != null)
     {
@@ -198,5 +225,6 @@ public void CompleteQuest(Quest quest)
 
     questUIManager.UpdateQuestUI(activeQuests, completedQuests);
 }
+
 
 }

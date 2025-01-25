@@ -13,7 +13,10 @@ public class Quest : ScriptableObject
     public Item rewardItem;
 
     public Quest nextQuest;
+
+    public string dialoguePanelName; // Nome do painel que será ativado
 }
+
 
 
 [System.Serializable]
@@ -26,7 +29,7 @@ public class QuestObjective
     public int targetID;
     public bool isCompleted;
     public int initialRequiredAmount; // Valor inicial para resetar
-    public bool isSequential; // Indica se este objetivo depende do anterior
+    public bool isSequential; // Indica se o objetivo depende do anterior
     public int statusID; // Numero do Id para definir o status como 1 o dialogo apos completar o objetivo
     public int rewardExperience;
     public Item rewardItem;

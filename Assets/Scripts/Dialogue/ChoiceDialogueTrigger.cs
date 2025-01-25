@@ -46,10 +46,27 @@ public void CollectItem(int ActionID)
 
 public void DeliverItem(int ActionID)
 {
-    DeliverItem deliverItem = FindObjectOfType<DeliverItem>();
-    if (deliverItem != null && deliverItem.objectID == ActionID)
+    // Encontra todos os DeliverItems na cena
+    DeliverItem[] deliverItems = FindObjectsOfType<DeliverItem>();
+
+    // Exibe o número de DeliverItems encontrados
+    Debug.Log($"Encontrados {deliverItems.Length} objetos DeliverItem na cena.");
+
+    DeliverItem foundDeliverItem = null;
+    foreach (DeliverItem item in deliverItems)
     {
-        deliverItem.TryDeliverItems();
+        if (item.objectID == ActionID)
+        {
+            foundDeliverItem = item;
+            break; // Encontrou o item, não precisa continuar a busca
+        }
+    }
+
+    // Se encontrou o DeliverItem, tenta entregar os itens
+    if (foundDeliverItem != null)
+    {
+        foundDeliverItem.TryDeliverItems();
+        Debug.Log($"Itens entregues com sucesso para o objeto de ID {ActionID}.");
     }
     else
     {

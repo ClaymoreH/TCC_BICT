@@ -23,22 +23,36 @@ MonoBehaviour:
     description: "O m\xF3dulo central de coleta foi desligado. Ajuste os par\xE2metros
       necess\xE1rios para que os dados possam ser acessados.  "
     type: 2
-    requiredAmount: 1
+    requiredAmount: 0
     targetID: 14
-    isCompleted: 0
+    isCompleted: 1
     initialRequiredAmount: 1
     isSequential: 0
+    statusID: 0
     rewardExperience: 0
     rewardItem: {fileID: 0}
   - title: "Configurar a C\xE1psula de Esp\xE9cimes  "
     description: "A c\xE1psula de esp\xE9cimes precisa ser configurada para garantir
       que os esp\xE9cimes coletados sejam protegidos durante o processo de transmiss\xE3o"
     type: 2
-    requiredAmount: 1
+    requiredAmount: 0
     targetID: 15
-    isCompleted: 0
+    isCompleted: 1
     initialRequiredAmount: 3
     isSequential: 0
+    statusID: 0
+    rewardExperience: 0
+    rewardItem: {fileID: 0}
+  - title: Verificar o estado do Viveiro
+    description: Um superaquecimento foi detectado no painel do viveiro. Inspecione
+      para identificar a origem do problema e evitar danos maiores.
+    type: 2
+    requiredAmount: 1
+    targetID: 18
+    isCompleted: 0
+    initialRequiredAmount: 1
+    isSequential: 0
+    statusID: 37
     rewardExperience: 0
     rewardItem: {fileID: 0}
   - title: "Substituir cabos do Viveiro Xenobot\xE2nico  "
@@ -50,6 +64,7 @@ MonoBehaviour:
     isCompleted: 0
     initialRequiredAmount: 1
     isSequential: 0
+    statusID: 38
     rewardExperience: 0
     rewardItem: {fileID: 0}
   - title: 'Iniciar o envio dos dados '
@@ -62,8 +77,10 @@ MonoBehaviour:
     isCompleted: 0
     initialRequiredAmount: 1
     isSequential: 1
+    statusID: 0
     rewardExperience: 0
     rewardItem: {fileID: 0}
   rewardExperience: 0
   rewardItem: {fileID: 0}
   nextQuest: {fileID: 0}
+  dialoguePanelName: 
