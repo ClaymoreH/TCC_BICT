@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: RRDatabase
+  m_EditorClassIdentifier: Assembly-CSharp::RRDatabase
+  alerts:
+  - iconDrag: {fileID: 0}
+    tempoExecucao: 6
+    ValorOriginal: 6
+    processo: 3
+    titulotext: "M\xF3dulo C"
+    tempotext: "Tempo de Execu\xE7\xE3o - 6ms"
+    chegadatext: Dados
+    descricaotext: 
+  - iconDrag: {fileID: 0}
+    tempoExecucao: 3
+    ValorOriginal: 3
+    processo: 1
+    titulotext: "M\xF3dulo A"
+    tempotext: "Tempo de Execu\xE7\xE3o - 3ms"
+    chegadatext: Dados
+    descricaotext: 
+  - iconDrag: {fileID: 0}
+    tempoExecucao: 2
+    ValorOriginal: 2
+    processo: 2
+    titulotext: "M\xF3dulo B"
+    tempotext: "Tempo de Execu\xE7\xE3o - 2ms"
+    chegadatext: Dados
+    descricaotext: 
+  - iconDrag: {fileID: 0}
+    tempoExecucao: 2
+    ValorOriginal: 2
+    processo: 5
+    titulotext: "M\xF3dulo E"
+    tempotext: "Tempo de Execu\xE7\xE3o - 2ms"
+    chegadatext: Dados
+    descricaotext: 
+  - iconDrag: {fileID: 0}
+    tempoExecucao: 2
+    ValorOriginal: 2
+    processo: 4
+    titulotext: "M\xF3dulo D"
+    tempotext: "Tempo de Execu\xE7\xE3o - 2ms"
+    chegadatext: Dados
+    descricaotext: 

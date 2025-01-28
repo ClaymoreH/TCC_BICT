@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;  // Necessário para manipular Image no Canvas
+using UnityEngine.UI;  
 
 public class FIFOGenerator : MonoBehaviour
 {
@@ -13,18 +13,26 @@ public class FIFOGenerator : MonoBehaviour
     [Header("Slots de Alertas")]
     public int numberOfAlerts = 4;  // Quantidade de alertas a serem sorteados
 
-    private List<FIFOData> availableAlerts;  // Lista interna de alertas disponíveis
+    private List<FIFOData> availableAlerts;  // Lista temporária para os alertas disponíveis
 
     private void Start()
     {
-        // Copia a lista de alertas do ScriptableObject para evitar modificações na original
-        availableAlerts = new List<FIFOData>(fifoDatabase.alerts);
+        // Gera os primeiros alertas ao iniciar o jogo
         GenerateRandomAlerts();
     }
 
-    private void GenerateRandomAlerts()
+    public void GenerateRandomAlerts()
     {
-        // Garante que o número de alertas não excede a quantidade de dados disponíveis
+        // Limpa os alertas anteriores no alertParent
+        foreach (Transform child in alertParent)
+        {
+            Destroy(child.gameObject);
+        }
+
+        // Cria uma nova lista temporária baseada nos alertas do banco de dados
+        availableAlerts = new List<FIFOData>(fifoDatabase.alerts);
+
+        // Garante que o número de alertas não exceda a quantidade disponível
         int alertsToGenerate = Mathf.Min(numberOfAlerts, availableAlerts.Count);
 
         for (int i = 0; i < alertsToGenerate; i++)
@@ -33,8 +41,14 @@ public class FIFOGenerator : MonoBehaviour
             int randomIndex = Random.Range(0, availableAlerts.Count);
             FIFOData randomAlert = availableAlerts[randomIndex];
 
-            // Remove da lista para evitar repetição
-            availableAlerts.RemoveAt(randomIndex);
+            // Gera uma data e hora aleatória
+            string generatedDate = GenerateRandomDate();
+            string generatedTime = GenerateRandomTime();
+
+            // Atualiza os valores de data e hora no objeto FIFOData
+            randomAlert.data = generatedDate;
+            randomAlert.hora = generatedTime;
+            randomAlert.datatext = $"Data: {generatedDate} {generatedTime}";
 
             // Instancia o prefab e aplica as informações do alerta
             GameObject newAlert = Instantiate(alertPrefab, alertParent);
@@ -42,7 +56,37 @@ public class FIFOGenerator : MonoBehaviour
         }
     }
 
-    private void SetupAlert(GameObject alertObject, FIFOData alertData)
+    /// <summary>
+    /// Gera uma data aleatória no ano de 2104.
+    /// </summary>
+    private string GenerateRandomDate()
+    {
+        int month = Random.Range(1, 13); // Mês aleatório (1 a 12)
+        int day;
+
+        // Define o número máximo de dias com base no mês
+        if (month == 2) // Fevereiro
+            day = Random.Range(1, 29); // 28 dias (2104 não é bissexto)
+        else if (month == 4 || month == 6 || month == 9 || month == 11) // Meses com 30 dias
+            day = Random.Range(1, 31);
+        else // Meses com 31 dias
+            day = Random.Range(1, 32);
+
+        return $"{day:00}/{month:00}/2104"; // Formato: DD/MM/2104
+    }
+
+    /// <summary>
+    /// Gera uma hora aleatória no formato HH:MM.
+    /// </summary>
+    private string GenerateRandomTime()
+    {
+        int hour = Random.Range(0, 24); // Horas (0 a 23)
+        int minute = Random.Range(0, 60); // Minutos (0 a 59)
+
+        return $"{hour:00}:{minute:00}"; // Formato: HH:MM
+    }
+
+    public void SetupAlert(GameObject alertObject, FIFOData alertData)
     {
         // Configura o ícone do alerta (estático)
         Image iconImage = alertObject.transform.Find("Icon")?.GetComponent<Image>();
@@ -124,3 +168,4 @@ public class FIFOGenerator : MonoBehaviour
         }
     }
 }
+

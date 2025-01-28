@@ -13,12 +13,48 @@ MonoBehaviour:
   m_Name: FIFODatabase
   m_EditorClassIdentifier: 
   alerts:
-  - icon: {fileID: 0}
-    iconDrag: {fileID: 0}
-    name: 
-    data: 
-    hora: 
-    titulotext: 
-    datatext: 
-    corpotext: 
-    logtext: 
+  - icon: {fileID: 21300000, guid: 1df5876335d76084cadbffbd516d00c2, type: 3}
+    iconDrag: {fileID: 21300000, guid: a4563132ebfc7fa4a9dfb2ddc223b818, type: 3}
+    name: Batery
+    data: 2025-01-01
+    hora: 14:00
+    titulotext: TEST
+    datatext: TEST
+    corpotext: TEST
+    logtext: TEST
+  - icon: {fileID: 21300000, guid: fc6e163d9e839aa4ea866fb44eee3435, type: 3}
+    iconDrag: {fileID: 21300000, guid: 8b218efe15ee8944fbc9a78e96d2114a, type: 3}
+    name: HD
+    data: 2025-01-01
+    hora: 12:00
+    titulotext: TEST
+    datatext: TEST
+    corpotext: TEST
+    logtext: TEST
+  - icon: {fileID: 21300000, guid: b72f7802e5747af47b17ca237448dc9e, type: 3}
+    iconDrag: {fileID: 21300000, guid: b4a8bca8c2a4c7a4cbd08c0fbe67c34c, type: 3}
+    name: Manometer
+    data: 2025-01-01
+    hora: 11:00
+    titulotext: TEST
+    datatext: TEST
+    corpotext: TEST
+    logtext: TEST
+  - icon: {fileID: 21300000, guid: 5887e2fd1524f7949a182318daada437, type: 3}
+    iconDrag: {fileID: 21300000, guid: 39a0d74c45574e042904358b7572c702, type: 3}
+    name: Thermomether
+    data: 2025-01-01
+    hora: 10:00
+    titulotext: TEST
+    datatext: TEST
+    corpotext: TEST
+    logtext: TEST
+  - icon: {fileID: 21300000, guid: 0e6ea0741aa99ee4f8d280bc80489b18, type: 3}
+    iconDrag: {fileID: 21300000, guid: 4e7b5fb7f546def4b96d18158e2c0415, type: 3}
+    name: Tower
+    data: 2025-01-01
+    hora: 09:00
+    titulotext: TEST
+    datatext: TEST
+    corpotext: TEST
+    logtext: TEST

@@ -35625,6 +35625,8 @@ MonoBehaviour:
   feedbackText: {fileID: 776719234}
   feedbackDuration: 0.5
   playerAnimatorPuzzle: {fileID: 301035833}
+  fifoGenerator: {fileID: 0}
+  isStoryMode: 1
   slots:
   - {fileID: 1463373263}
   - {fileID: 870163510}
@@ -35632,7 +35634,9 @@ MonoBehaviour:
   - {fileID: 1750616228}
   - {fileID: 415205376}
   puzzle: {fileID: 19879897}
-  playerAnimator: {fileID: 0}
+  playerAnimator: {fileID: 301035833}
+  timer: {fileID: 1422301246}
+  randomModeScoreText: {fileID: 0}
 --- !u!114 &644260500
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36722,6 +36726,9 @@ MonoBehaviour:
   playerAnimatorPuzzle: {fileID: 301035833}
   panelTransform: {fileID: 222050684}
   painelProcessos: {fileID: 825584492}
+  rrGenerator: {fileID: 0}
+  circulardropzonemanager: {fileID: 0}
+  isStoryMode: 1
   puzzle: {fileID: 2107016118}
 --- !u!114 &721721759
 MonoBehaviour:
@@ -115342,6 +115349,9 @@ MonoBehaviour:
   playerAnimator: {fileID: 301035833}
   gameOverScreen: {fileID: 518632537}
   toggleKey: 112
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  warningColor: {r: 1, g: 0, b: 0, a: 1}
+  colorChangeDuration: 1
 --- !u!114 &1422301247
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -116518,6 +116528,10 @@ MonoBehaviour:
   playerAnimatorPuzzle: {fileID: 301035833}
   slotManager: {fileID: 1556393106}
   puzzle: {fileID: 1828315743}
+  sjfGenerator: {fileID: 0}
+  isStoryMode: 1
+  timer: {fileID: 1422301246}
+  randomModeScoreText: {fileID: 0}
 --- !u!114 &1460871937
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -145702,7 +145716,7 @@ Tilemap:
       - {fileID: -1510998810, guid: 4c61f7d7407734d4aa98ebace2d2bb90, type: 3}
       - {fileID: -2121271292, guid: 4c61f7d7407734d4aa98ebace2d2bb90, type: 3}
       - {fileID: 296239472, guid: 4c61f7d7407734d4aa98ebace2d2bb90, type: 3}
-      m_AnimationSpeed: 13.325262
+      m_AnimationSpeed: 16.899683
       m_AnimationTimeOffset: 0
       m_Flags: 0
   m_TileAssetArray:

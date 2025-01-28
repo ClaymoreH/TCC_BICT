@@ -14,4 +14,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Quest1.unity
     guid: 72c151d62d1451b4eb7a534f03acb522
+  - enabled: 1
+    path: Assets/Scenes/Random/FIFORandom.unity
+    guid: 0624681e94e8a074781fe7a7d3a5cea9
+  - enabled: 1
+    path: Assets/Scenes/Random/RRRandom.unity
+    guid: 716339677cae9cf40b30352be4121f43
+  - enabled: 1
+    path: Assets/Scenes/Random/SJFRANDOM.unity
+    guid: 981ca59401307674a9d45f861d3e458c
   m_configObjects: {}

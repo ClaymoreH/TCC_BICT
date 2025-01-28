@@ -34152,57 +34152,12 @@ MonoBehaviour:
   uiTextAreas: []
   tmpTextAreas:
   - {fileID: 707861871}
-  - {fileID: 1404836927}
   - {fileID: 1013852801}
+  - {fileID: 1404836927}
   - {fileID: 195278337}
-  buttons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  buttonContents:
-  - associatedButtonIndices: 00000000
-    uiTexts: []
-    tmpTexts:
-    - "M\xF3dulo A"
-    - "Dados Atmosf\xE9ricos"
-    - "Transmiss\xE3o - 7s"
-    - "Cont\xE9m informa\xE7\xF5es detalhadas sobre a composi\xE7\xE3o da atmosfera,
-      incluindo gases como oxig\xEAnio, nitrog\xEAnio e outros compostos vol\xE1teis. "
-  - associatedButtonIndices: 01000000
-    uiTexts: []
-    tmpTexts:
-    - "M\xF3dulo B"
-    - "Dados Geol\xF3gicos"
-    - "Transmiss\xE3o - 1s"
-    - "Inclui imagens e an\xE1lises sobre a superf\xEDcie do planeta, destacando
-      forma\xE7\xF5es geol\xF3gicas, minerais e potenciais recursos naturais."
-  - associatedButtonIndices: 02000000
-    uiTexts: []
-    tmpTexts:
-    - "M\xF3dulo C"
-    - "Dados Biol\xF3gicos"
-    - "Transmiss\xE3o - 5s"
-    - "Cont\xE9m poss\xEDveis sinais de vida, como mol\xE9culas org\xE2nicas detectadas
-      em amostras de solo e dados sobre poss\xEDveis microorganismos."
-  - associatedButtonIndices: 03000000
-    uiTexts: []
-    tmpTexts:
-    - "M\xF3dulo D"
-    - Dados Visuais
-    - "Transmiss\xE3o - 8s"
-    - "Imagens e v\xEDdeos capturados pelo sensor visual da nave, mostrando paisagens
-      e fen\xF4menos atmosf\xE9ricos em Kepler-10b."
-  - associatedButtonIndices: 04000000
-    uiTexts: []
-    tmpTexts:
-    - "M\xF3dulo E"
-    - "Dados Diagn\xF3stico"
-    - "Transmiss\xE3o - 4s"
-    - "Inclui informa\xE7\xF5es cr\xEDticas sobre o estado da nave, como falhas no
-      sistema e status das opera\xE7\xF5es de reparo."
-  audioSource: {fileID: 0}
+  buttons: []
+  buttonContents: []
+  audioSource: {fileID: 873074824}
   buttonClickSound: {fileID: 8300000, guid: ea8041a89a3b0494b985101acad70cc3, type: 3}
   textChangeSound: {fileID: 0}
   typeSpeed: 0
@@ -35052,7 +35007,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1147040896}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
   m_Name: 
@@ -35067,8 +35022,8 @@ MonoBehaviour:
   m_StartAxis: 0
   m_CellSize: {x: 100, y: 80}
   m_Spacing: {x: 0, y: 0}
-  m_Constraint: 0
-  m_ConstraintCount: 2
+  m_Constraint: 1
+  m_ConstraintCount: 5
 --- !u!114 &1147040899
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35119,10 +35074,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76af6b7b3d1279644ae77a015644924f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rrDatabase: {fileID: 11400000, guid: d353442cfa36ba94fbe597425f4f6980, type: 2}
+  rrDatabase: {fileID: 11400000, guid: fd027f7dc367e734ba6d0fa24fe59c7f, type: 2}
   alertParent: {fileID: 1147040897}
-  alertPrefab: {fileID: 5088086783073493415, guid: d38976e434a37fc459f6d835a416d257, type: 3}
-  numberOfAlerts: 4
+  alertPrefab: {fileID: 5088086783073493415, guid: c79dae5e0d3359e429b7c9b010bb017f, type: 3}
+  numberOfAlerts: 5
+  minExecutionTime: 1
+  maxExecutionTime: 10
 --- !u!1 &1155738192
 GameObject:
   m_ObjectHideFlags: 0
@@ -120585,7 +120542,7 @@ Tilemap:
       - {fileID: 1635390446, guid: 149f71cea41e6614a9ae23d467072f45, type: 3}
       - {fileID: 375417798, guid: 149f71cea41e6614a9ae23d467072f45, type: 3}
       - {fileID: 1218399489, guid: 149f71cea41e6614a9ae23d467072f45, type: 3}
-      m_AnimationSpeed: 12.110508
+      m_AnimationSpeed: 15.418441
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: -9, y: -89, z: 0}
@@ -120596,7 +120553,7 @@ Tilemap:
       - {fileID: 1635390446, guid: 149f71cea41e6614a9ae23d467072f45, type: 3}
       - {fileID: 375417798, guid: 149f71cea41e6614a9ae23d467072f45, type: 3}
       - {fileID: 1218399489, guid: 149f71cea41e6614a9ae23d467072f45, type: 3}
-      m_AnimationSpeed: 14.06101
+      m_AnimationSpeed: 13.349907
       m_AnimationTimeOffset: 0
       m_Flags: 0
   - first: {x: -4, y: -11, z: 0}
@@ -120615,7 +120572,7 @@ Tilemap:
       - {fileID: -1510998810, guid: 4c61f7d7407734d4aa98ebace2d2bb90, type: 3}
       - {fileID: -2121271292, guid: 4c61f7d7407734d4aa98ebace2d2bb90, type: 3}
       - {fileID: 296239472, guid: 4c61f7d7407734d4aa98ebace2d2bb90, type: 3}
-      m_AnimationSpeed: 14.18812
+      m_AnimationSpeed: 16.990902
       m_AnimationTimeOffset: 0
       m_Flags: 0
   m_TileAssetArray:

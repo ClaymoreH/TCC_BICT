@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class SJFManager : PuzzleManager
 {
@@ -9,6 +10,15 @@ public class SJFManager : PuzzleManager
 
     [Header("Referência ao Puzzle")]
     public Puzzle puzzle;
+
+    [Header("Modos de Jogo")]
+    public SJFGenerator sjfGenerator;
+    public bool isStoryMode = true; 
+
+    [Header("Configurações de Tempo e Pontuação")]
+    public Timer timer; // Referência ao script Timer
+    public TextMeshProUGUI randomModeScoreText; // Texto para exibir a pontuação no modo aleatório
+    private int randomModeScore = 0; // Contador de puzzles resolvidos no modo aleatório
 
     private void Start()
     {
@@ -66,7 +76,7 @@ public class SJFManager : PuzzleManager
 
             if (!linhaTemObjeto)
             {
-                ExibirFeedback("ERRO: Todas as linhas da tabela devem ter pelo menos um objeto.", errorSound);
+                HandleError("ERRO: Todas as linhas da tabela devem ter pelo menos um objeto.");
                 yield break;
             }
         }
@@ -74,26 +84,32 @@ public class SJFManager : PuzzleManager
         // Validação de ordem (checando chegada e tempo de execução)
         if (!ValidarOrdemTabelaLogic(objetos))
         {
-            ExibirFeedback("ERRO: A ordem dos processos na tabela está incorreta!", errorSound);
+            HandleError("ERRO: A ordem dos processos na tabela está incorreta!");
             yield break;
         }
 
         ExibirFeedback("Sucesso! A ordem está correta.", successSound);
-        // Destroi todos os objetos filhos do painel
-        yield return new WaitForSeconds(2f); // Substitua 2f pelo tempo desejado
+        yield return new WaitForSeconds(2f); // Espera antes de limpar a tabela
 
-        // Destroi todos os objetos filhos do painel
-        Transform panelTransform = puzzle.transform;
-        foreach (Transform child in panelTransform)
+
+        // Ação para os modos de jogo
+        if (isStoryMode)
         {
-            Destroy(child.gameObject);
-        }
-            // Completar o puzzle
             if (puzzle != null)
             {
                 puzzle.CompletePuzzle();
             }
         }
+        else
+        {
+            randomModeScore++;
+            UpdateRandomModeScoreUI();
+
+            slotManager.ResetTable(); // Limpa a tabela usando o método ResetTable
+            sjfGenerator.GenerateRandomAlerts();
+            Debug.Log("Modo Aleatório: Reiniciando o puzzle.");
+        }
+    }
 
     private bool ValidarOrdemTabelaLogic(List<PuzzleObjectData> objetos)
     {
@@ -131,5 +147,29 @@ public class SJFManager : PuzzleManager
 
         // Se todos os processos foram executados corretamente
         return true;
+    }
+
+    // Método para lidar com erros (reduz tempo no modo história ou exibe feedback no modo aleatório)
+    private void HandleError(string errorMessage)
+    {
+        ExibirFeedback(errorMessage, errorSound);
+
+        if (isStoryMode)
+        {
+            // Reduz 30s do tempo no modo história
+            if (timer != null)
+            {
+                timer.ReduceTime(30); // Reduz 60 segundos
+            }
+        }
+    }
+
+    // Método para atualizar o texto de pontuação no modo aleatório
+    private void UpdateRandomModeScoreUI()
+    {
+        if (randomModeScoreText != null)
+        {
+            randomModeScoreText.text = $"Score: {randomModeScore}";
+        }
     }
 }

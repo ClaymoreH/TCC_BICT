@@ -9,6 +9,11 @@ public class RRManager : PuzzleManager
     public Transform panelTransform; // Painel que contém os slots
     public Transform painelProcessos; // Painel que contém todos os processos
 
+    [Header("Gerador de Puzzles (Modo Aleatório)")]
+    public RRGenerator rrGenerator;
+    public CircularDropZoneManager circulardropzonemanager;
+    public bool isStoryMode = true; 
+
     [Header("Referência ao Puzzle")]
     public Puzzle puzzle;
 
@@ -72,19 +77,41 @@ public class RRManager : PuzzleManager
             int ultimaDropZone = aparicoes.Max();
             ValidarTempoExecucao(objetosNosSlots, processo, ultimaDropZone, ref errosEncontrados);
         }
+if (errosEncontrados == 0)
+{
+    if (isStoryMode)
+    {
+        Debug.Log("Validação finalizada com sucesso! Todos os processos são válidos.");
+        ExibirFeedbackUnificado("Validação concluída com sucesso! Todos os processos são válidos.", true);
+                
+        puzzle.CompletePuzzle();
 
-        // Feedback geral
-        if (errosEncontrados == 0)
-        {
-            Debug.Log("Validação finalizada com sucesso! Todos os processos são válidos.");
-            ExibirFeedbackUnificado("Validação concluída com sucesso! Todos os processos são válidos.", true);
-            
-            puzzle.CompletePuzzle();
-
-            // Destruir o puzzle após um atraso de 2 segundos
-            StartCoroutine(DestroyPuzzleWithDelay(2f));
-        }
+        // Destruir o puzzle após um atraso de 2 segundos
+        StartCoroutine(DestroyPuzzleWithDelay(2f));
     }
+    else
+    {
+        // Remover todas as dropzones antes de gerar alertas
+        RemoverTodasDropZones();
+
+        rrGenerator.GenerateRandomAlerts();
+    }
+}
+
+
+    }
+// Função para excluir todas as dropzones
+private void RemoverTodasDropZones()
+{
+    // Itera sobre todas as dropzones e as destrói
+    foreach (var dropZone in circulardropzonemanager.GetCircularDropZones())
+    {
+        Destroy(dropZone);  // Destroi a dropzone
+    }
+
+    // Limpar a lista de dropzones
+    circulardropzonemanager.GetCircularDropZones().Clear();
+}
 
     private List<GameObject> ObterProcessosDoPainel()
     {

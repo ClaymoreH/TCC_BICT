@@ -17,44 +17,53 @@ MonoBehaviour:
     iconDrag: {fileID: 0}
     button: {fileID: 0}
     tempoExecucao: 1
-    ordemChegada: 2
-    titulotext: AAA
-    tempotext: AAA
-    chegadatext: AAA
-    descricaotext: Aaa
+    ordemChegada: 1
+    titulotext: aaaaaa
+    tempotext: 1
+    chegadatext: 1
+    descricaotext: aaaaaaaaaaa
   - icon: {fileID: 0}
     iconDrag: {fileID: 0}
     button: {fileID: 0}
     tempoExecucao: 2
-    ordemChegada: 3
-    titulotext: BBBB
-    tempotext: BBB
-    chegadatext: BBBB
-    descricaotext: BBB
+    ordemChegada: 2
+    titulotext: vvvvvvvv
+    tempotext: 2
+    chegadatext: 2
+    descricaotext: vvvvvvvvvvvvvv
   - icon: {fileID: 0}
     iconDrag: {fileID: 0}
     button: {fileID: 0}
     tempoExecucao: 3
     ordemChegada: 3
-    titulotext: CCCC
-    tempotext: CCCC
-    chegadatext: CCCC
-    descricaotext: CCCC
+    titulotext: 3
+    tempotext: 3
+    chegadatext: 3
+    descricaotext: nnnnnnnnnnnnnnn
   - icon: {fileID: 0}
     iconDrag: {fileID: 0}
     button: {fileID: 0}
-    tempoExecucao: 3
-    ordemChegada: 3
-    titulotext: DDD
-    tempotext: DDD
-    chegadatext: DDD
-    descricaotext: DDD
+    tempoExecucao: 4
+    ordemChegada: 4
+    titulotext: yyyyyyyyyyyyyyyyy
+    tempotext: 4
+    chegadatext: 4
+    descricaotext: yyyyyyyyyyyyyyy
   - icon: {fileID: 0}
     iconDrag: {fileID: 0}
     button: {fileID: 0}
-    tempoExecucao: 3
-    ordemChegada: 3
-    titulotext: EEE
-    tempotext: EEE
-    chegadatext: EEEE
-    descricaotext: EEE
+    tempoExecucao: 5
+    ordemChegada: 5
+    titulotext: 8888888
+    tempotext: 5
+    chegadatext: 5
+    descricaotext: 8888888888888888
+  - icon: {fileID: 0}
+    iconDrag: {fileID: 0}
+    button: {fileID: 0}
+    tempoExecucao: 6
+    ordemChegada: 6
+    titulotext: 3333333
+    tempotext: 6
+    chegadatext: 6
+    descricaotext: 3333333333333333

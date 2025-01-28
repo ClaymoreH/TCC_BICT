@@ -11,6 +11,9 @@ public class Timer : MonoBehaviour
     public Animator playerAnimator;  
     public GameObject gameOverScreen; 
     public KeyCode toggleKey = KeyCode.P; // Tecla para alternar a visibilidade
+    public Color normalColor = Color.white; // Cor padrão do texto
+    public Color warningColor = Color.red;  // Cor ao reduzir o tempo
+    public float colorChangeDuration = 1f;  // Duração do vermelho
 
     void Start()
     {
@@ -46,6 +49,47 @@ public class Timer : MonoBehaviour
             if (text != null)
             {
                 text.text = formattedTime;
+                text.color = normalColor; // Reseta a cor para o normal
+            }
+        }
+    }
+
+    public void ReduceTime(int secondsToReduce)
+    {
+        // Reduz o tempo e limita para no mínimo 0
+        currentValue = Mathf.Max(0, currentValue - secondsToReduce);
+
+        // Atualiza o UI imediatamente
+        UpdateTimerUI();
+
+        // Altera a cor dos textos para vermelho temporariamente
+        foreach (var text in timerTexts)
+        {
+            if (text != null)
+            {
+                text.color = warningColor; // Define como vermelho
+            }
+        }
+
+        // Retorna à cor normal após um tempo
+        Invoke(nameof(ResetTextColor), colorChangeDuration);
+
+        // Verifica se o tempo chegou a 0
+        if (currentValue == 0)
+        {
+            CancelInvoke(nameof(DecrementTimer)); 
+            TriggerGameOver();
+        }
+    }
+
+    void ResetTextColor()
+    {
+        // Restaura a cor normal para todos os textos
+        foreach (var text in timerTexts)
+        {
+            if (text != null)
+            {
+                text.color = normalColor;
             }
         }
     }

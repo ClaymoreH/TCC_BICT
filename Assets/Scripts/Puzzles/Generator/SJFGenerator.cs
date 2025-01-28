@@ -12,6 +12,8 @@ public class SJFGenerator : MonoBehaviour
 
     [Header("Slots de Alertas")]
     public int numberOfAlerts = 4; // Quantidade de alertas a serem sorteados
+    public int minExecutionTime = 1; // Tempo de execução mínimo
+    public int maxExecutionTime = 10; // Tempo de execução máximo
 
     private List<SJFData> availableAlerts; // Lista interna de alertas disponíveis
 
@@ -22,22 +24,76 @@ public class SJFGenerator : MonoBehaviour
         GenerateRandomAlerts();
     }
 
-private void GenerateRandomAlerts()
+public void GenerateRandomAlerts()
 {
+    // Limpa os alertas existentes no alertParent
+    foreach (Transform child in alertParent)
+    {
+        Destroy(child.gameObject);
+    }
+
     // Seleciona o número de tarefas a serem exibidas
     int tasksToGenerate = Mathf.Min(numberOfAlerts, sjfDatabase.alerts.Count);
 
-    // Lista para armazenar as tarefas sorteadas
+    // Gera tempos de execução que somam exatamente 15ms
+    List<int> executionTimes = new List<int>();
+    int remainingExecutionTime = 15;
+
+    for (int i = 0; i < tasksToGenerate; i++)
+    {
+        if (i == tasksToGenerate - 1)
+        {
+            // Último processo recebe o restante
+            executionTimes.Add(remainingExecutionTime);
+        }
+        else
+        {
+            // Define um tempo de execução aleatório (1 a 5ms)
+            int maxTime = Mathf.Min(5, remainingExecutionTime - (tasksToGenerate - i - 1));
+            int executionTime = Random.Range(1, maxTime + 1);
+            executionTimes.Add(executionTime);
+            remainingExecutionTime -= executionTime;
+        }
+    }
+
+    // Gera tempos de chegada variados
+    List<int> arrivalTimes = new List<int> { 0 }; // Primeiro processo sempre chega no tempo 0
+
+    for (int i = 1; i < tasksToGenerate; i++)
+    {
+        // Gera o tempo de chegada baseado no término de execução do processo anterior
+        int earliestArrival = arrivalTimes[i - 1] + Random.Range(1, 3); // Pequena lacuna (1 a 2ms)
+        int latestArrival = earliestArrival + Random.Range(0, 3); // Adiciona variação (0 a 2ms)
+        int arrivalTime = Random.Range(earliestArrival, latestArrival + 1);
+
+        // Garante que o próximo processo esteja disponível antes que todos os anteriores terminem
+        arrivalTime = Mathf.Min(arrivalTime, arrivalTimes[i - 1] + executionTimes[i - 1]);
+        arrivalTimes.Add(arrivalTime);
+    }
+
+    // Seleciona tarefas do banco de dados
+    List<SJFData> availableTasks = new List<SJFData>(sjfDatabase.alerts);
     List<SJFData> selectedTasks = new List<SJFData>();
 
-    // Sorteia as tarefas sem repetição
-    List<SJFData> availableTasks = new List<SJFData>(sjfDatabase.alerts);
     for (int i = 0; i < tasksToGenerate; i++)
     {
         int randomIndex = Random.Range(0, availableTasks.Count);
-        selectedTasks.Add(availableTasks[randomIndex]);
+        SJFData taskData = availableTasks[randomIndex];
+
+        // Configura os tempos gerados
+        taskData.tempoExecucao = executionTimes[i];
+        taskData.ordemChegada = arrivalTimes[i];
+
+        // Formata os textos para exibição
+        taskData.tempotext = $"Tempo de Execução - {taskData.tempoExecucao}ms";
+        taskData.chegadatext = $"Chegada - {taskData.ordemChegada}ms";
+
+        selectedTasks.Add(taskData);
         availableTasks.RemoveAt(randomIndex);
     }
+
+    // Embaralha as partes para distribuição aleatória
+    ShuffleList(selectedTasks);
 
     // Instancia o prefab base
     GameObject newAlert = Instantiate(alertPrefab, alertParent);
@@ -45,6 +101,20 @@ private void GenerateRandomAlerts()
     // Configura as tarefas no prefab
     SetupAlert(newAlert, selectedTasks);
 }
+
+// Função para embaralhar a lista
+private void ShuffleList<T>(List<T> list)
+{
+    for (int i = 0; i < list.Count; i++)
+    {
+        int randomIndex = Random.Range(i, list.Count);
+        T temp = list[i];
+        list[i] = list[randomIndex];
+        list[randomIndex] = temp;
+    }
+}
+
+
 private void SetupAlert(GameObject alertObject, List<SJFData> selectedTasks)
 {
     for (int i = 1; i <= 5; i++) // Loop para as 5 partes
@@ -65,7 +135,7 @@ private void SetupAlert(GameObject alertObject, List<SJFData> selectedTasks)
                 }
 
                 // Atribui os valores ao PuzzleObjectData no iconDrag
-                GameObject iconDragObject = partTransform.Find("IconDrag").gameObject; // Assumindo que o objeto está nomeado como "IconDrag"
+                GameObject iconDragObject = partTransform.Find("IconDrag").gameObject;
                 if (iconDragObject != null)
                 {
                     PuzzleObjectData puzzleObjectData = iconDragObject.GetComponent<PuzzleObjectData>();
@@ -73,17 +143,7 @@ private void SetupAlert(GameObject alertObject, List<SJFData> selectedTasks)
                     {
                         puzzleObjectData.tempoExecucao = taskData.tempoExecucao;
                         puzzleObjectData.ordemChegada = taskData.ordemChegada;
-
-                        Debug.Log($"Valores atribuídos ao PuzzleObjectData: TempoExecução = {taskData.tempoExecucao}, OrdemChegada = {taskData.ordemChegada}");
                     }
-                    else
-                    {
-                        Debug.LogError("PuzzleObjectData não encontrado no IconDrag!");
-                    }
-                }
-                else
-                {
-                    Debug.LogError("IconDrag não encontrado na Parte!");
                 }
 
                 // Configura os botões
@@ -95,20 +155,8 @@ private void SetupAlert(GameObject alertObject, List<SJFData> selectedTasks)
                     {
                         TextContent buttonContent = new TextContent
                         {
-                            uiTexts = new List<string>
-                            {
-                                taskData.titulotext,
-                                taskData.tempotext,
-                                taskData.chegadatext,
-                                taskData.descricaotext
-                            },
-                            tmpTexts = new List<string>
-                            {
-                                taskData.titulotext,
-                                taskData.tempotext,
-                                taskData.chegadatext,
-                                taskData.descricaotext
-                            },
+                            uiTexts = new List<string> { taskData.titulotext, taskData.tempotext, taskData.chegadatext, taskData.descricaotext },
+                            tmpTexts = new List<string> { taskData.titulotext, taskData.tempotext, taskData.chegadatext, taskData.descricaotext },
                             associatedButtonIndices = new List<int> { displayManager.buttons.Count }
                         };
 
@@ -120,14 +168,6 @@ private void SetupAlert(GameObject alertObject, List<SJFData> selectedTasks)
                             button.onClick.AddListener(() => displayManager.HandleButtonClick(buttonContent.associatedButtonIndices[0]));
                         }
                     }
-                    else
-                    {
-                        Debug.LogError("MultiTextDisplayManager não encontrado na cena!");
-                    }
-                }
-                else
-                {
-                    Debug.LogError($"Nenhum botão encontrado na Parte{i} do prefab!");
                 }
             }
             else
@@ -135,12 +175,16 @@ private void SetupAlert(GameObject alertObject, List<SJFData> selectedTasks)
                 partTransform.gameObject.SetActive(false); // Desativa a parte se não houver mais tarefas
             }
         }
-        else
-        {
-            Debug.LogError($"Parte{i} não encontrada no prefab do alerta!");
-        }
     }
 }
 
-
+    private void ClearAlerts()
+    {
+        // Remove todos os filhos do alertParent
+        foreach (Transform child in alertParent)
+        {
+            Destroy(child.gameObject);
+        }
+        Debug.Log("Todos os alertas foram removidos.");
+    }
 }
