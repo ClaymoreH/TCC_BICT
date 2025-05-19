@@ -1,248 +1,252 @@
 {
-    "dialogues": [
+  "dialogues": [
+    {
+      "id": 1,
+      "status": 1,
+      "next_status": 1,
+      "lines": [
+        { "text": "Sinal remoto detectado. Reestabelecendo conexão com a unidade RRY-82...", "npc": 1 },
+        { "text": "Inicializando...", "npc": 0 },
+        { "text": "Leitura confirmada. #Conexão instável... mas estou dentro. Status da Zenith-1", "npc": 0 },
+        { "text": "#Alerta: Múltiplas falhas críticas na Zenith-1. Estado de degradação avançada. Sistemas de suporte à vida offline.", "npc": 1 },
+        { "text": "Priorize a recuperação dos backups armazenados fisicamente no interior da sonda.", "npc": 1 },
+        { "text": "1. Reator Principal | 2. Central de Energia | 3. Unidade de Coleta | 4. Cabine de Comando. | 5. Central de Refrigeramento.", "npc": 1 },
+        { "text": "Consulte o &painel &de &missões &(M) para mais detalhes.", "npc": 1 },
+        { "text": "Entendido. Movendo-se para os setores", "npc": 0 }
+      ]
+    },
+    {
+      "id": 4,
+      "status": 1,
+      "next_status": 1,
+      "lines": [
+        { "text": "Você entrou no núcleo do &Reator &Principal.", "npc": 1 },
+        { "text": "Esta sala abriga o coração energético da Zenith-1.", "npc": 1 },
+        { "text": "A degradação aqui comprometeu a maior parte dos sistemas operacionais.", "npc": 1 }
+      ]
+    },
+    {
+      "id": 5,
+      "status": 1,
+      "next_status": 1,
+      "lines": [
+        { "text": "Você se aproxima de um painel danificado próximo ao núcleo do reator.", "npc": 1 },
+        { "text": "As luzes piscam irregularmente, mas você consegue distinguir um @HD @preso @ao @sistema.", "npc": 1 },
+        { "text": "", "npc": 1 }
+      ],
+      "choices": [
         {
-            "id": 1,
-            "status": 1,
-            "next_status": 1,
-            "lines": [
-                "Inicializando...",
-                "#Falhas #detectadas em múltiplos sistemas. Recursos disponíveis limitados.",
-                "Protocolo de emergência ativado.",
-                "Analisando...",
-                "Priorize a recuperação dos backups armazenados fisicamente no interior da sonda.",
-                "Localizações dos backups mapeadas no sistema. Consulte o &painel &de &missões &(M) para mais detalhes."
-            ]
+          "choiceText": "Examinar o painel",
+          "actionType": "EndDialogue",
+          "ActionID": 0,
+          "responseLines": [{ "text": "Painel em estado crítico. Backup identificado como funcional. Recuperação manual necessária.", "npc": 1 }]
         },
         {
-            "id": 4,
-            "status": 1,
-            "next_status": 1,
-            "lines": [
-                "Você entrou no núcleo do &Reator &Principal.",
-                "Esta sala abriga o coração energético da Argos VII.",
-                "A degradação aqui comprometeu a maior parte dos sistemas operacionais."
-            ]
+          "choiceText": "Pegar o HD",
+          "actionType": "CollectItem",
+          "ActionID": 1,
+          "responseLines": [{ "text": "@HD @do @Reator @Principal @recuperado. Dados em estado parcial, pronto para análise.", "npc": 1 }]
         },
         {
-            "id": 5,
-            "status": 1,
-            "next_status": 1,
-            "lines": [
-                "Você se aproxima de um painel danificado próximo ao núcleo do reator.",
-                "As luzes piscam irregularmente, mas você consegue distinguir um @HD @preso @ao @sistema.",
-                ""
-            ],
-            "choices": [
-                {
-                    "choiceText": "Examinar o painel",
-                    "actionType": "EndDialogue",
-                    "ActionID": 0,
-                    "responseLines": ["Painel em estado crítico. Backup identificado como funcional. Recuperação manual necessária."]
-                },
-                {
-                    "choiceText": "Pegar o HD",
-                    "actionType": "CollectItem",
-                    "ActionID": 1,
-                    "responseLines": ["@HD @do @Reator @Principal @recuperado. Dados em estado parcial, pronto para análise."]
-                },
-                {
-                    "choiceText": "Sair",
-                    "actionType": "EndDialogue",
-                    "ActionID": 0,
-                    "responseLines": ["Você decide #sair #sem #pegar #o #HD. A missão não pode continuar sem ele."]
-                }
-            ]
-        },
-        {
-            "id": 6,
-            "status": 1,
-            "next_status": 1,
-            "lines": [
-                "Você entrou na &Central &de &Energia.",
-                "A Central de Energia é o núcleo da distribuição energética."
-            ]
-        },
-        {
-            "id": 7,
-            "status": 1,
-            "next_status": 1,
-            "lines": [
-                "Ao final de um corredor iluminado por luzes intermitentes, você encontra um compartimento de acesso.",
-                "Dentro, @um @HD repousa sob uma camada de poeira.",
-                ""
-            ],
-            "choices": [
-                {
-                    "choiceText": "Abrir e pegar o HD",
-                    "actionType": "CollectItem",
-                    "ActionID": 2,
-                    "responseLines": ["Compartimento aberto. &Recuperou &o &HD &da &Central &de &Energia com sucesso."]
-                },
-                {
-                    "choiceText": "Examinar mais de perto",
-                    "actionType": "EndDialogue",
-                    "ActionID": 0,
-                    "responseLines": ["Inscrição no HD: 'Central de Energia - Backup Primário'. Dados críticos armazenados."]
-                },
-                {
-                    "choiceText": "Deixar o HD no lugar",
-                    "actionType": "EndDialogue",
-                    "ActionID": 0,
-                    "responseLines": ["#O #HD #permanece #no #lugar. A sonda não pode prosseguir sem esses dados."]
-                }
-            ]
-        },
-        {
-            "id": 8,
-            "status": 1,
-            "next_status": 1,
-            "lines": [
-                "Bem-vindo à &Unidade &de &Coleta.",
-                "Este setor processa dados externos obtidos durante a missão de exploração."
-            ]
-        },
-        {
-            "id": 9,
-            "status": 1,
-            "next_status": 1,
-            "lines": [
-                "Um servidor enegrecido pelo tempo exibe luzes intermitentes. Você nota um HD parcialmente encaixado.",""
-            ],
-            "choices": [
-                {
-                    "choiceText": "Puxar o HD",
-                    "actionType": "CollectItem",
-                    "ActionID": 3,
-                    "responseLines": ["&HD &da &Unidade &de &Coleta &recuperado. Transferência de dados iniciada... Pronto para análise."]
-                },
-                {
-                    "choiceText": "Analisar o estado do servidor",
-                    "actionType": "EndDialogue",
-                    "ActionID": 0,
-                    "responseLines": ["Servidor comprometido. Backup armazenado no HD é a única fonte de recuperação."]
-                },
-                {
-                    "choiceText": "Ignorar o HD e continuar explorando",
-                    "actionType": "EndDialogue",
-                    "ActionID": 0,
-                    "responseLines": ["#Não #tocou #no #HD, a reconstrução não será possível. A sonda permanece incompleta."]
-                }
-            ]
-        },
-        {
-            "id": 10,
-            "status": 1,
-            "next_status": 1,
-            "lines": [
-                "Entrou na &Sala &de &Refrigeração.",
-                "O Sistema de Refrigeração é vital para a estabilidade do reator principal.",
-                "Sem ele, a integridade estrutural da Argos VII está em risco."
-            ]
-        },
-        {
-            "id": 11,
-            "status": 1,
-            "next_status": 1,
-            "lines": [
-                "No canto superior direito da sala, você encontra um computador com uma tela empoeirada.",
-                "Um HD está conectado ao lado.",""
-            ],
-            "choices": [
-                {
-                    "choiceText": "Verificar o computador.",
-                    "actionType": "EndDialogue",
-                    "ActionID": 0,
-                    "responseLines": ["&HD &do &Sistema &de &Refrigeração &recuperado. Dados prontos para análise."]
-                },
-                {
-                    "choiceText": "Desconectar o HD.",
-                    "actionType": "CollectItem",
-                    "ActionID": 4,
-                    "responseLines": ["Computador indica falhas críticas no sistema de refrigeração. Backup armazenado no HD."]
-                },
-                {
-                    "choiceText": "Deixar o HD.",
-                    "actionType": "EndDialogue",
-                    "ActionID": 0,
-                    "responseLines": ["#Deixou #o #HD #no #lugar, o sistema não pode ser restaurado."]
-                }
-            ]
-        },
-        {
-            "id": 12,
-            "status": 1,
-            "next_status": 1,
-            "lines": [
-                "Você entrou na &Cabine &Principal",
-                "O centro de comando da Argos VII. Aqui, as ocorre o mapeamento de rota e tomada de decisoes"
-            ]
-        },
-        {
-            "id": 13,
-            "status": 1,
-            "next_status": 1,
-            "lines": [
-                "Sob o painel de controle da cabine, você percebe um HD preso por parafusos já gastos pelo tempo.",""
-            ],
-            "choices": [
-                {
-                    "choiceText": "Remover o HD.",
-                    "actionType": "CollectItem",
-                    "ActionID": 5,
-                    "responseLines": ["&HD &da &Cabine &Principal &recuperado. Dados essenciais para análise."]
-                },
-                {
-                    "choiceText": "Investigar a inscrição no HD.",
-                    "actionType": "EndDialogue",
-                    "ActionID": 0,
-                    "responseLines": ["Inscrição no HD: 'Cabine Principal - Logs do Sistema'. Backup vital para diagnóstico."]
-                },
-                {
-                    "choiceText": "Deixar o HD e sair.",
-                    "actionType": "EndDialogue",
-                    "ActionID": 0,
-                    "responseLines": ["#Nao #tocou #no #HD, os backups sao necessários para concluir a missão."]
-                }
-            ]
-        },
-        {
-            "id": 14,
-            "status": 0,
-            "next_status": 1,
-            "lines": [
-                "&Todos &os &backups &recuperados. Iniciando processamento sequencial.",
-                "Acesse o terminal para decifrar a origem dos erros.",""
-            ],
-            "choices": [
-                {
-                    "choiceText": "Extrair os dados.",
-                    "actionType": "DeliverItem",
-                    "ActionID": 6,
-                    "responseLines": ["@Dados @sendo @descriptografados no sistema, extraindo logs de erros."]
-                },
-                {
-                    "choiceText": "Voltar",
-                    "actionType": "EndDialogue",
-                    "ActionID": 0,
-                    "responseLines": ["É preciso #processar #os #dados para entender o que aconteceu com a sonda. Melhor fazer isso #rápido."]
-                }
-            ]
-        },
-        {
-            "id": 15,
-            "status": 0,
-            "next_status": 1,
-            "lines": [
-                "Dados descriptografados com sucesso, abrindo tela de processamento.",""
-            ],
-            "choices": [
-                {
-                    "choiceText": "Abrir tela de processo",
-                    "actionType": "OpenPuzzle",
-                    "ActionID": 7,
-                    "responseLines": ["Solução correta do algoritmo garantirá funcionalidade temporária. Continue."]
-                }
-            ]
+          "choiceText": "Sair",
+          "actionType": "EndDialogue",
+          "ActionID": 0,
+          "responseLines": [{ "text": "Você decide #sair #sem #pegar #o #HD. A missão não pode continuar sem ele.", "npc": 1 }]
         }
-    ]
+      ]
+    },
+    {
+      "id": 6,
+      "status": 1,
+      "next_status": 1,
+      "lines": [
+        { "text": "Você entrou na &Central &de &Energia.", "npc": 1 },
+        { "text": "A Central de Energia é o núcleo da distribuição energética.", "npc": 1 }
+      ]
+    },
+    {
+      "id": 7,
+      "status": 1,
+      "next_status": 1,
+      "lines": [
+        { "text": "Ao final de um corredor iluminado por luzes intermitentes, você encontra um compartimento de acesso.", "npc": 1 },
+        { "text": "Dentro, @um @HD repousa sob uma camada de poeira.", "npc": 1 },
+        { "text": "", "npc": 1 }
+      ],
+      "choices": [
+        {
+          "choiceText": "Abrir e pegar o HD",
+          "actionType": "CollectItem",
+          "ActionID": 2,
+          "responseLines": [{ "text": "Compartimento aberto. &Recuperou &o &HD &da &Central &de &Energia com sucesso.", "npc": 1 }]
+        },
+        {
+          "choiceText": "Examinar mais de perto",
+          "actionType": "EndDialogue",
+          "ActionID": 0,
+          "responseLines": [{ "text": "Inscrição no HD: 'Central de Energia - Backup Primário'. Dados críticos armazenados.", "npc": 1 }]
+        },
+        {
+          "choiceText": "Deixar o HD no lugar",
+          "actionType": "EndDialogue",
+          "ActionID": 0,
+          "responseLines": [{ "text": "#O #HD #permanece #no #lugar. A sonda não pode prosseguir sem esses dados.", "npc": 1 }]
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "status": 1,
+      "next_status": 1,
+      "lines": [
+        { "text": "Bem-vindo à &Unidade &de &Coleta.", "npc": 1 },
+        { "text": "Este setor processa dados externos obtidos durante a missão de exploração.", "npc": 1 }
+      ]
+    },
+    {
+      "id": 9,
+      "status": 1,
+      "next_status": 1,
+      "lines": [
+        { "text": "Um servidor enegrecido pelo tempo exibe luzes intermitentes. Você nota um HD parcialmente encaixado.", "npc": 1 },
+        { "text": "", "npc": 1 }
+      ],
+      "choices": [
+        {
+          "choiceText": "Puxar o HD",
+          "actionType": "CollectItem",
+          "ActionID": 3,
+          "responseLines": [{ "text": "&HD &da &Unidade &de &Coleta &recuperado. Transferência de dados iniciada... Pronto para análise.", "npc": 1 }]
+        },
+        {
+          "choiceText": "Analisar o estado do servidor",
+          "actionType": "EndDialogue",
+          "ActionID": 0,
+          "responseLines": [{ "text": "Servidor comprometido. Backup armazenado no HD é a única fonte de recuperação.", "npc": 1 }]
+        },
+        {
+          "choiceText": "Ignorar o HD e continuar explorando",
+          "actionType": "EndDialogue",
+          "ActionID": 0,
+          "responseLines": [{ "text": "#Não #tocou #no #HD, a reconstrução não será possível. A sonda permanece incompleta.", "npc": 1 }]
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "status": 1,
+      "next_status": 1,
+      "lines": [
+        { "text": "Entrou na &Sala &de &Refrigeração.", "npc": 1 },
+        { "text": "O Sistema de Refrigeração é vital para a estabilidade do reator principal.", "npc": 1 },
+        { "text": "Sem ele, a integridade estrutural da Argos VII está em risco.", "npc": 1 }
+      ]
+    },
+    {
+      "id": 11,
+      "status": 1,
+      "next_status": 1,
+      "lines": [
+        { "text": "No canto superior direito da sala, você encontra um computador com uma tela empoeirada.", "npc": 1 },
+        { "text": "Um HD está conectado ao lado.", "npc": 1 },
+        { "text": "", "npc": 1 }
+      ],
+      "choices": [
+        {
+          "choiceText": "Verificar o computador.",
+          "actionType": "EndDialogue",
+          "ActionID": 0,
+          "responseLines": [{ "text": "&HD &do &Sistema &de &Refrigeração &recuperado. Dados prontos para análise.", "npc": 1 }]
+        },
+        {
+          "choiceText": "Desconectar o HD.",
+          "actionType": "CollectItem",
+          "ActionID": 4,
+          "responseLines": [{ "text": "Computador indica falhas críticas no sistema de refrigeração. Backup armazenado no HD.", "npc": 1 }]
+        },
+        {
+          "choiceText": "Deixar o HD.",
+          "actionType": "EndDialogue",
+          "ActionID": 0,
+          "responseLines": [{ "text": "#Deixou #o #HD #no #lugar, o sistema não pode ser restaurado.", "npc": 1 }]
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "status": 1,
+      "next_status": 1,
+      "lines": [
+        { "text": "Você entrou na &Cabine &Principal", "npc": 1 },
+        { "text": "O centro de comando da Argos VII. Aqui, as ocorre o mapeamento de rota e tomada de decisões.", "npc": 1 }
+      ]
+    },
+    {
+      "id": 13,
+      "status": 1,
+      "next_status": 1,
+      "lines": [
+        { "text": "Sob o painel de controle da cabine, você percebe um HD preso por parafusos já gastos pelo tempo.", "npc": 1 },
+        { "text": "", "npc": 1 }
+      ],
+      "choices": [
+        {
+          "choiceText": "Remover o HD.",
+
+          "ActionID": 5,
+          "responseLines": [{ "text": "&HD &da &Cabine &Principal &recuperado. Dados essenciais para análise.", "npc": 1 }]
+        },
+        {
+          "choiceText": "Investigar a inscrição no HD.",
+          "actionType": "EndDialogue",
+          "ActionID": 0,
+          "responseLines": [{ "text": "Inscrição no HD: 'Cabine Principal - Logs do Sistema'. Backup vital para diagnóstico.", "npc": 1 }]
+        },
+        {
+          "choiceText": "Deixar o HD e sair.",
+          "actionType": "EndDialogue",
+          "ActionID": 0,
+          "responseLines": [{ "text": "#Nao #tocou #no #HD, os backups sao necessários para concluir a missão.", "npc": 1 }]
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "status": 0,
+      "next_status": 1,
+      "lines": [
+        { "text": "(&Todos &os &discos &foram &recuperados. O RRY-82 se prepara para decifrar os dados.)", "npc": 1 },
+        { "text": "Acesse o terminal para decifrar a origem dos erros.", "npc": 1 },
+        { "text": "", "npc": 1 }
+      ],
+      "choices": [
+        {
+          "choiceText": "Extrair os dados.",
+          "actionType": "DeliverItem",
+          "ActionID": 6,
+          "responseLines": [{ "text": "@Dados @sendo @descriptografados no sistema, extraindo logs de erros.", "npc": 1 }]
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "status": 0,
+      "next_status": 1,
+      "lines": [
+        { "text": "Ok, N.O.V.A, tenho os logs. Como organizo isso?", "npc": 0 },
+        { "text": "Siga a &ordem &de o&correncia: qual falha &aconteceu &primeiro? Use os timestamps dos discos.", "npc": 1 },
+        { "text": "Então... &verificar o que aconteceu em &data &crescente. Isso faz sentido?", "npc": 0 },
+        { "text": "Exato! Processe nessa sequência.", "npc": 1 },
+        { "text": "", "npc": 1 }
+      ],
+      "choices": [
+        {
+          "choiceText": "Abrir tela de processo",
+          "actionType": "OpenPuzzle",
+          "ActionID": 7,
+          "responseLines": [{ "text": "Solução correta do algoritmo garantirá funcionalidade temporária. Continue.", "npc": 1 }]
+        }
+      ]
+    }
+  ]
 }

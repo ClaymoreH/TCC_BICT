@@ -1,199 +1,254 @@
 {
-    "dialogues": [
+  "dialogues": [
+    {
+      "id": 1,
+      "status": 1,
+      "next_status": 1,
+      "lines": [
+        { "text": "Olá, Atena. Alguma novidade no sistema?", "npc": 0 },
+        { "text": "Inicializando...", "npc": 1 },
+        { "text": "#Falhas #detectadas em múltiplos sistemas. Recursos disponíveis limitados.", "npc": 1 },
+        { "text": "Protocolo de emergência ativado.", "npc": 1 },
+        { "text": "Analisando...", "npc": 1 },
+        { "text": "Priorize a recuperação dos backups armazenados fisicamente no interior da sonda.", "npc": 1 },
+        { "text": "Localizações dos backups mapeadas no sistema. Consulte o &painel &de &missões &(M) para mais detalhes.", "npc": 1 }
+      ]
+    },
+    {
+      "id": 4,
+      "status": 1,
+      "next_status": 1,
+      "lines": [
+        { "text": "Você entrou no núcleo do &Reator &Principal.", "npc": 1 },
+        { "text": "Esta sala abriga o coração energético da Argos VII.", "npc": 1 },
+        { "text": "A degradação aqui comprometeu a maior parte dos sistemas operacionais.", "npc": 1 }
+      ]
+    },
+    {
+      "id": 5,
+      "status": 1,
+      "next_status": 1,
+      "lines": [
+        { "text": "Você se aproxima de um painel danificado próximo ao núcleo do reator.", "npc": 1 },
+        { "text": "As luzes piscam irregularmente, mas você consegue distinguir um @HD @preso @ao @sistema.", "npc": 1 },
+        { "text": "", "npc": 1 }
+      ],
+      "choices": [
         {
-            "id": 20,
-            "status": 1,
-            "next_status": 1,
-            "lines": [
-                "Sequência de falhas identificadas.",
-                "Análise concluída. A origem do problema foi identificada: #superaquecimento #do #reator #principal.",
-                "Este evento causou uma @falha @em @cascata @nos @sistemas, afetando a memória e prejudicando a navegação da Argos VII.",
-                "Agora que a cadeia de eventos foi reconstruída, é necessário agir rapidamente para &restaurar &as &funções &vitais &da &nave.",
-                "O reator principal e as &baterias &de &reserva estão comprometidos.",
-                "Dirija-se à &central &de &energia, inspecione-a e analise a situação."
-            ]
+          "choiceText": "Examinar o painel",
+          "actionType": "EndDialogue",
+          "ActionID": 0,
+          "responseLines": [{ "text": "Painel em estado crítico. Backup identificado como funcional. Recuperação manual necessária.", "npc": 1 }]
         },
         {
-            "id": 22,
-            "status": 1,
-            "next_status": 1,
-            "lines": [
-                "Inspeção necessária. Identifique a condição das baterias e registre os níveis de carga.",
-                ""
-            ],
-            "choices": [
-                {
-                    "choiceText": "Inspecionar a bateria.",
-                    "actionType": "InteractWithObject",
-                    "ActionID": 8,
-                    "responseLines": [
-                        "Inspeção concluída. Estruturalmente, a bateria parece intacta. Apresenta &nível &estável &de &carga."
-                    ]
-                },
-                {
-                    "choiceText": "Deixar para depois.",
-                    "actionType": "EndDialogue",
-                    "ActionID": 0,
-                    "responseLines": [
-                        "#Tarefa #pendente. Inspecionar baterias é essencial para prosseguir."
-                    ]
-                }
-            ]
+          "choiceText": "Pegar o HD",
+          "actionType": "CollectItem",
+          "ActionID": 1,
+          "responseLines": [{ "text": "@HD @do @Reator @Principal @recuperado. Dados em estado parcial, pronto para análise.", "npc": 1 }]
         },
         {
-            "id": 23,
-            "status": 1,
-            "next_status": 1,
-            "lines": [
-                "Inspeção necessária. Identifique a condição das baterias e registre os níveis de carga.",
-                ""
-            ],
-            "choices": [
-                {
-                    "choiceText": "Inspecionar a bateria.",
-                    "actionType": "InteractWithObject",
-                    "ActionID": 8,
-                    "responseLines": [
-                        "Inspeção concluída. Estruturalmente, a bateria parece intacta. Mas apresenta #nível #mínimo #de #carga.",
-                        "Continue com o protocolo de recarga, no &Reator &Principal."
-                    ]
-                },
-                {
-                    "choiceText": "Deixar para depois.",
-                    "actionType": "EndDialogue",
-                    "ActionID": 0,
-                    "responseLines": [
-                        "#Tarefa #pendente. Inspecionar baterias é essencial para prosseguir."
-                    ]
-                }
-            ]
-        },
-        {
-            "id": 24,
-            "status": 0,
-            "next_status": 1,
-            "lines": [
-                "Configure os sistemas para iniciar o processo de recarga. Tenha cuidado: a energia é limitada.",
-                ""
-            ],
-            "choices": [
-                {
-                    "choiceText": "Configurar o reator.",
-                    "actionType": "InteractWithObject",
-                    "ActionID": 9,
-                    "responseLines": [
-                        "Configurações ajustadas. O &reator &está &pronto para receber a bateria reserva."
-                    ]
-                },
-                {
-                    "choiceText": "Verificar as configurações antes de ativar.",
-                    "actionType": "EndDialogue",
-                    "ActionID": 0,
-                    "responseLines": [
-                        "Configurações padrão do sistema verificadas. Ajuste concluído. Pode prosseguir."
-                    ]
-                },
-                {
-                    "choiceText": "Deixar para depois.",
-                    "actionType": "EndDialogue",
-                    "ActionID": 0,
-                    "responseLines": [
-                        "#As #baterias #não #recarregarão até que o reator seja configurado."
-                    ]
-                }
-            ]
-        },
-        {
-            "id": 25,
-            "status": 0,
-            "next_status": 1,
-            "lines": [
-                "O compartimento para inserção da bateria está aberto.",
-                "Insira a bateria no compartimento designado para iniciar a recarga.",""
-            ],
-            "choices": [
-                {
-                    "choiceText": "Inserir a bateria.",
-                    "actionType": "DeliverItem",
-                    "ActionID": 10,
-                    "responseLines": [
-                        "Bateria inserida. &Recarga &iniciada.",
-                        "Aguarde a conclusão do processo."
-                    ]
-                },
-                {
-                    "choiceText": "Verificar o compartimento antes de inserir.",
-                    "actionType": "EndDialogue",
-                    "ActionID": 0,
-                    "responseLines": [
-                        "Compartimento em condições operacionais.",
-                        "A recarga pode ser iniciada."
-                    ]
-                }
-            ]
-        },
-        {
-            "id": 26,
-            "status": 0,
-            "next_status": 1,
-            "lines": [
-                "O reator emite um som baixo e constante.",
-                "A &bateria está &completamente &carregada",
-                ""
-            ],
-            "choices": [
-                {
-                    "choiceText": "Pegar Bateria.",
-                    "actionType": "CollectItem",
-                    "ActionID": 7,
-                    "responseLines": [
-                        "Recuperação da bateria concluída.",
-                        "Pronta para &substituir &a &unidade &crítica."
-                    ]
-                }
-            ]
-        },
-        {
-            "id": 27,
-            "status": 0,
-            "next_status": 1,
-            "lines": [
-                "O painel indica a necessidade de substituição imediata.",
-                ""
-            ],
-            "choices": [
-                {
-                    "choiceText": "Substituir a bateria.",
-                    "actionType": "DeliverItem",
-                    "ActionID": 12,
-                    "responseLines": [
-                        "&Bateria &crítica &substituída por unidade recarregada. &Funções &principais &restauradas.",
-                        "Se dirija ao &Servidor &Central para calibrar a distribuição."
-                    ]
-                }
-            ]
-        },
-        {
-            "id": 28,
-            "status": 0,
-            "next_status": 1,
-            "lines": [
-                "Energia em restauração.",
-                "Distribuição eficiente necessária.",
-                "&Priorize &tarefas &de &menor &duração para otimizar o uso dos recursos restantes.",""
-            ],
-            "choices": [
-                {
-                    "choiceText": "Iniciar a distribuição de energia.",
-                    "actionType": "OpenPuzzle",
-                    "ActionID": 13,
-                    "responseLines": [
-                        "A solução correta do algoritmo restaurará a energia."
-                    ]
-                }
-            ]
+          "choiceText": "Sair",
+          "actionType": "EndDialogue",
+          "ActionID": 0,
+          "responseLines": [{ "text": "Você decide #sair #sem #pegar #o #HD. A missão não pode continuar sem ele.", "npc": 1 }]
         }
-    ]
+      ]
+    },
+    {
+      "id": 6,
+      "status": 1,
+      "next_status": 1,
+      "lines": [
+        { "text": "Você entrou na &Central &de &Energia.", "npc": 1 },
+        { "text": "A Central de Energia é o núcleo da distribuição energética.", "npc": 1 }
+      ]
+    },
+    {
+      "id": 7,
+      "status": 1,
+      "next_status": 1,
+      "lines": [
+        { "text": "Ao final de um corredor iluminado por luzes intermitentes, você encontra um compartimento de acesso.", "npc": 1 },
+        { "text": "Dentro, @um @HD repousa sob uma camada de poeira.", "npc": 1 },
+        { "text": "", "npc": 1 }
+      ],
+      "choices": [
+        {
+          "choiceText": "Abrir e pegar o HD",
+          "actionType": "CollectItem",
+          "ActionID": 2,
+          "responseLines": [{ "text": "Compartimento aberto. &Recuperou &o &HD &da &Central &de &Energia com sucesso.", "npc": 1 }]
+        },
+        {
+          "choiceText": "Examinar mais de perto",
+          "actionType": "EndDialogue",
+          "ActionID": 0,
+          "responseLines": [{ "text": "Inscrição no HD: 'Central de Energia - Backup Primário'. Dados críticos armazenados.", "npc": 1 }]
+        },
+        {
+          "choiceText": "Deixar o HD no lugar",
+          "actionType": "EndDialogue",
+          "ActionID": 0,
+          "responseLines": [{ "text": "#O #HD #permanece #no #lugar. A sonda não pode prosseguir sem esses dados.", "npc": 1 }]
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "status": 1,
+      "next_status": 1,
+      "lines": [
+        { "text": "Bem-vindo à &Unidade &de &Coleta.", "npc": 1 },
+        { "text": "Este setor processa dados externos obtidos durante a missão de exploração.", "npc": 1 }
+      ]
+    },
+    {
+      "id": 9,
+      "status": 1,
+      "next_status": 1,
+      "lines": [
+        { "text": "Um servidor enegrecido pelo tempo exibe luzes intermitentes. Você nota um HD parcialmente encaixado.", "npc": 1 },
+        { "text": "", "npc": 1 }
+      ],
+      "choices": [
+        {
+          "choiceText": "Puxar o HD",
+          "actionType": "CollectItem",
+          "ActionID": 3,
+          "responseLines": [{ "text": "&HD &da &Unidade &de &Coleta &recuperado. Transferência de dados iniciada... Pronto para análise.", "npc": 1 }]
+        },
+        {
+          "choiceText": "Analisar o estado do servidor",
+          "actionType": "EndDialogue",
+          "ActionID": 0,
+          "responseLines": [{ "text": "Servidor comprometido. Backup armazenado no HD é a única fonte de recuperação.", "npc": 1 }]
+        },
+        {
+          "choiceText": "Ignorar o HD e continuar explorando",
+          "actionType": "EndDialogue",
+          "ActionID": 0,
+          "responseLines": [{ "text": "#Não #tocou #no #HD, a reconstrução não será possível. A sonda permanece incompleta.", "npc": 1 }]
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "status": 1,
+      "next_status": 1,
+      "lines": [
+        { "text": "Entrou na &Sala &de &Refrigeração.", "npc": 1 },
+        { "text": "O Sistema de Refrigeração é vital para a estabilidade do reator principal.", "npc": 1 },
+        { "text": "Sem ele, a integridade estrutural da Argos VII está em risco.", "npc": 1 }
+      ]
+    },
+    {
+      "id": 11,
+      "status": 1,
+      "next_status": 1,
+      "lines": [
+        { "text": "No canto superior direito da sala, você encontra um computador com uma tela empoeirada.", "npc": 1 },
+        { "text": "Um HD está conectado ao lado.", "npc": 1 },
+        { "text": "", "npc": 1 }
+      ],
+      "choices": [
+        {
+          "choiceText": "Verificar o computador.",
+          "actionType": "EndDialogue",
+          "ActionID": 0,
+          "responseLines": [{ "text": "&HD &do &Sistema &de &Refrigeração &recuperado. Dados prontos para análise.", "npc": 1 }]
+        },
+        {
+          "choiceText": "Desconectar o HD.",
+          "actionType": "CollectItem",
+          "ActionID": 4,
+          "responseLines": [{ "text": "Computador indica falhas críticas no sistema de refrigeração. Backup armazenado no HD.", "npc": 1 }]
+        },
+        {
+          "choiceText": "Deixar o HD.",
+          "actionType": "EndDialogue",
+          "ActionID": 0,
+          "responseLines": [{ "text": "#Deixou #o #HD #no #lugar, o sistema não pode ser restaurado.", "npc": 1 }]
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "status": 1,
+      "next_status": 1,
+      "lines": [
+        { "text": "Você entrou na &Cabine &Principal", "npc": 1 },
+        { "text": "O centro de comando da Argos VII. Aqui, as ocorre o mapeamento de rota e tomada de decisões.", "npc": 1 }
+      ]
+    },
+    {
+      "id": 13,
+      "status": 1,
+      "next_status": 1,
+      "lines": [
+        { "text": "Sob o painel de controle da cabine, você percebe um HD preso por parafusos já gastos pelo tempo.", "npc": 1 },
+        { "text": "", "npc": 1 }
+      ],
+      "choices": [
+        {
+          "choiceText": "Remover o HD.",
+          "actionType": "CollectItem",
+          "ActionID": 5,
+          "responseLines": [{ "text": "&HD &da &Cabine &Principal &recuperado. Dados essenciais para análise.", "npc": 1 }]
+        },
+        {
+          "choiceText": "Investigar a inscrição no HD.",
+          "actionType": "EndDialogue",
+          "ActionID": 0,
+          "responseLines": [{ "text": "Inscrição no HD: 'Cabine Principal - Logs do Sistema'. Backup vital para diagnóstico.", "npc": 1 }]
+        },
+        {
+          "choiceText": "Deixar o HD e sair.",
+          "actionType": "EndDialogue",
+          "ActionID": 0,
+          "responseLines": [{ "text": "#Nao #tocou #no #HD, os backups sao necessários para concluir a missão.", "npc": 1 }]
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "status": 0,
+      "next_status": 1,
+      "lines": [
+        { "text": "&Todos &os &backups &recuperados. Iniciando processamento sequencial.", "npc": 1 },
+        { "text": "Acesse o terminal para decifrar a origem dos erros.", "npc": 1 },
+        { "text": "", "npc": 1 }
+      ],
+      "choices": [
+        {
+          "choiceText": "Extrair os dados.",
+          "actionType": "DeliverItem",
+          "ActionID": 6,
+          "responseLines": [{ "text": "@Dados @sendo @descriptografados no sistema, extraindo logs de erros.", "npc": 1 }]
+        },
+        {
+          "choiceText": "Voltar",
+          "actionType": "EndDialogue",
+          "ActionID": 0,
+          "responseLines": [{ "text": "É preciso #processar #os #dados para entender o que aconteceu com a sonda. Melhor fazer isso #rápido.", "npc": 1 }]
+        }
+      ]
+    },
+    {
+      "id": 15,
+      "status": 0,
+      "next_status": 1,
+      "lines": [
+        { "text": "Dados descriptografados com sucesso, abrindo tela de processamento.", "npc": 1 },
+        { "text": "", "npc": 1 }
+      ],
+      "choices": [
+        {
+          "choiceText": "Abrir tela de processo",
+          "actionType": "OpenPuzzle",
+          "ActionID": 7,
+          "responseLines": [{ "text": "Solução correta do algoritmo garantirá funcionalidade temporária. Continue.", "npc": 1 }]
+        }
+      ]
+    }
+  ]
 }
-
-

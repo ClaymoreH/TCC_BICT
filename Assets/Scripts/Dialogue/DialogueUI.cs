@@ -27,6 +27,7 @@ public class DialogueUI : MonoBehaviour
     public GameObject choicePrefab;
     public List<ChoiceText> choiceTextList = new List<ChoiceText>();
     public int currentChoiceIndex = 0;
+    public TMP_Text speakerNameText; // Nome do personagem que está falando
 
 
 public void AddChoiceText(string choiceText, System.Action onClickAction)

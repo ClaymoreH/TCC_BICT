@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
 [CreateAssetMenu(fileName = "NewQuest", menuName = "Quests/Quest")]
 public class Quest : ScriptableObject
@@ -14,7 +15,10 @@ public class Quest : ScriptableObject
 
     public Quest nextQuest;
 
-    public string dialoguePanelName; // Nome do painel que será ativado
+    public string dialoguePanelName;
+
+    public PlayableAsset timelineToPlay; // <- Timeline opcional ao concluir a missão
+
 }
 
 

@@ -77,7 +77,8 @@ public virtual void StartDialogue()
                 currentDialogue = dialogue;
 
                 // Passar o callingObject para o DialogueManager
-                dialogueManager.StartDialogue(currentDialogue.lines, currentDialogue.choices, callingObject);
+                dialogueManager.StartDialogue(currentDialogue.lines, currentDialogue.choices.ToArray(), callingObject);
+
 
                 dialogueManager.dialogueUI.HidePressXMessage();
                 canShowDialogue = false;

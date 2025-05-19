@@ -1,13 +1,23 @@
 using UnityEngine;
+using System.Collections.Generic;
+
+[System.Serializable]
+public class DialogueLine
+{
+    public string text;
+    public int npc; // 0 = Jogador, 1 = NPC
+}
+
 
 [System.Serializable]
 public class DialogueData
 {
     public int id;
-    public int status;        // 0 = inativo, 1 = ativo
-    public int next_status;   
-    public string[] lines; 
-    public DialogueChoice[] choices; 
+    public int status;
+    public int next_status;
+
+    public List<DialogueLine> lines;
+    public List<DialogueChoice> choices;
 }
 
 [System.Serializable]
@@ -16,8 +26,9 @@ public class DialogueChoice
     public string choiceText;
     public string actionType;
     public int ActionID;
-    public string[] responseLines;   // Linhas de resposta associadas à escolha
+    public List<DialogueLine> responseLines;
 }
+
 
 [System.Serializable]
 public class DialogueDatabase

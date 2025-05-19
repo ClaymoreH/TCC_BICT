@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables; // Adicione esse using no topo
 
 public class QuestManager : MonoBehaviour
 {
@@ -172,11 +173,11 @@ private void GrantObjectiveReward(QuestObjective objective)
         return true;
     }
 
+
 public void CompleteQuest(Quest quest)
 {
     Debug.Log($"Missão '{quest.questName}' concluída!");
 
-    // Recompensas e lógica
     if (quest.rewardItem != null)
     {
         InventoryManager inventoryManager = FindObjectOfType<InventoryManager>();
@@ -186,13 +187,27 @@ public void CompleteQuest(Quest quest)
     activeQuests.Remove(quest);
     completedQuests.Add(quest);
 
-    // Exibir notificação e tocar som
     notificationManager?.ShowNotification($"Missão concluída: {quest.questName}");
     audioManager?.PlayMissionCompletedSound();
 
+    // ✅ TOCAR TIMELINE
+    if (quest.timelineToPlay != null)
+    {
+        PlayableDirector director = FindObjectOfType<PlayableDirector>();
+        if (director != null)
+        {
+            director.playableAsset = quest.timelineToPlay;
+            director.Play();
+            Debug.Log($"Timeline da missão '{quest.questName}' foi disparada.");
+        }
+        else
+        {
+            Debug.LogWarning("Nenhum PlayableDirector encontrado na cena para tocar a Timeline.");
+        }
+    }
+
     if (!string.IsNullOrEmpty(quest.dialoguePanelName))
     {
-        // Buscar o painel mesmo que esteja desativado
         Transform[] allTransforms = Resources.FindObjectsOfTypeAll<Transform>();
         GameObject panel = null;
 
@@ -210,14 +225,8 @@ public void CompleteQuest(Quest quest)
             panel.SetActive(true);
             Debug.Log($"Painel de diálogo '{panel.name}' ativado para a missão '{quest.questName}'.");
         }
-        else
-        {
-            Debug.LogWarning($"Painel de diálogo com o nome '{quest.dialoguePanelName}' não foi encontrado na cena.");
-        }
     }
 
-
-    // Adicionar próxima missão, se houver
     if (quest.nextQuest != null)
     {
         AddQuest(quest.nextQuest);
@@ -225,6 +234,7 @@ public void CompleteQuest(Quest quest)
 
     questUIManager.UpdateQuestUI(activeQuests, completedQuests);
 }
+
 
 
 }

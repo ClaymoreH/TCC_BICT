@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class DialogueManager : MonoBehaviour
 {
@@ -7,17 +8,17 @@ public class DialogueManager : MonoBehaviour
     public DialogueUI dialogueUI;
     public PlayerController playerController;
 
-    private string[] lines;
+    private List<DialogueLine> lines;
     private int currentLineIndex;
     private bool isTyping;
     private bool isDialogueActive;
     private Animator playerAnimator;
-    private DialogueChoice[] choices;  // Novo campo para armazenar as escolhas do diálogo
+    private DialogueChoice[] choices;
 
     public event System.Action OnDialogueEnded;
     public bool IsDialogueActive => isDialogueActive;
-    public bool isShowingChoices = false;  // As escolhas estão sendo mostradas
-    private GameObject callingObject;  // Definindo a variável para armazenar o objeto que chama
+    public bool isShowingChoices = false;
+    private GameObject callingObject;
 
     void Start()
     {
@@ -25,25 +26,23 @@ public class DialogueManager : MonoBehaviour
         playerAnimator = playerController?.GetComponent<Animator>();
     }
 
-public void StartDialogue(string[] dialogueLines, DialogueChoice[] dialogueChoices = null, GameObject callingObject = null)
-{
-    ResetDialogue();
-    lines = ProcessLines(dialogueLines);
-    choices = dialogueChoices;
-    currentLineIndex = 0;
-    dialogueUI.dialogueObject.SetActive(true);
-    dialogueUI.HidePressXMessage();
-    dialogueUI.ShowContinueMessage();
-    TogglePlayerControl(false);
-    isDialogueActive = true;
+    public void StartDialogue(List<DialogueLine> dialogueLines, DialogueChoice[] dialogueChoices = null, GameObject callingObject = null)
+    {
+        ResetDialogue();
+        lines = ProcessLines(dialogueLines);
+        choices = dialogueChoices;
+        currentLineIndex = 0;
+        dialogueUI.dialogueObject.SetActive(true);
+        dialogueUI.HidePressXMessage();
+        dialogueUI.ShowContinueMessage();
+        TogglePlayerControl(false);
+        isDialogueActive = true;
 
-    // Agora você pode fazer algo com o callingObject, como armazená-lo
-    this.callingObject = callingObject;
-    Debug.Log("Objeto '" + callingObject + "' Start");
+        this.callingObject = callingObject;
+        Debug.Log("Objeto '" + callingObject + "' Start");
 
-    StartCoroutine(TypeCurrentLine());
-}
-
+        StartCoroutine(TypeCurrentLine());
+    }
 
     private void ResetDialogue()
     {
@@ -55,7 +54,11 @@ public void StartDialogue(string[] dialogueLines, DialogueChoice[] dialogueChoic
     public IEnumerator TypeCurrentLine()
     {
         isTyping = true;
-        yield return StartCoroutine(dialogueUI.TypeText(lines[currentLineIndex]));
+
+        DialogueLine currentLine = lines[currentLineIndex];
+        dialogueUI.speakerNameText.text = currentLine.npc == 0 ? "Helena" : "Athena";
+
+        yield return StartCoroutine(dialogueUI.TypeText(currentLine.text));
         isTyping = false;
         dialogueUI.ShowContinueMessage();
     }
@@ -65,178 +68,162 @@ public void StartDialogue(string[] dialogueLines, DialogueChoice[] dialogueChoic
         if (isDialogueActive && Input.GetKeyDown(KeyCode.X))
             AdvanceDialogue();
     }
-public void AdvanceDialogue()
-{
-    if (isShowingChoices)
-        return;
 
-    if (isTyping)
+    public void AdvanceDialogue()
     {
-        StopAllCoroutines();
-        dialogueUI.dialogueText.text = lines[currentLineIndex];
-        isTyping = false;
-        dialogueUI.ShowContinueMessage();
-    }
-    else
-    {
-        currentLineIndex++;
-        if (currentLineIndex < lines.Length)
+        if (isShowingChoices)
+            return;
+
+        if (isTyping)
         {
-            StartCoroutine(TypeCurrentLine());
+            StopAllCoroutines();
+            dialogueUI.dialogueText.text = lines[currentLineIndex].text;
+            isTyping = false;
+            dialogueUI.ShowContinueMessage();
         }
         else
         {
-            if (choices != null && choices.Length > 0)
+            currentLineIndex++;
+            if (currentLineIndex < lines.Count)
             {
-                ShowChoices();
+                StartCoroutine(TypeCurrentLine());
             }
             else
             {
-                EndDialogue();
+                if (choices != null && choices.Length > 0)
+                {
+                    ShowChoices();
+                }
+                else
+                {
+                    EndDialogue();
+                }
             }
         }
     }
-}
 
-
-private void ShowChoices()
-{
-    isShowingChoices = true;  // As escolhas estão sendo mostradas
-    foreach (var choice in choices)
+    private void ShowChoices()
     {
-        dialogueUI.AddChoiceText(choice.choiceText, () => HandleChoice(choice));
+        isShowingChoices = true;
+        foreach (var choice in choices)
+        {
+            dialogueUI.AddChoiceText(choice.choiceText, () => HandleChoice(choice));
+        }
+
+        dialogueUI.ShowChoices();
     }
 
-    dialogueUI.ShowChoices(); // Ativa a navegação e seleção das escolhas
-}
-
-private void HandleChoice(DialogueChoice choice)
-{
-    // Buscar o ChoiceDialogueTrigger apenas no callingObject
-    ChoiceDialogueTrigger choiceTrigger = callingObject.GetComponent<ChoiceDialogueTrigger>();
-    Debug.Log("Objeto '" + callingObject + "' Handle");
-
-
-    if (choiceTrigger != null)
+    private void HandleChoice(DialogueChoice choice)
     {
-        // Exibe as linhas de resposta antes de realizar a ação
-        if (choice.responseLines != null && choice.responseLines.Length > 0)
+        ChoiceDialogueTrigger choiceTrigger = callingObject.GetComponent<ChoiceDialogueTrigger>();
+        Debug.Log("Objeto '" + callingObject + "' Handle");
+
+        if (choiceTrigger != null)
         {
-            StartCoroutine(ShowResponseAndExecute(choice));
+            if (choice.responseLines != null && choice.responseLines.Count > 0)
+            {
+                StartCoroutine(ShowResponseAndExecute(choice));
+            }
+            else
+            {
+                ExecuteChoiceAction(choice, choiceTrigger);
+            }
         }
         else
         {
-            ExecuteChoiceAction(choice, choiceTrigger);
+            Debug.LogWarning("ChoiceDialogueTrigger não encontrado no callingObject");
         }
     }
-    else
+
+    private IEnumerator ShowResponseAndExecute(DialogueChoice choice)
     {
-        Debug.LogWarning("ChoiceDialogueTrigger não encontrado no callingObject");
-    }
-}
+        DestroyChoiceButtons();
 
-
-private IEnumerator ShowResponseAndExecute(DialogueChoice choice)
-{
-    DestroyChoiceButtons();
-
-    foreach (string responseLine in choice.responseLines)
-    {
-        // Processa a linha antes de exibi-la
-        string processedLine = dialogueUI.ProcessLine(responseLine);
-
-        dialogueUI.dialogueText.text = ""; // Limpa o texto atual
-        var typingCoroutine = StartCoroutine(dialogueUI.TypeText(processedLine)); // Inicia a digitação
-        bool isTyping = true; // Indica que a digitação está em andamento
-
-        // Aguarda o jogador pressionar X ou o término da digitação
-        while (isTyping)
+        foreach (DialogueLine responseLine in choice.responseLines)
         {
-            if (Input.GetKeyDown(KeyCode.X))
+            string processedLine = dialogueUI.ProcessLine(responseLine.text);
+            dialogueUI.dialogueText.text = "";
+            var typingCoroutine = StartCoroutine(dialogueUI.TypeText(processedLine));
+            bool localTyping = true;
+
+            while (localTyping)
             {
-                StopCoroutine(typingCoroutine); // Interrompe a digitação
-                dialogueUI.dialogueText.text = processedLine; // Exibe o texto completo
-                isTyping = false; // Finaliza o estado de digitação
+                if (Input.GetKeyDown(KeyCode.X))
+                {
+                    StopCoroutine(typingCoroutine);
+                    dialogueUI.dialogueText.text = processedLine;
+                    localTyping = false;
+                }
+                yield return null;
             }
-            yield return null;
+
+            yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.X));
         }
 
-        // Aguarda o jogador pressionar X novamente para continuar
-        yield return new WaitUntil(() => Input.GetKeyDown(KeyCode.X));
+        ChoiceDialogueTrigger choiceTrigger = callingObject.GetComponent<ChoiceDialogueTrigger>();
+        ExecuteChoiceAction(choice, choiceTrigger);
     }
 
-    // Após exibir todas as respostas, executa a ação associada
-    ChoiceDialogueTrigger choiceTrigger = FindObjectOfType<ChoiceDialogueTrigger>();
-    ExecuteChoiceAction(choice, choiceTrigger);
-}
-
-// Método separado para executar a ação
-private void ExecuteChoiceAction(DialogueChoice choice, ChoiceDialogueTrigger choiceTrigger)
-{
-    switch (choice.actionType)
+    private void ExecuteChoiceAction(DialogueChoice choice, ChoiceDialogueTrigger choiceTrigger)
     {
-        case "EndDialogue":
-            EndDialogue();
-            break;
+        switch (choice.actionType)
+        {
+            case "EndDialogue":
+                EndDialogue();
+                break;
 
-        case "CollectItem":
-            EndDialogue();
-            choiceTrigger?.CollectItem(choice.ActionID);
-            Destroy(callingObject); // Destrói o objeto que iniciou a interação
-            break;
+            case "CollectItem":
+                EndDialogue();
+                choiceTrigger?.CollectItem(choice.ActionID);
+                Destroy(callingObject);
+                break;
 
-        case "InteractWithObject":
-            choiceTrigger?.InteractWithObject(choice.ActionID);
-            Destroy(callingObject); // Destrói o objeto que iniciou a interação
-            EndDialogue();
-            break;
+            case "InteractWithObject":
+                choiceTrigger?.InteractWithObject(choice.ActionID);
+                Destroy(callingObject);
+                EndDialogue();
+                break;
 
-        case "DeliverItem":
-            choiceTrigger?.DeliverItem(choice.ActionID);
-            EndDialogue();
-            Destroy(callingObject); // Destrói o objeto que iniciou a interação
-            break;
+            case "DeliverItem":
+                choiceTrigger?.DeliverItem(choice.ActionID);
+                EndDialogue();
+                Destroy(callingObject);
+                break;
 
-        case "OpenPuzzle":
-            choiceTrigger?.OpenPuzzle(choice.ActionID);
-            Destroy(callingObject); // Destrói o objeto que iniciou a interação
-            EndDialogue();
-            break;
+            case "OpenPuzzle":
+                choiceTrigger?.OpenPuzzle(choice.ActionID);
+                Destroy(callingObject);
+                EndDialogue();
+                break;
 
-        default:
-            Debug.LogWarning("Ação desconhecida: " + choice.actionType);
-            break;
+            default:
+                Debug.LogWarning("Ação desconhecida: " + choice.actionType);
+                break;
+        }
+
+        isShowingChoices = false;
     }
-    isShowingChoices = false;
-}
 
-
-
-private void EndDialogue()
-{
-    // Destrói os botões de escolha se existirem
-    DestroyChoiceButtons();
-    // Desativa o diálogo
-    dialogueUI.dialogueObject.SetActive(false);
-    dialogueUI.HideContinueMessage();
-
-    TogglePlayerControl(true);
-    isDialogueActive = false;
-    isShowingChoices = false;  // Reseta o estado das escolhas
-    OnDialogueEnded?.Invoke();
-}
-
-
-private void DestroyChoiceButtons()
-{
-    // Destrói todos os botões dentro do choicesContainer
-    foreach (Transform child in dialogueUI.choicesContainer.transform)
+    private void EndDialogue()
     {
-        Destroy(child.gameObject);
+        DestroyChoiceButtons();
+        dialogueUI.dialogueObject.SetActive(false);
+        dialogueUI.HideContinueMessage();
+        TogglePlayerControl(true);
+        isDialogueActive = false;
+        isShowingChoices = false;
+        OnDialogueEnded?.Invoke();
     }
-    dialogueUI.choiceTextList.Clear();  // Limpa a lista de escolhas para não deixar rastros
 
-}
+    private void DestroyChoiceButtons()
+    {
+        foreach (Transform child in dialogueUI.choicesContainer.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        dialogueUI.choiceTextList.Clear();
+    }
 
     private void TogglePlayerControl(bool state)
     {
@@ -244,10 +231,12 @@ private void DestroyChoiceButtons()
         if (playerAnimator != null) playerAnimator.enabled = state;
     }
 
-    private string[] ProcessLines(string[] lines)
+    private List<DialogueLine> ProcessLines(List<DialogueLine> rawLines)
     {
-        for (int i = 0; i < lines.Length; i++)
-            lines[i] = dialogueUI.ProcessLine(lines[i]);
-        return lines;
+        foreach (var line in rawLines)
+        {
+            line.text = dialogueUI.ProcessLine(line.text);
+        }
+        return rawLines;
     }
 }

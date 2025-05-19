@@ -4,24 +4,25 @@ using TMPro;
 
 public class QuestUIManager : MonoBehaviour
 {
-    public GameObject questPanel; // O painel principal de missões
-    public GameObject questItemPrefab; // Prefab para os itens de missão (painel 1)
-    public Transform questListContainer; // Contêiner da lista de missões (painel 1)
+    public GameObject questPanel;
+    public GameObject questBanner; 
+    public GameObject questItemPrefab;
+    public Transform questListContainer; 
 
-    public GameObject objectivePanel; // Painel de objetivos (painel 2)
-    public TextMeshProUGUI questTitleText; // Texto do título da missão (painel 2)
-    public TextMeshProUGUI questDescriptionText; // Texto da descrição da missão (painel 2)
-    public Transform objectiveListContainer; // Contêiner para a lista de objetivos (painel 2)
-    public GameObject objectiveItemPrefab; // Prefab dos objetivos com título, descrição e status (painel 2)
+    public GameObject objectivePanel; 
+    public TextMeshProUGUI questTitleText; 
+    public TextMeshProUGUI questDescriptionText; 
+    public Transform objectiveListContainer; 
+    public GameObject objectiveItemPrefab;
 
     private List<GameObject> questItems = new List<GameObject>();
     private List<GameObject> objectiveItems = new List<GameObject>();
 
-    private bool isQuestPanelVisible = false; // Controle da visibilidade do painel
+    private bool isQuestPanelVisible = false; 
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.M)) // Verifica se a tecla M foi pressionada
+        if (Input.GetKeyDown(KeyCode.M))
         {
             ToggleQuestPanel();
         }
@@ -31,6 +32,7 @@ public class QuestUIManager : MonoBehaviour
     {
         isQuestPanelVisible = !isQuestPanelVisible; // Alterna o estado
         questPanel.SetActive(isQuestPanelVisible); // Mostra ou oculta o painel
+        questBanner.SetActive(isQuestPanelVisible); // Mostra ou oculta o painel
     }
 
     public void UpdateQuestUI(List<Quest> activeQuests, List<Quest> completedQuests)

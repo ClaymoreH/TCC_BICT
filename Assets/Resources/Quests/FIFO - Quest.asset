@@ -106,3 +106,4 @@ MonoBehaviour:
   rewardItem: {fileID: 0}
   nextQuest: {fileID: 11400000, guid: b63422d76bc0e2048ae5357cafe7988a, type: 2}
   dialoguePanelName: Quest 2
+  timelineToPlay: {fileID: 11400000, guid: b51f2986b8a9e1dac9c1c66862d40dc8, type: 2}
